@@ -1,0 +1,63 @@
+{
+  "brand": {
+    "name": "somespai"
+  },
+  "nav": {
+    "searchPlaceholder": "Search spaces in Vila de Gràcia…",
+    "signIn": "Sign in",
+    "designSystem": "Design system",
+    "publish": "Publish a space"
+  },
+  "view": {
+    "back": "Back to map"
+  },
+  "filter": {
+    "all": "All",
+    "storage": "Storage",
+    "workspace": "Studios",
+    "garden": "Gardens",
+    "room": "Rooms",
+    "featured": "Featured"
+  },
+  "sheet": {
+    "count": "{n, plural, =0 {No spaces} one {# space in Vila de Gràcia} other {# spaces in Vila de Gràcia}}",
+    "empty": "No spaces match this filter. Try another.",
+    "sort": "Sorted by distance"
+  },
+  "card": {
+    "month": "/mo",
+    "featured": "Featured",
+    "like": "Like",
+    "size": "{n} m²"
+  },
+  "detail": {
+    "share": "Share",
+    "contact": "Contact owner",
+    "size": "{n} m²",
+    "reviews": "{n, plural, =0 {No reviews yet} one {# review} other {# reviews}}",
+    "amenities": "Includes",
+    "location": "Location"
+  },
+  "auth": {
+    "title": "Sign in to Somespai",
+    "lead": "We'll email you a magic link. No passwords, no friction.",
+    "email": "Your email",
+    "send": "Send me the link",
+    "sent": "Check your inbox"
+  },
+  "lang": {
+    "label": "Language"
+  },
+  "ds": {
+    "title": "Design system",
+    "lead": "Components, tokens and decisions. This page is the visual source of truth.",
+    "section": {
+      "colors": "Color",
+      "typography": "Typography",
+      "buttons": "Buttons",
+      "chips": "Filter chips",
+      "cards": "Space card",
+      "markers": "Map markers"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "brand": {
+    "name": "somespai"
+  },
+  "nav": {
+    "searchPlaceholder": "Busca espacios en Vila de Gràcia…",
+    "signIn": "Entrar",
+    "designSystem": "Sistema de diseño",
+    "publish": "Publica un espacio"
+  },
+  "view": {
+    "back": "Volver al mapa"
+  },
+  "filter": {
+    "all": "Todos",
+    "storage": "Trasteros",
+    "workspace": "Estudios",
+    "garden": "Jardines",
+    "room": "Salas",
+    "featured": "Destacados"
+  },
+  "sheet": {
+    "count": "{n, plural, =0 {Sin espacios} one {# espacio en Vila de Gràcia} other {# espacios en Vila de Gràcia}}",
+    "empty": "Sin resultados con este filtro. Prueba con otro.",
+    "sort": "Por cercanía"
+  },
+  "card": {
+    "month": "/mes",
+    "featured": "Destacado",
+    "like": "Me gusta",
+    "size": "{n} m²"
+  },
+  "detail": {
+    "share": "Compartir",
+    "contact": "Contactar con el propietario",
+    "size": "{n} m²",
+    "reviews": "{n, plural, =0 {Aún sin reseñas} one {# reseña} other {# reseñas}}",
+    "amenities": "Incluye",
+    "location": "Ubicación"
+  },
+  "auth": {
+    "title": "Entra en Somespai",
+    "lead": "Te enviamos un enlace mágico. Sin contraseña, sin fricción.",
+    "email": "Tu correo",
+    "send": "Envíame el enlace",
+    "sent": "Revisa tu bandeja de entrada"
+  },
+  "lang": {
+    "label": "Idioma"
+  },
+  "ds": {
+    "title": "Sistema de diseño",
+    "lead": "Componentes, tokens y decisiones. Esta página es la fuente visual de la verdad.",
+    "section": {
+      "colors": "Color",
+      "typography": "Tipografía",
+      "buttons": "Botones",
+      "chips": "Chips de filtro",
+      "cards": "Tarjeta de espacio",
+      "markers": "Marcadores de mapa"
+    }
+  }
+}

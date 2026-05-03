@@ -1,0 +1,63 @@
+{
+  "brand": {
+    "name": "somespai"
+  },
+  "nav": {
+    "searchPlaceholder": "Cerca espais a Vila de Gràcia…",
+    "signIn": "Entrar",
+    "designSystem": "Sistema de disseny",
+    "publish": "Publica un espai"
+  },
+  "view": {
+    "back": "Tornar al mapa"
+  },
+  "filter": {
+    "all": "Tots",
+    "storage": "Trasters",
+    "workspace": "Estudis",
+    "garden": "Jardins",
+    "room": "Sales",
+    "featured": "Destacats"
+  },
+  "sheet": {
+    "count": "{n, plural, =0 {Cap espai} one {# espai a Vila de Gràcia} other {# espais a Vila de Gràcia}}",
+    "empty": "Cap espai amb aquest filtre. Prova-ho amb un altre.",
+    "sort": "Per proximitat"
+  },
+  "card": {
+    "month": "/mes",
+    "featured": "Destacat",
+    "like": "M'agrada",
+    "size": "{n} m²"
+  },
+  "detail": {
+    "share": "Compartir",
+    "contact": "Contactar amb el propietari",
+    "size": "{n} m²",
+    "reviews": "{n, plural, =0 {Encara cap ressenya} one {# ressenya} other {# ressenyes}}",
+    "amenities": "Inclou",
+    "location": "Ubicació"
+  },
+  "auth": {
+    "title": "Entra a Somespai",
+    "lead": "T'enviarem un enllaç màgic. Sense contrasenya, sense fricció.",
+    "email": "El teu correu",
+    "send": "Envia'm l'enllaç",
+    "sent": "Comprova la safata d'entrada"
+  },
+  "lang": {
+    "label": "Idioma"
+  },
+  "ds": {
+    "title": "Sistema de disseny",
+    "lead": "Components, tokens i decisions de disseny. Aquesta pàgina és la font de veritat visual de Somespai.",
+    "section": {
+      "colors": "Color",
+      "typography": "Tipografia",
+      "buttons": "Botons",
+      "chips": "Chips de filtre",
+      "cards": "Targeta d'espai",
+      "markers": "Marcadors de mapa"
+    }
+  }
+}
