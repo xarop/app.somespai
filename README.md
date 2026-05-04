@@ -82,7 +82,67 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0001_init.sql` | Esquema inicial: `profiles`, `spaces`, `reviews`, `favorites`, RLS, RPC `nearby_spaces` |
 | `0002_add_space_extra_fields.sql` | Afegeix `price_unit`, `contact_url`, `rating`, `reviews_count`, columnes generades `lat`/`lng` |
 
-Per desplegar en producció (Supabase Cloud):
+---
+
+## Desplegament a producció
+
+### Vercel
+
+URL producció: https://app-somespai.vercel.app
+Dashboard: https://vercel.com/xarops-projects/app-somespai
+
+**Primer desplegament (una sola vegada):**
+
+```bash
+# Instal·la la CLI de Vercel
+npm install -g vercel
+
+# Login i link al projecte existent
+vercel login
+vercel --prod
+# → selecciona "xarop's projects" i linkeu a "xarops-projects/app-somespai"
+```
+
+**Variables d'entorn** — afegir al projecte Vercel (una sola vegada):
+
+```bash
+echo "https://<ref>.supabase.co" | vercel env add NEXT_PUBLIC_SUPABASE_URL production
+echo "<anon-key>"               | vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
+echo "<service-role-key>"       | vercel env add SUPABASE_SERVICE_ROLE_KEY production
+```
+
+Les claus es troben a: https://supabase.com/dashboard/project/nkdmysztmgerwhrklzhx/settings/api
+
+**Desplegaments habituals** — simplement fes push a `main`:
+
+```bash
+git push origin main   # Vercel desplega automàticament si GitHub està connectat
+# o bé manualment:
+vercel --prod
+```
+
+> Nota: el lockfile és `bun.lockb` — no incloure `package-lock.json` al repo o Vercel fallarà.
+
+---
+
+### Supabase Cloud
+
+Projecte: https://supabase.com/dashboard/project/nkdmysztmgerwhrklzhx
+
+**Primera vegada — link i migracions:**
+
+```bash
+npx supabase login
+npx supabase link --project-ref nkdmysztmgerwhrklzhx
+
+# Aplica l'esquema al cloud
+npx supabase db push
+
+# Carrega les dades inicials (27 espais)
+npx supabase db execute --file supabase/seed.sql
+```
+
+**Quan s'afegeix una nova migració:**
 
 ```bash
 npx supabase db push
