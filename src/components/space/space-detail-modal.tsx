@@ -199,9 +199,11 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
               href={primaryContact.href}
               {...(primaryContact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               data-variant="primary"
-              className="detail__action-link detail__action-cta"
             >
-              {primaryContact.label}
+              {space.contactDefault === 'whatsapp' && <Icon name="share" size={16} />}
+              {space.contactDefault === 'phone'    && <Icon name="phone" size={16} />}
+              {space.contactDefault === 'email'    && <Icon name="mail"  size={16} />}
+              {t('detail.contact')}
             </a>
           )}
 
@@ -214,11 +216,13 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
               className="detail__action-link"
             >
               <Icon name="pin" size={16} />
+              {t('detail.location')}
             </a>
           )}
 
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />
+            {t('detail.share')}
           </button>
         </div>
 
