@@ -2,6 +2,8 @@
 
 > Marketplace P2P d'espais a Vila de Gràcia. Trasters, estudis, jardins i sales.
 
+**Demo:** https://app.somespai.net
+
 **Filosofia**: minimalisme radical, geolocalització, acord econòmic extern, mòbil-first.
 
 ---
