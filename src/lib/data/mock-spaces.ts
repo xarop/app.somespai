@@ -33,7 +33,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Traster sec i ben ventilat, accessible 24h amb codi. Cobertura de càmeres a tot l\'edifici. Ideal per a caixes, mobles petits i emmagatzematge estacional.',
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34611223344?text=Hola%21+He+vist+el+traster+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34611223344',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '2',
@@ -58,7 +62,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Sala insonoritzada per a músics i creadors. Equip de so bàsic inclòs. Llum natural durant els matins, ambient acollidor.',
     priceUnit: 'hour',
-    contactUrl: 'https://wa.me/34622334455?text=Hola%21+He+vist+la+sala+d%27assaig+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34622334455',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '3',
@@ -83,7 +91,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       "Petit oasi urbà amb glicines centenàries. Perfecte per a sopars íntims, sessions fotogràfiques o tallers a l'aire lliure.",
     priceUnit: 'day',
-    contactUrl: 'mailto:jardi.glicines@gmail.com',
+    phone: null,
+    emailContact: 'jardi.glicines@gmail.com',
+    whatsapp: null,
+    web: null,
+    contactDefault: 'email',
   },
   {
     id: '4',
@@ -108,7 +120,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Sala diàfana al cor de Gràcia, ideal per a tallers, presentacions o assajos. Cuina petita inclosa, projector disponible.',
     priceUnit: 'hour',
-    contactUrl: 'https://wa.me/34633445566?text=Hola%21+He+vist+l%27espai+polivalent+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34633445566',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '5',
@@ -133,7 +149,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Estudi compartit amb fibra simètrica, escriptoris regulables i sala de reunions petita. Comunitat tranquil·la, ideal per a treball concentrat.',
     priceUnit: 'month',
-    contactUrl: 'mailto:estudi.travessera@gmail.com',
+    phone: null,
+    emailContact: 'estudi.travessera@gmail.com',
+    whatsapp: null,
+    web: null,
+    contactDefault: 'email',
   },
   {
     id: '6',
@@ -158,7 +178,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Magatzem ampli amb pati per càrrega i descàrrega. Accés furgoneta. Bàscula disponible al lloc.',
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34644556677?text=Hola%21+He+vist+el+magatzem+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34644556677',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '7',
@@ -183,7 +207,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Sala lluminosa per a 6 persones amb vistes a la plaça. Pissarra magnètica, projector i cafè artesà inclòs.',
     priceUnit: 'hour',
-    contactUrl: 'mailto:sala.placacasol@gmail.com',
+    phone: null,
+    emailContact: 'sala.placacasol@gmail.com',
+    whatsapp: null,
+    web: null,
+    contactDefault: 'email',
   },
   {
     id: '8',
@@ -208,7 +236,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       "Parcel·la d'hort urbà amb eines compartides. Comunitat petita i amable, aigua de pou inclosa.",
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34655667788?text=Hola%21+He+vist+l%27hort+urb%C3%A0+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34655667788',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '9',
@@ -233,7 +265,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Saló acollidor amb terra de fusta. Cadires apilables, llum regulable. Ideal per a ioga, lectures, reunions petites.',
     priceUnit: 'hour',
-    contactUrl: 'https://wa.me/34666778899?text=Hola%21+He+vist+el+sal%C3%B3+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34666778899',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '10',
@@ -258,7 +294,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Garatge sec amb prestatgeries metàl·liques. Càmera de seguretat i accés 24/7 amb codi numèric.',
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34677889900?text=Hola%21+He+vist+el+garatge+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34677889900',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   // ── Sira10 — Carrer Verdi 85, Vila de Gràcia ─────────────────────────────
   {
@@ -284,7 +324,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Sala diàfana de 35 m² al cor de Gràcia. Ideal per a tallers, presentacions, reunions i esdeveniments petits. Projector Full HD, pissarra magnètica i cuina compartida inclosos. Espais compartits Sira10.',
     priceUnit: 'hour',
-    contactUrl: 'https://wa.me/34600100200?text=Hola%21+He+vist+la+sala+Sira10+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34600100200',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '17',
@@ -309,7 +353,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Lloc de coworking fix en espai privat. Comunitat creativa i tranquil·la. Part dels espais compartits Sira10 al carrer Verdi.',
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34600100200?text=Hola%21+He+vist+el+coworking+fix+Sira10+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34600100200',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '18',
@@ -334,7 +382,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Hot desk per dies o setmanes als espais Sira10. Sense compromís de permanència. Wifi ràpid, cafè i impressora compartits. Entorn tranquil al barri de Gràcia.',
     priceUnit: 'day',
-    contactUrl: 'https://wa.me/34600100200?text=Hola%21+He+vist+el+coworking+flexible+Sira10+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34600100200',
+    web: null,
+    contactDefault: 'whatsapp',
   },
 
   // ── Coworkings Barcelona ──────────────────────────────────────────────────
@@ -360,7 +412,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Betahaus és un dels coworkings més consolidats de Barcelona. Espai obert, comunitat internacional de freelancers, startups i creatius. Terrassa, sala d\'events i molt bona connexió.',
     priceUnit: 'month',
-    contactUrl: 'https://barcelona.betahaus.com/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://barcelona.betahaus.com/',
+    contactDefault: 'web',
   },
   {
     id: '20',
@@ -384,7 +440,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Aticco ofereix coworking flexible i oficines privades al districte tecnològic 22@. Accés 24/7, estudi de podcast, sales de reunions i una comunitat activa d\'empreses tech.',
     priceUnit: 'month',
-    contactUrl: 'https://aticco.com/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://aticco.com/',
+    contactDefault: 'web',
   },
   {
     id: '21',
@@ -408,7 +468,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Makers of Barcelona és un coworking al cor del 22@ amb gran terrassa exterior. Enfocament en disseny, tecnologia i innovació social.',
     priceUnit: 'month',
-    contactUrl: 'https://www.mob-barcelona.com/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://www.mob-barcelona.com/',
+    contactDefault: 'web',
   },
   {
     id: '22',
@@ -432,7 +496,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'OneCoWork Marina amb vistes al mar Mediterrani. Espai modern, ben equipat i amb accés 24/7. Comunitat diversa de professionals digitals.',
     priceUnit: 'month',
-    contactUrl: 'https://www.onecowork.com/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://www.onecowork.com/',
+    contactDefault: 'web',
   },
   {
     id: '23',
@@ -456,7 +524,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Utopicus és un coworking amb compromís mediambiental certificat. Disseny biofilíc, materials naturals i comunitat orientada a l\'impacte positiu.',
     priceUnit: 'month',
-    contactUrl: 'https://utopicus.es/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://utopicus.es/',
+    contactDefault: 'web',
   },
   {
     id: '24',
@@ -480,7 +552,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Coworking acollidor al centre de l\'Eixample. Tarifa diària, setmanal i mensual. Bon ambient per a professionals independents i petits equips.',
     priceUnit: 'month',
-    contactUrl: 'mailto:info@cloudcoworking.es',
+    phone: null,
+    emailContact: 'info@cloudcoworking.es',
+    whatsapp: null,
+    web: null,
+    contactDefault: 'email',
   },
   {
     id: '25',
@@ -504,7 +580,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Campus de coworking europeu al 22@. Talent Garden Barcelona acull centenars de professionals i startups. Sala d\'events fins a 200 persones, formació i xarxa de 30 ciutats europees.',
     priceUnit: 'month',
-    contactUrl: 'https://talentgarden.com/en/campus/barcelona/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://talentgarden.com/en/campus/barcelona/',
+    contactDefault: 'web',
   },
   {
     id: '26',
@@ -528,7 +608,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Crec és un coworking de proximitat a Sants, amb terrassa interior i ambient familiar. Ideal per a autònoms i micro-empreses que busquen sortir de casa sense pagar preus d\'Eixample.',
     priceUnit: 'month',
-    contactUrl: 'https://crec.cat/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://crec.cat/',
+    contactDefault: 'web',
   },
   {
     id: '27',
@@ -552,7 +636,11 @@ export const MOCK_SPACES: Space[] = [
     status: 'active',
     description: 'Spaces Diagonal és un coworking premium a l\'avinguda més emblemàtica de Barcelona. Recepció professional, sales de reunions d\'alt nivell i serveis corporatius complets.',
     priceUnit: 'month',
-    contactUrl: 'https://www.spacesworks.com/es/barcelona/',
+    phone: null,
+    emailContact: null,
+    whatsapp: null,
+    web: 'https://www.spacesworks.com/es/barcelona/',
+    contactDefault: 'web',
   },
 
   // ── Teià ─────────────────────────────────────────────────────────────────
@@ -579,7 +667,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Jardí privat de 120 m² envoltat d\'oliveres centenàries. Tranquil·litat absoluta amb vistes al Maresme. Perfecte per a celebracions íntimes, sessions fotogràfiques o retirs.',
     priceUnit: 'day',
-    contactUrl: 'https://wa.me/34688990011?text=Hola%21+He+vist+el+jard%C3%AD+amb+oliveres+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34688990011',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '12',
@@ -604,7 +696,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Traster en planta baixa de masia del segle XVIII. Parets de pedra que mantenen la temperatura constant. Accés amb vehicle, elèctricitat inclosa.',
     priceUnit: 'month',
-    contactUrl: 'https://wa.me/34699001122?text=Hola%21+He+vist+el+traster+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34699001122',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '13',
@@ -629,7 +725,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Estudi diàfan amb terrassa privada i vistes a la muntanya. Fibra simètrica, aire condicionat, cuina equipada. Silenci i aire net a 20 minuts de Barcelona.',
     priceUnit: 'month',
-    contactUrl: 'mailto:espai.teia@gmail.com',
+    phone: null,
+    emailContact: 'espai.teia@gmail.com',
+    whatsapp: null,
+    web: null,
+    contactDefault: 'email',
   },
   {
     id: '14',
@@ -654,7 +754,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Celler de pedra amb voltes originals del segle XIX. Temperatura natural de 15°C. Capacitat per a 40 persones, ideal per a tastings de vi, sopars de gala i presentacions exclusives.',
     priceUnit: 'hour',
-    contactUrl: 'https://wa.me/34611223300?text=Hola%21+He+vist+el+celler+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34611223300',
+    web: null,
+    contactDefault: 'whatsapp',
   },
   {
     id: '15',
@@ -679,7 +783,11 @@ export const MOCK_SPACES: Space[] = [
     description:
       'Terrassa elevada amb panoràmica de 180° sobre el Mediterrani i el Maresme. Mobiliari de jardí inclòs, zona de BBQ, accés a piscina exterior. Postes de sol inigualables.',
     priceUnit: 'day',
-    contactUrl: 'https://wa.me/34622334400?text=Hola%21+He+vist+la+terrassa+a+Somespai+i+m%27agradaria+saber-ne+m%C3%A9s.',
+    phone: null,
+    emailContact: null,
+    whatsapp: '+34622334400',
+    web: null,
+    contactDefault: 'whatsapp',
   },
 ];
 

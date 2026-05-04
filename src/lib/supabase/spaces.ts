@@ -26,7 +26,11 @@ function rowToSpace(row: Record<string, any>): Space {
     reviewsCount: row.reviews_count ?? 0,
     status: row.status ?? 'active',
     priceUnit: row.price_unit ?? 'month',
-    contactUrl: row.contact_url ?? null,
+    phone: row.phone ?? null,
+    emailContact: row.email_contact ?? null,
+    whatsapp: row.whatsapp ?? null,
+    web: row.web ?? null,
+    contactDefault: row.contact_default ?? 'web',
   };
 }
 

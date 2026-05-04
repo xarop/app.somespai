@@ -19,7 +19,11 @@ const importRowSchema = z.object({
   amenities: z.array(z.string()).default([]),
   photos: z.array(z.string()).default([]),
   is_featured: z.boolean().default(false),
-  contact_url: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  email_contact: z.string().nullable().optional(),
+  whatsapp: z.string().nullable().optional(),
+  web: z.string().nullable().optional(),
+  contact_default: z.enum(['phone', 'whatsapp', 'email', 'web']).default('web'),
   status: z.enum(['active', 'paused', 'removed']).default('active'),
 });
 
@@ -66,7 +70,11 @@ export async function POST(request: NextRequest) {
         amenities: r.amenities,
         photos: r.photos,
         is_featured: r.is_featured,
-        contact_url: r.contact_url ?? null,
+        phone: r.phone ?? null,
+        email_contact: r.email_contact ?? null,
+        whatsapp: r.whatsapp ?? null,
+        web: r.web ?? null,
+        contact_default: r.contact_default,
         status: r.status,
       });
     }

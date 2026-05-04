@@ -26,7 +26,11 @@ export const spaceSchema = z.object({
   reviewsCount: z.number().int().nonnegative().default(0),
   status: z.enum(['active', 'paused', 'removed']).default('active'),
   priceUnit: z.enum(['month', 'day', 'hour']).default('month'),
-  contactUrl: z.string().nullable().default(null),
+  phone: z.string().nullable().default(null),
+  emailContact: z.string().nullable().default(null),
+  whatsapp: z.string().nullable().default(null),
+  web: z.string().nullable().default(null),
+  contactDefault: z.enum(['phone', 'whatsapp', 'email', 'web']).default('web'),
 });
 
 export type Space = z.infer<typeof spaceSchema>;

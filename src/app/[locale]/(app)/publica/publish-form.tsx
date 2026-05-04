@@ -197,11 +197,38 @@ export function PublishForm() {
       {/* ── Contact ── */}
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionContact')}</legend>
+
         <label className="field">
-          <span className="field__label">{t('fieldContactUrl')}</span>
-          <input name="contact_url" type="text" className="field__input"
-            placeholder={t('fieldContactUrlPlaceholder')} />
+          <span className="field__label">{t('fieldWeb')}</span>
+          <input name="web" type="url" className="field__input" placeholder="https://" />
         </label>
+
+        <label className="field">
+          <span className="field__label">{t('fieldPhone')}</span>
+          <input name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" />
+        </label>
+
+        <label className="field">
+          <span className="field__label">{t('fieldEmail')}</span>
+          <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
+        </label>
+
+        <label className="field">
+          <span className="field__label">{t('fieldWhatsapp')}</span>
+          <input name="whatsapp" type="tel" className="field__input" placeholder="+34 600 000 000" />
+        </label>
+
+        <div className="field">
+          <span className="field__label">{t('contactDefault')}</span>
+          <div className="type-picker">
+            {(['web', 'phone', 'email', 'whatsapp'] as const).map(opt => (
+              <label key={opt} className="type-option">
+                <input type="radio" name="contact_default" value={opt} defaultChecked={opt === 'web'} />
+                <span>{t(`contact_${opt}` as Parameters<typeof t>[0])}</span>
+              </label>
+            ))}
+          </div>
+        </div>
       </fieldset>
 
       <div className="form-actions">

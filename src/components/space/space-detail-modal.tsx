@@ -117,6 +117,10 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
 
   const isVerified = (space as Space & { ownerVerified?: boolean }).ownerVerified;
 
+  const whatsappHref = space.whatsapp
+    ? `https://wa.me/${space.whatsapp.replace(/[^\d]/g, '')}`
+    : null;
+
   return (
     <dialog ref={dialogRef} data-modal aria-labelledby="space-title">
       <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
@@ -182,18 +186,71 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
         )}
 
         <div className="detail__actions">
-          <button type="button" data-variant="primary" disabled={!space.contactUrl}
-            onClick={() => {
-              if (!space.contactUrl) return;
-              if (space.contactUrl.startsWith('mailto:')) window.location.href = space.contactUrl;
-              else window.open(space.contactUrl, '_blank', 'noopener,noreferrer');
-            }}>
-            <Icon name="user" size={16} />{t('detail.contact')}
-          </button>
-          <a href={`https://www.google.com/maps?q=${space.lat},${space.lng}`}
-            target="_blank" rel="noopener noreferrer" data-variant="ghost" className="detail__action-link">
-            <Icon name="pin" size={16} />{t('detail.location')}
-          </a>
+          {(space.address || space.city) && (
+            <a
+              href={`https://www.google.com/maps?q=${space.lat},${space.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-variant="ghost"
+              className="detail__action-link"
+            >
+              <Icon name="pin" size={16} />
+              {[space.address, space.city].filter(Boolean).join(', ')}
+            </a>
+          )}
+
+          {space.web && (
+            <a
+              href={space.web}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-variant={space.contactDefault === 'web' ? 'primary' : 'ghost'}
+              className="detail__action-link"
+              style={space.contactDefault === 'web' ? { fontWeight: 'bold' } : undefined}
+            >
+              <Icon name="globe" size={16} />
+              {t('detail.web')}
+            </a>
+          )}
+
+          {space.phone && (
+            <a
+              href={`tel:${space.phone}`}
+              data-variant={space.contactDefault === 'phone' ? 'primary' : 'ghost'}
+              className="detail__action-link"
+              style={space.contactDefault === 'phone' ? { fontWeight: 'bold' } : undefined}
+            >
+              <Icon name="phone" size={16} />
+              {t('detail.phone')}
+            </a>
+          )}
+
+          {space.emailContact && (
+            <a
+              href={`mailto:${space.emailContact}`}
+              data-variant={space.contactDefault === 'email' ? 'primary' : 'ghost'}
+              className="detail__action-link"
+              style={space.contactDefault === 'email' ? { fontWeight: 'bold' } : undefined}
+            >
+              <Icon name="mail" size={16} />
+              {t('detail.email')}
+            </a>
+          )}
+
+          {space.whatsapp && whatsappHref && (
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-variant={space.contactDefault === 'whatsapp' ? 'primary' : 'ghost'}
+              className="detail__action-link"
+              style={space.contactDefault === 'whatsapp' ? { fontWeight: 'bold' } : undefined}
+            >
+              <Icon name="share" size={16} />
+              {t('detail.whatsapp')}
+            </a>
+          )}
+
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />{t('detail.share')}
           </button>

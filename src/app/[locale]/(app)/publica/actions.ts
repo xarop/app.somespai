@@ -25,7 +25,11 @@ export async function createSpaceAction(
   const city = (formData.get('city') as string)?.trim() || 'Barcelona';
   const lat = parseFloat(formData.get('lat') as string);
   const lng = parseFloat(formData.get('lng') as string);
-  const contactUrl = (formData.get('contact_url') as string)?.trim() || null;
+  const phone = (formData.get('phone') as string)?.trim() || null;
+  const emailContact = (formData.get('email_contact') as string)?.trim() || null;
+  const whatsapp = (formData.get('whatsapp') as string)?.trim() || null;
+  const web = (formData.get('web') as string)?.trim() || null;
+  const contactDefault = (formData.get('contact_default') as string) || 'web';
   const amenities = formData.getAll('amenities') as string[];
 
   if (isNaN(lat) || isNaN(lng)) return 'Invalid coordinates — geocode the address first';
@@ -73,7 +77,11 @@ export async function createSpaceAction(
       location: `SRID=4326;POINT(${lng} ${lat})`,
       amenities,
       photos,
-      contact_url: contactUrl,
+      phone,
+      email_contact: emailContact,
+      whatsapp,
+      web,
+      contact_default: contactDefault,
       status: 'active',
     })
     .select('slug')
