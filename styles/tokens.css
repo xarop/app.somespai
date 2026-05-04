@@ -23,7 +23,7 @@
     /* ── Accent ───────────────────────────────────────────────────────────── */
     --accent:      #c45a2c;
     --accent-soft: #e8a583;
-    --gold:        #b8893a;
+    --gold:        #c8a400;
 
     /* ── Status ───────────────────────────────────────────────────────────── */
     --success: #4a7c2e;
@@ -47,9 +47,9 @@
     --type-room-soft:      #d4806f;
     --type-room-tint:      #f0d0ca;
 
-    --type-featured:       #b8893a;
-    --type-featured-soft:  #d4aa60;
-    --type-featured-tint:  #f5edd0;
+    --type-featured:       #c8a400;
+    --type-featured-soft:  #e8cc5a;
+    --type-featured-tint:  #fef3c0;
 
     /* ── Glass (border only — no shadows) ────────────────────────────────── */
     --glass:        rgba(255, 252, 247, 0.72);
