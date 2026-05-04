@@ -9,7 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "export": "next build",
-    "postexport": "cp ./out/ca.html ./out/index.html || copy .\\out\\ca.html .\\out\\index.html",
+    "postexport": "node ./scripts/ghpages-redirect.js",
     "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out"
   },
   "dependencies": {
