@@ -134,7 +134,7 @@
   }
 
   .iconbtn[aria-pressed="true"] {
-    color: var(--primary);
+    color: var(--primary-ink);
   }
 
   /* ── Buttons by variant — element-agnostic so <a> and <button> both work ── */
@@ -198,6 +198,7 @@
     right: var(--s-3);
     z-index: 40;
     display: flex;
+    align-items: center;
     gap: var(--s-2);
     overflow-x: auto;
     overflow-y: hidden;
@@ -251,7 +252,7 @@
     font-weight: 700;
     font-style: italic;
     line-height: 1;
-    color: #fff;
+    color: var(--primary-ink);
     background: var(--primary);
     border-color: var(--primary);
     justify-content: center;
@@ -327,7 +328,7 @@
     place-items: center;
     background: var(--bg);
     border-radius: var(--r-sm);
-    color: var(--primary);
+    color: var(--primary-ink);
     flex-shrink: 0;
   }
 
@@ -656,12 +657,12 @@
   }
 
   .langmenu button[aria-pressed="true"] {
-    color: var(--primary);
+    color: var(--primary-ink);
     font-weight: 600;
   }
 
   .langmenu button[aria-pressed="true"] svg {
-    color: var(--primary);
+    color: var(--primary-ink);
     margin-left: auto;
   }
 

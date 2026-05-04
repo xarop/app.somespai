@@ -15,9 +15,10 @@
     --ink-mute:  #8a8276;
 
     /* ── Brand ────────────────────────────────────────────────────────────── */
-    --primary:      #3d4f29;
-    --primary-soft: #6b8053;
-    --primary-tint: #d8e0cc;
+    --primary:      #6FCF97;
+    --primary-soft: #a5dfc0;
+    --primary-tint: #dff2ea;
+    --primary-ink:  #1a4a2e;
 
     /* ── Accent ───────────────────────────────────────────────────────────── */
     --accent:      #c45a2c;
