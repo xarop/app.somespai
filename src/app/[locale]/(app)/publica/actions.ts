@@ -30,6 +30,9 @@ export async function createSpaceAction(
 
   if (isNaN(lat) || isNaN(lng)) return 'Invalid coordinates — geocode the address first';
 
+  // Ensure profile exists (defensive — trigger handles new signups automatically)
+  await supabase.from('profiles').upsert({ id: user.id, display_name: user.email }, { onConflict: 'id', ignoreDuplicates: true });
+
   // Upload photos
   const photos: string[] = [];
   const files = formData.getAll('photos') as File[];
