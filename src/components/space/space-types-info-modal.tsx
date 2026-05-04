@@ -78,20 +78,14 @@ export function SpaceTypesInfoModal({ open, onClose, onSelectType }: SpaceTypesI
                   alignItems: 'flex-start',
                   padding: 'var(--s-3)',
                   borderRadius: 'var(--r-md)',
-                  border: '1px solid var(--glass-border)',
-                  background: 'var(--glass-strong)',
+                  border: `1px solid ${TYPE_COLORS[id].main}40`,
+                  background: TYPE_COLORS[id].tint,
                   textAlign: 'left',
                   cursor: 'pointer',
-                  transition: 'background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)',
+                  transition: 'filter var(--t-fast) var(--ease)',
                 }}
-                onMouseEnter={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = 'var(--primary-tint)';
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--primary)';
-                }}
-                onMouseLeave={e => {
-                  (e.currentTarget as HTMLButtonElement).style.background = 'var(--glass-strong)';
-                  (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--glass-border)';
-                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(0.95)'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.filter = '';               }}
               >
                 <span style={{
                   flexShrink: 0,
@@ -100,9 +94,8 @@ export function SpaceTypesInfoModal({ open, onClose, onSelectType }: SpaceTypesI
                   display: 'grid',
                   placeItems: 'center',
                   borderRadius: 'var(--r-sm)',
-                  background: TYPE_COLORS[id].tint,
-                  color: TYPE_COLORS[id].main,
-                  border: '1px solid var(--glass-border)',
+                  background: TYPE_COLORS[id].main,
+                  color: '#fff',
                 }}>
                   <Icon name={iconName} size={20} />
                 </span>
