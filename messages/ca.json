@@ -14,10 +14,10 @@
   },
   "filter": {
     "all": "Tots",
-    "storage": "Traster",
-    "workspace": "Estudi",
-    "garden": "Exterior",
-    "room": "Sala",
+    "storage": "Trasters",
+    "workspace": "Estudis",
+    "garden": "Exteriors",
+    "room": "Sales",
     "featured": "Destacats"
   },
   "sheet": {
@@ -98,6 +98,26 @@
     "campus": "Campus",
     "cellar": "Cava",
     "soundproofed": "Insonoritzada"
+  },
+  "typeInfo": {
+    "title": "Tipus d'espais",
+    "close": "Tancar",
+    "storage": {
+      "label": "Trasters",
+      "desc": "Espais tancats per guardar objectes, materials o mercaderia. Accés privat i segur."
+    },
+    "workspace": {
+      "label": "Estudis",
+      "desc": "Taules i escriptoris en espais compartits o privats, amb connexió i infraestructura de treball."
+    },
+    "garden": {
+      "label": "Exteriors",
+      "desc": "Patis, terrasses, jardins i espais a l'aire lliure per a activitats, events o descans."
+    },
+    "room": {
+      "label": "Sales",
+      "desc": "Sales polivalents per a reunions, assajos, fotografia, formació o petits events."
+    }
   },
   "lang": {
     "label": "Idioma"

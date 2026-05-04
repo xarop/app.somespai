@@ -242,6 +242,17 @@
     height: 16px;
   }
 
+  .chip--info {
+    padding: var(--s-2);
+    color: var(--ink-mute);
+    border-style: dashed;
+  }
+
+  .chip--info:hover {
+    color: var(--ink);
+    border-style: solid;
+  }
+
   /* ── Map ──────────────────────────────────────────────────────────────── */
   .mapwrap {
     position: relative;

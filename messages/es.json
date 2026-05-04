@@ -14,10 +14,10 @@
   },
   "filter": {
     "all": "Todos",
-    "storage": "Trastero",
-    "workspace": "Estudio",
+    "storage": "Trasteros",
+    "workspace": "Estudios",
     "garden": "Exterior",
-    "room": "Sala",
+    "room": "Salas",
     "featured": "Destacados"
   },
   "sheet": {
@@ -98,6 +98,26 @@
     "campus": "Campus",
     "cellar": "Bodega",
     "soundproofed": "Insonorizada"
+  },
+  "typeInfo": {
+    "title": "Tipos de espacio",
+    "close": "Cerrar",
+    "storage": {
+      "label": "Trasteros",
+      "desc": "Espacios cerrados para guardar objetos, materiales o mercancía. Acceso privado y seguro."
+    },
+    "workspace": {
+      "label": "Escritorios",
+      "desc": "Mesas y escritorios en espacios compartidos o privados, con conectividad e infraestructura."
+    },
+    "garden": {
+      "label": "Exteriores",
+      "desc": "Patios, terrazas, jardines y espacios al aire libre para actividades, eventos o descanso."
+    },
+    "room": {
+      "label": "Salas",
+      "desc": "Salas polivalentes para reuniones, ensayos, fotografía, formación o pequeños eventos."
+    }
   },
   "lang": {
     "label": "Idioma"

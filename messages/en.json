@@ -15,9 +15,9 @@
   "filter": {
     "all": "All",
     "storage": "Storage",
-    "workspace": "Workspace",
+    "workspace": "Workspaces",
     "garden": "Outdoor",
-    "room": "Room",
+    "room": "Rooms",
     "featured": "Featured"
   },
   "sheet": {
@@ -98,6 +98,26 @@
     "campus": "Campus",
     "cellar": "Wine cellar",
     "soundproofed": "Soundproofed"
+  },
+  "typeInfo": {
+    "title": "Space types",
+    "close": "Close",
+    "storage": {
+      "label": "Storage",
+      "desc": "Closed spaces to store goods, materials or equipment. Private and secure access."
+    },
+    "workspace": {
+      "label": "Workspaces",
+      "desc": "Desks and offices in shared or private settings, with connectivity and work infrastructure."
+    },
+    "garden": {
+      "label": "Outdoors",
+      "desc": "Patios, terraces, gardens and open-air spaces for activities, events or relaxation."
+    },
+    "room": {
+      "label": "Rooms",
+      "desc": "Multipurpose rooms for meetings, rehearsals, photography, training or small events."
+    }
   },
   "lang": {
     "label": "Language"

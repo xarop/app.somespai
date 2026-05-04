@@ -1,8 +1,10 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import type { SpaceType } from '@/lib/schemas/space';
 import { Icon, type IconName } from '@/components/ui/icon';
+import { SpaceTypesInfoModal } from './space-types-info-modal';
 
 export type FilterId = 'all' | SpaceType | 'featured';
 
@@ -26,21 +28,35 @@ const FILTERS: ReadonlyArray<{
 
 export function FilterBar({ active, onChange }: FilterBarProps) {
   const t = useTranslations();
+  const [infoOpen, setInfoOpen] = useState(false);
 
   return (
-    <nav className="filterbar" aria-label="Filters">
-      {FILTERS.map((f) => (
+    <>
+      <nav className="filterbar" aria-label="Filters">
         <button
-          key={f.id}
           type="button"
-          className="chip"
-          aria-pressed={active === f.id}
-          onClick={() => onChange(f.id)}
+          className="chip chip--info"
+          aria-label={t('typeInfo.title')}
+          onClick={() => setInfoOpen(true)}
         >
-          {f.iconName && <Icon name={f.iconName} size={16} />}
-          <span>{t(f.labelKey)}</span>
+          <Icon name="info" size={16} />
         </button>
-      ))}
-    </nav>
+
+        {FILTERS.map((f) => (
+          <button
+            key={f.id}
+            type="button"
+            className="chip"
+            aria-pressed={active === f.id}
+            onClick={() => onChange(f.id)}
+          >
+            {f.iconName && <Icon name={f.iconName} size={16} />}
+            <span>{t(f.labelKey)}</span>
+          </button>
+        ))}
+      </nav>
+
+      <SpaceTypesInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
+    </>
   );
 }
