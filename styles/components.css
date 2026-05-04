@@ -367,6 +367,11 @@
     height: 16px;
   }
 
+  .chip[data-type="workspace"]:not([aria-pressed="true"]) svg { color: var(--type-workspace); }
+  .chip[data-type="garden"]:not([aria-pressed="true"])    svg { color: var(--type-garden);    }
+  .chip[data-type="storage"]:not([aria-pressed="true"])   svg { color: var(--type-storage);   }
+  .chip[data-type="room"]:not([aria-pressed="true"])      svg { color: var(--type-room);      }
+
   @media (max-width: 639px) {
     .filterbar .chip:has(svg) span {
       display: none;

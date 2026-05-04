@@ -12,6 +12,13 @@ const TYPES: ReadonlyArray<{ id: SpaceType; iconName: IconName }> = [
   { id: 'room', iconName: 'room' },
 ];
 
+const TYPE_COLORS: Record<SpaceType, { tint: string; main: string }> = {
+  workspace: { tint: 'var(--type-workspace-tint)', main: 'var(--type-workspace)' },
+  garden:    { tint: 'var(--type-garden-tint)',    main: 'var(--type-garden)'    },
+  storage:   { tint: 'var(--type-storage-tint)',   main: 'var(--type-storage)'   },
+  room:      { tint: 'var(--type-room-tint)',       main: 'var(--type-room)'      },
+};
+
 interface SpaceTypesInfoModalProps {
   open: boolean;
   onClose: () => void;
@@ -93,7 +100,8 @@ export function SpaceTypesInfoModal({ open, onClose, onSelectType }: SpaceTypesI
                   display: 'grid',
                   placeItems: 'center',
                   borderRadius: 'var(--r-sm)',
-                  background: 'var(--bg)',
+                  background: TYPE_COLORS[id].tint,
+                  color: TYPE_COLORS[id].main,
                   border: '1px solid var(--glass-border)',
                 }}>
                   <Icon name={iconName} size={20} />
