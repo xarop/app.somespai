@@ -83,6 +83,7 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 |--------|-----------|
 | `0001_init.sql` | Esquema inicial: `profiles`, `spaces`, `reviews`, `favorites`, RLS, RPC `nearby_spaces` |
 | `0002_add_space_extra_fields.sql` | Afegeix `price_unit`, `contact_url`, `rating`, `reviews_count`, columnes generades `lat`/`lng` |
+| `0003_storage_photos.sql` | Bucket `space-photos` (públic, 5 MB, imatges) + RLS: lectura pública, pujada/eliminació per propietari |
 
 ---
 
@@ -177,14 +178,26 @@ Totes les queries van per `src/lib/supabase/spaces.ts`. Cap component de client 
 - ✅ Postgres + PostGIS operatiu en local i en cloud
 - ✅ RLS configurat (default deny, políiques per taula)
 
-## Phase 2 — pendent
+## Phase 2 — fet
 
-- Auth amb magic-link + perfil d'usuari
-- Formulari de creació d'espai (`/publica`) amb pujada de fotos
-- Ressenyes + preferits (RLS)
-- Web Share API a la pàgina de detall
-- Endpoint d'importació admin (`/api/admin/import`)
-- UI premium (espais destacats, badge verificat)
+- ✅ Auth amb magic-link (`signInWithOtp`) + callback route + sessió persistent via middleware
+- ✅ TopNav reescrit: botó "Publica un espai" sempre visible; resta d'accions dins hamburger menu
+- ✅ Formulari de creació d'espai (`/publica`): tipus, preu, mida, ubicació (geocodificació Nominatim), amenitats, fotos, contacte
+- ✅ Pujada de fotos a Supabase Storage (`space-photos` bucket, carpeta per usuari, 5 MB)
+- ✅ Preferits persistits a DB amb optimistic update
+- ✅ Ressenyes: llistat + formulari amb star rating (StarRating component)
+- ✅ Web Share API a la pàgina de detall
+- ✅ Endpoint d'importació admin: `POST /api/admin/import` (autenticació per service role key)
+- ✅ Badge verificat per espais amb `ownerVerified`
+
+**Endpoint d'importació:**
+
+```bash
+curl -X POST https://app.somespai.net/api/admin/import \
+  -H "Authorization: Bearer <SUPABASE_SERVICE_ROLE_KEY>" \
+  -H "Content-Type: application/json" \
+  -d '[{"slug":"...", "title":"...", ...}]'
+```
 
 ---
 
