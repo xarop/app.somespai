@@ -6,10 +6,10 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import type { SpaceType } from '@/lib/schemas/space';
 
 const TYPES: ReadonlyArray<{ id: SpaceType; iconName: IconName }> = [
-  { id: 'storage', iconName: 'storage' },
   { id: 'workspace', iconName: 'workspace' },
   { id: 'garden', iconName: 'garden' },
   { id: 'room', iconName: 'room' },
+  { id: 'storage', iconName: 'storage' },
 ];
 
 const TYPE_COLORS: Record<SpaceType, { tint: string; main: string }> = {
