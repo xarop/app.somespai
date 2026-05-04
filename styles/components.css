@@ -243,6 +243,12 @@
     height: 16px;
   }
 
+  @media (max-width: 639px) {
+    .filterbar .chip:has(svg) span {
+      display: none;
+    }
+  }
+
   .chip--info {
     width: 36px;
     height: 36px;
