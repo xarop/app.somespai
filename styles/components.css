@@ -362,11 +362,30 @@
     border-color: var(--ink);
   }
 
-  .chip[data-type="workspace"][aria-pressed="true"] { background: var(--type-workspace); border-color: var(--type-workspace); }
-  .chip[data-type="garden"][aria-pressed="true"]    { background: var(--type-garden);    border-color: var(--type-garden);    }
-  .chip[data-type="storage"][aria-pressed="true"]   { background: var(--type-storage);   border-color: var(--type-storage);   }
-  .chip[data-type="room"][aria-pressed="true"]      { background: var(--type-room);      border-color: var(--type-room);      }
-  .chip[data-type="featured"][aria-pressed="true"]  { background: var(--type-featured);  border-color: var(--type-featured);  }
+  .chip[data-type="workspace"][aria-pressed="true"] {
+    background: var(--type-workspace);
+    border-color: var(--type-workspace);
+  }
+
+  .chip[data-type="garden"][aria-pressed="true"] {
+    background: var(--type-garden);
+    border-color: var(--type-garden);
+  }
+
+  .chip[data-type="storage"][aria-pressed="true"] {
+    background: var(--type-storage);
+    border-color: var(--type-storage);
+  }
+
+  .chip[data-type="room"][aria-pressed="true"] {
+    background: var(--type-room);
+    border-color: var(--type-room);
+  }
+
+  .chip[data-type="featured"][aria-pressed="true"] {
+    background: var(--type-featured);
+    border-color: var(--type-featured);
+  }
 
   .chip svg {
     width: 16px;
@@ -382,11 +401,30 @@
     flex-shrink: 0;
   }
 
-  .chip[data-type="workspace"] .chip__icon { background: var(--type-workspace-tint); color: var(--type-workspace); }
-  .chip[data-type="garden"]    .chip__icon { background: var(--type-garden-tint);    color: var(--type-garden);    }
-  .chip[data-type="storage"]   .chip__icon { background: var(--type-storage-tint);   color: var(--type-storage);   }
-  .chip[data-type="room"]      .chip__icon { background: var(--type-room-tint);       color: var(--type-room);      }
-  .chip[data-type="featured"]  .chip__icon { background: var(--type-featured-tint);  color: var(--type-featured);  }
+  .chip[data-type="workspace"] .chip__icon {
+    background: var(--type-workspace-tint);
+    color: var(--type-workspace);
+  }
+
+  .chip[data-type="garden"] .chip__icon {
+    background: var(--type-garden-tint);
+    color: var(--type-garden);
+  }
+
+  .chip[data-type="storage"] .chip__icon {
+    background: var(--type-storage-tint);
+    color: var(--type-storage);
+  }
+
+  .chip[data-type="room"] .chip__icon {
+    background: var(--type-room-tint);
+    color: var(--type-room);
+  }
+
+  .chip[data-type="featured"] .chip__icon {
+    background: var(--type-featured-tint);
+    color: var(--type-featured);
+  }
 
   .chip[aria-pressed="true"] .chip__icon {
     background: rgba(255, 252, 247, 0.15);
@@ -394,7 +432,7 @@
   }
 
   @media (max-width: 639px) {
-    .filterbar .chip:has(svg) span {
+    .filterbar .chip:has(svg) span:not(.chip__icon) {
       display: none;
     }
   }
@@ -499,10 +537,25 @@
   }
 
   /* Marker icon color per type */
-  .marker[data-type="workspace"] .marker__icon { background: var(--type-workspace-tint); color: var(--type-workspace); }
-  .marker[data-type="garden"]    .marker__icon { background: var(--type-garden-tint);    color: var(--type-garden);    }
-  .marker[data-type="storage"]   .marker__icon { background: var(--type-storage-tint);   color: var(--type-storage);   }
-  .marker[data-type="room"]      .marker__icon { background: var(--type-room-tint);       color: var(--type-room);      }
+  .marker[data-type="workspace"] .marker__icon {
+    background: var(--type-workspace-tint);
+    color: var(--type-workspace);
+  }
+
+  .marker[data-type="garden"] .marker__icon {
+    background: var(--type-garden-tint);
+    color: var(--type-garden);
+  }
+
+  .marker[data-type="storage"] .marker__icon {
+    background: var(--type-storage-tint);
+    color: var(--type-storage);
+  }
+
+  .marker[data-type="room"] .marker__icon {
+    background: var(--type-room-tint);
+    color: var(--type-room);
+  }
 
   .marker[data-featured="true"] .marker__pin::after {
     content: '';
@@ -635,14 +688,17 @@
   .detail__hero[data-type="workspace"] {
     background: linear-gradient(135deg, var(--type-workspace-soft) 0%, var(--type-workspace) 100%);
   }
+
   .card__media[data-type="garden"],
   .detail__hero[data-type="garden"] {
     background: linear-gradient(135deg, var(--type-garden-soft) 0%, var(--type-garden) 100%);
   }
+
   .card__media[data-type="storage"],
   .detail__hero[data-type="storage"] {
     background: linear-gradient(135deg, var(--type-storage-soft) 0%, var(--type-storage) 100%);
   }
+
   .card__media[data-type="room"],
   .detail__hero[data-type="room"] {
     background: linear-gradient(135deg, var(--type-room-soft) 0%, var(--type-room) 100%);
@@ -650,13 +706,24 @@
 
   /* Type badge icon color */
   .card__media[data-type="workspace"] .card__type-badge,
-  .detail__hero[data-type="workspace"] .detail__type-badge { color: var(--type-workspace); }
+  .detail__hero[data-type="workspace"] .detail__type-badge {
+    color: var(--type-workspace);
+  }
+
   .card__media[data-type="garden"] .card__type-badge,
-  .detail__hero[data-type="garden"] .detail__type-badge   { color: var(--type-garden);    }
+  .detail__hero[data-type="garden"] .detail__type-badge {
+    color: var(--type-garden);
+  }
+
   .card__media[data-type="storage"] .card__type-badge,
-  .detail__hero[data-type="storage"] .detail__type-badge  { color: var(--type-storage);   }
+  .detail__hero[data-type="storage"] .detail__type-badge {
+    color: var(--type-storage);
+  }
+
   .card__media[data-type="room"] .card__type-badge,
-  .detail__hero[data-type="room"] .detail__type-badge     { color: var(--type-room);      }
+  .detail__hero[data-type="room"] .detail__type-badge {
+    color: var(--type-room);
+  }
 
   .card__photo {
     position: absolute;
@@ -687,13 +754,12 @@
     left: var(--s-3);
     width: 28px;
     height: 28px;
-    border-radius: 50%;
     background: rgba(255, 252, 247, 0.88);
     backdrop-filter: blur(6px);
     display: grid;
     place-items: center;
     color: var(--ink);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
   }
 
   .detail__type-badge {
@@ -1378,7 +1444,7 @@
     transition: all var(--t-fast) var(--ease);
   }
 
-  .type-option input:checked + span {
+  .type-option input:checked+span {
     border-color: var(--primary);
     background: var(--primary-tint);
     color: var(--primary-ink);
