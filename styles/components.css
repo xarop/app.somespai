@@ -472,6 +472,12 @@
     height: 14px;
   }
 
+  /* Marker icon color per type */
+  .marker[data-type="workspace"] .marker__icon { background: var(--type-workspace-tint); color: var(--type-workspace); }
+  .marker[data-type="garden"]    .marker__icon { background: var(--type-garden-tint);    color: var(--type-garden);    }
+  .marker[data-type="storage"]   .marker__icon { background: var(--type-storage-tint);   color: var(--type-storage);   }
+  .marker[data-type="room"]      .marker__icon { background: var(--type-room-tint);       color: var(--type-room);      }
+
   .marker[data-featured="true"] .marker__pin::after {
     content: '';
     position: absolute;
@@ -599,21 +605,32 @@
     overflow: hidden;
   }
 
-  .card__media[data-type="storage"] {
-    background: linear-gradient(135deg, #e8d9b8 0%, #c9b288 100%);
+  .card__media[data-type="workspace"],
+  .detail__hero[data-type="workspace"] {
+    background: linear-gradient(135deg, var(--type-workspace-soft) 0%, var(--type-workspace) 100%);
+  }
+  .card__media[data-type="garden"],
+  .detail__hero[data-type="garden"] {
+    background: linear-gradient(135deg, var(--type-garden-soft) 0%, var(--type-garden) 100%);
+  }
+  .card__media[data-type="storage"],
+  .detail__hero[data-type="storage"] {
+    background: linear-gradient(135deg, var(--type-storage-soft) 0%, var(--type-storage) 100%);
+  }
+  .card__media[data-type="room"],
+  .detail__hero[data-type="room"] {
+    background: linear-gradient(135deg, var(--type-room-soft) 0%, var(--type-room) 100%);
   }
 
-  .card__media[data-type="workspace"] {
-    background: linear-gradient(135deg, #b6c4a3 0%, #6b8053 100%);
-  }
-
-  .card__media[data-type="garden"] {
-    background: linear-gradient(135deg, #c8d8b3 0%, #8aa66f 100%);
-  }
-
-  .card__media[data-type="room"] {
-    background: linear-gradient(135deg, #e8a583 0%, #c45a2c 100%);
-  }
+  /* Type badge icon color */
+  .card__media[data-type="workspace"] .card__type-badge,
+  .detail__hero[data-type="workspace"] .detail__type-badge { color: var(--type-workspace); }
+  .card__media[data-type="garden"] .card__type-badge,
+  .detail__hero[data-type="garden"] .detail__type-badge   { color: var(--type-garden);    }
+  .card__media[data-type="storage"] .card__type-badge,
+  .detail__hero[data-type="storage"] .detail__type-badge  { color: var(--type-storage);   }
+  .card__media[data-type="room"] .card__type-badge,
+  .detail__hero[data-type="room"] .detail__type-badge     { color: var(--type-room);      }
 
   .card__photo {
     position: absolute;

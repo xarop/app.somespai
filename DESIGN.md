@@ -65,6 +65,17 @@ All colors live as CSS custom properties on `:root`. Never hardcode hex values i
 
 **Usage rule**: 70% bg/ink, 20% primary, 8% bg-deep accents, 2% terracotta. Terracotta is precious — use it for one moment per screen.
 
+### Space type colors
+
+Each type has three levels — main, soft (gradient start), tint (badge/icon bg). Applied to `.card__media[data-type]`, `.detail__hero[data-type]`, map markers, and type badges.
+
+| Type | Token prefix | Main | Soft | Tint |
+|---|---|---|---|---|
+| workspace | `--type-workspace` | `#3d6fa8` blue | `#7fb0d4` | `#d0e4f2` |
+| garden | `--type-garden` | `#3d7a4a` green | `#7fba92` | `#cde8d4` |
+| storage | `--type-storage` | `#c4782c` orange | `#e8b87a` | `#f5e0c0` |
+| room | `--type-room` | `#b54336` red | `#d4806f` | `#f0d0ca` |
+
 ---
 
 ## 4. Typography — Recursive

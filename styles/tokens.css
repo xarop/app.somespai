@@ -30,6 +30,23 @@
     --warning: #b8893a;
     --danger:  #b54336;
 
+    /* ── Space types ─────────────────────────────────────────────────────── */
+    --type-workspace:      #3d6fa8;
+    --type-workspace-soft: #7fb0d4;
+    --type-workspace-tint: #d0e4f2;
+
+    --type-garden:         #3d7a4a;
+    --type-garden-soft:    #7fba92;
+    --type-garden-tint:    #cde8d4;
+
+    --type-storage:        #c4782c;
+    --type-storage-soft:   #e8b87a;
+    --type-storage-tint:   #f5e0c0;
+
+    --type-room:           #b54336;
+    --type-room-soft:      #d4806f;
+    --type-room-tint:      #f0d0ca;
+
     /* ── Glass (border only — no shadows) ────────────────────────────────── */
     --glass:        rgba(255, 252, 247, 0.72);
     --glass-strong: rgba(255, 252, 247, 0.92);
