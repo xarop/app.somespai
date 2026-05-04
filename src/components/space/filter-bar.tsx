@@ -56,7 +56,11 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
         ))}
       </nav>
 
-      <SpaceTypesInfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
+      <SpaceTypesInfoModal
+        open={infoOpen}
+        onClose={() => setInfoOpen(false)}
+        onSelectType={(type) => { onChange(type); setInfoOpen(false); }}
+      />
     </>
   );
 }
