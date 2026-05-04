@@ -16,6 +16,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -25,7 +26,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   }, [open]);
 
   useEffect(() => {
-    if (!open) { setSent(false); setEmail(''); setLoading(false); }
+    if (!open) { setSent(false); setEmail(''); setLoading(false); setError(null); }
   }, [open]);
 
   useEffect(() => {
@@ -45,13 +46,19 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     e.preventDefault();
     if (!email || loading) return;
     setLoading(true);
+    setError(null);
     const supabase = createClient();
-    await supabase.auth.signInWithOtp({
+    const { error: otpError } = await supabase.auth.signInWithOtp({
       email,
       options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
     });
-    setSent(true);
-    setLoading(false);
+    if (otpError) {
+      setError(otpError.message);
+      setLoading(false);
+    } else {
+      setSent(true);
+      setLoading(false);
+    }
   }
 
   return (
@@ -90,6 +97,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
                   autoFocus
                 />
               </label>
+              {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
               <button type="submit" data-variant="primary" disabled={loading} style={{ marginTop: 'var(--s-1)' }}>
                 {loading ? '…' : t('auth.send')}
               </button>
