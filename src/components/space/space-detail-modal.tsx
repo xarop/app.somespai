@@ -162,7 +162,7 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
               {isVerified && <span className="badge-verified" title="Verificat">✓</span>}
             </h2>
             <p className="detail__meta">
-              <span><Icon name="pin" size={14} />{space.address}</span>
+              <span><Icon name="pin" size={14} />{[space.address, space.city].filter(Boolean).join(', ')}</span>
               {space.sizeM2 != null && (
                 <span><Icon name="ruler" size={14} />{t('detail.size', { n: space.sizeM2 })}</span>
               )}
