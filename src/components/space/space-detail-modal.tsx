@@ -123,7 +123,7 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
         <Icon name="close" size={18} />
       </button>
 
-      <div className="detail__hero" data-type={space.type} style={{
+      <div className="detail__hero" data-type={space.type} style={space.photos[0] ? undefined : {
         background: {
           storage: 'linear-gradient(135deg, #e8d9b8 0%, #c9b288 100%)',
           workspace: 'linear-gradient(135deg, #b6c4a3 0%, #6b8053 100%)',
@@ -131,7 +131,12 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
           room: 'linear-gradient(135deg, #e8a583 0%, #c45a2c 100%)',
         }[space.type],
       }}>
-        <Icon name={TYPE_ICON[space.type]} size={88} className="glyph" />
+        {space.photos[0] ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={space.photos[0]} alt={space.title} className="detail__hero-img" />
+        ) : (
+          <Icon name={TYPE_ICON[space.type]} size={88} className="glyph" />
+        )}
       </div>
 
       <div className="detail__body">
