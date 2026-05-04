@@ -119,6 +119,58 @@
       "desc": "Multipurpose rooms for meetings, rehearsals, photography, training or small events."
     }
   },
+  "publish": {
+    "title": "Publish a space",
+    "subtitle": "Fill in the form to publish your space on Somespai.",
+    "sectionBasic": "Basic information",
+    "sectionPricing": "Pricing",
+    "sectionLocation": "Location",
+    "sectionAmenities": "Included amenities",
+    "sectionPhotos": "Photos",
+    "sectionContact": "Contact",
+    "fieldTitle": "Title",
+    "fieldTitlePlaceholder": "E.g. Dry and ventilated storage unit in central Gràcia",
+    "fieldType": "Space type",
+    "fieldDescription": "Description",
+    "fieldDescriptionPlaceholder": "Describe the space in detail…",
+    "fieldPrice": "Price (€)",
+    "fieldPriceUnit": "Period",
+    "unitMonth": "Per month",
+    "unitDay": "Per day",
+    "unitHour": "Per hour",
+    "fieldSize": "Area (m²)",
+    "fieldAddress": "Full address",
+    "fieldAddressPlaceholder": "Street, number, floor…",
+    "fieldNeighborhood": "Neighbourhood",
+    "fieldCity": "City",
+    "fieldContactUrl": "Contact URL",
+    "fieldContactUrlPlaceholder": "https:// or mailto:",
+    "photosHelp": "Up to 6 photos · JPG, PNG, WebP · max 5 MB each",
+    "geolocating": "Locating address…",
+    "geoError": "Address not found. Please check it and try again.",
+    "submit": "Publish space",
+    "submitting": "Publishing…",
+    "successTitle": "Space published!",
+    "successDesc": "Your space is now visible on Somespai.",
+    "viewSpace": "View space",
+    "loginRequired": "You must be signed in to publish a space."
+  },
+  "review": {
+    "title": "Reviews",
+    "noReviews": "No reviews yet.",
+    "add": "Write a review",
+    "rating": "Rating",
+    "body": "Comment",
+    "bodyPlaceholder": "How was the experience?",
+    "submit": "Post review",
+    "submitting": "Posting…",
+    "loginRequired": "Sign in to write a review.",
+    "alreadyReviewed": "You have already reviewed this space."
+  },
+  "user": {
+    "signOut": "Sign out",
+    "mySpaces": "My spaces"
+  },
   "lang": {
     "label": "Language"
   },

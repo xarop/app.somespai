@@ -119,6 +119,58 @@
       "desc": "Salas polivalentes para reuniones, ensayos, fotografía, formación o pequeños eventos."
     }
   },
+  "publish": {
+    "title": "Publica un espacio",
+    "subtitle": "Rellena el formulario para publicar tu espacio en Somespai.",
+    "sectionBasic": "Información básica",
+    "sectionPricing": "Precio",
+    "sectionLocation": "Ubicación",
+    "sectionAmenities": "Equipamientos incluidos",
+    "sectionPhotos": "Fotos",
+    "sectionContact": "Contacto",
+    "fieldTitle": "Título",
+    "fieldTitlePlaceholder": "Ej: Trastero seco y ventilado en el centro de Gracia",
+    "fieldType": "Tipo de espacio",
+    "fieldDescription": "Descripción",
+    "fieldDescriptionPlaceholder": "Describe el espacio con detalle…",
+    "fieldPrice": "Precio (€)",
+    "fieldPriceUnit": "Periodicidad",
+    "unitMonth": "Al mes",
+    "unitDay": "Al día",
+    "unitHour": "Por hora",
+    "fieldSize": "Superficie (m²)",
+    "fieldAddress": "Dirección completa",
+    "fieldAddressPlaceholder": "Calle, número, piso…",
+    "fieldNeighborhood": "Barrio",
+    "fieldCity": "Ciudad",
+    "fieldContactUrl": "URL de contacto",
+    "fieldContactUrlPlaceholder": "https:// o mailto:",
+    "photosHelp": "Hasta 6 fotos · JPG, PNG, WebP · máx. 5 MB cada una",
+    "geolocating": "Buscando coordenadas…",
+    "geoError": "No encontramos la dirección. Compruébala e inténtalo de nuevo.",
+    "submit": "Publicar espacio",
+    "submitting": "Publicando…",
+    "successTitle": "¡Espacio publicado!",
+    "successDesc": "Tu espacio ya es visible en Somespai.",
+    "viewSpace": "Ver el espacio",
+    "loginRequired": "Debes estar identificado para publicar un espacio."
+  },
+  "review": {
+    "title": "Reseñas",
+    "noReviews": "Aún no hay reseñas.",
+    "add": "Escribe una reseña",
+    "rating": "Puntuación",
+    "body": "Comentario",
+    "bodyPlaceholder": "¿Cómo fue la experiencia?",
+    "submit": "Publicar reseña",
+    "submitting": "Publicando…",
+    "loginRequired": "Identifícate para escribir una reseña.",
+    "alreadyReviewed": "Ya has reseñado este espacio."
+  },
+  "user": {
+    "signOut": "Cerrar sesión",
+    "mySpaces": "Mis espacios"
+  },
   "lang": {
     "label": "Idioma"
   },

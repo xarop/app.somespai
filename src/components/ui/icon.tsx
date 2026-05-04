@@ -74,6 +74,11 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
     </>
   ),
   arrowLeft: <path d="M19 12H5M12 19l-7-7 7-7" />,
+  menu: (
+    <>
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </>
+  ),
   info: (
     <>
       <circle cx="12" cy="7" r="1.2" fill="currentColor" stroke="none" />

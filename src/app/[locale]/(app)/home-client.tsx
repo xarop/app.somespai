@@ -1,12 +1,14 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { TopNav } from '@/components/ui/top-nav';
 import { FilterBar, type FilterId } from '@/components/space/filter-bar';
 import { SpaceSheet, type SortId } from '@/components/space/space-sheet';
 import { SpaceDetailModal } from '@/components/space/space-detail-modal';
 import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
+import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
+import { createClient } from '@/lib/supabase/client';
 import type { Space } from '@/lib/schemas/space';
 
 const MapView = dynamic(
@@ -32,6 +34,18 @@ export function HomeClient({ initialSpaces }: HomeClientProps) {
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
 
+  // Load favorites when user logs in
+  useEffect(() => {
+    const supabase = createClient();
+    const load = async () => {
+      const ids = await getFavoriteIds();
+      setLikedIds(ids);
+    };
+    load();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => load());
+    return () => subscription.unsubscribe();
+  }, []);
+
   const filteredSpaces = useMemo(() => {
     let list = [...initialSpaces];
     if (filter === 'featured') list = list.filter((s) => s.isFeatured);
@@ -54,20 +68,22 @@ export function HomeClient({ initialSpaces }: HomeClientProps) {
     return list;
   }, [initialSpaces, filter, query, sort, userCenter]);
 
-  /** Location label shown in the results count. Null = no query active → show plain count. */
   const locationLabel = useMemo<string | null>(() => {
     if (!query.trim()) return null;
     const q = query.trim();
     return q.charAt(0).toUpperCase() + q.slice(1);
   }, [query]);
 
-  const toggleLike = useCallback((id: string) => {
+  const toggleLike = useCallback(async (id: string) => {
+    // Optimistic update
     setLikedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
+    // Persist to DB (no-op if not authenticated)
+    await toggleFavorite(id);
   }, []);
 
   return (

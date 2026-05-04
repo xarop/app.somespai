@@ -1,0 +1,77 @@
+'use server';
+
+import { createClient } from '@/lib/supabase/server';
+import { slugify } from '@/lib/geo';
+import { redirect } from 'next/navigation';
+
+export async function createSpaceAction(formData: FormData) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) throw new Error('Not authenticated');
+
+  const title = (formData.get('title') as string).trim();
+  const type = formData.get('type') as string;
+  const description = (formData.get('description') as string)?.trim() || null;
+  const priceRaw = parseFloat(formData.get('price') as string);
+  const priceCents = isNaN(priceRaw) ? 0 : Math.round(priceRaw * 100);
+  const priceUnit = (formData.get('price_unit') as string) || 'month';
+  const sizeM2Raw = formData.get('size_m2') as string;
+  const sizeM2 = sizeM2Raw ? parseFloat(sizeM2Raw) : null;
+  const address = (formData.get('address') as string)?.trim() || null;
+  const neighborhood = (formData.get('neighborhood') as string)?.trim() || 'Vila de Gràcia';
+  const city = (formData.get('city') as string)?.trim() || 'Barcelona';
+  const lat = parseFloat(formData.get('lat') as string);
+  const lng = parseFloat(formData.get('lng') as string);
+  const contactUrl = (formData.get('contact_url') as string)?.trim() || null;
+  const amenities = formData.getAll('amenities') as string[];
+
+  // Upload photos
+  const photos: string[] = [];
+  const files = formData.getAll('photos') as File[];
+  for (const file of files) {
+    if (!file || file.size === 0) continue;
+    const ext = file.name.split('.').pop() ?? 'jpg';
+    const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabase.storage.from('space-photos').upload(path, file);
+    if (!error) {
+      const { data: { publicUrl } } = supabase.storage.from('space-photos').getPublicUrl(path);
+      photos.push(publicUrl);
+    }
+  }
+
+  // Unique slug
+  let slug = slugify(title) || 'espai';
+  const { count } = await supabase
+    .from('spaces')
+    .select('id', { count: 'exact', head: true })
+    .eq('slug', slug);
+  if (count && count > 0) slug = `${slug}-${Date.now().toString(36)}`;
+
+  const { data: space, error } = await supabase
+    .from('spaces')
+    .insert({
+      owner_id: user.id,
+      slug,
+      title,
+      type,
+      description,
+      price_cents: priceCents,
+      price_unit: priceUnit,
+      size_m2: sizeM2,
+      address,
+      neighborhood,
+      city,
+      region: 'Catalunya',
+      location: `SRID=4326;POINT(${lng} ${lat})`,
+      amenities,
+      photos,
+      contact_url: contactUrl,
+      status: 'active',
+    })
+    .select('slug')
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  redirect(`/espai/${space.slug}`);
+}

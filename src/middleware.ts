@@ -1,9 +1,50 @@
-import createMiddleware from 'next-intl/middleware';
+import { createServerClient } from '@supabase/ssr';
+import { type NextRequest, NextResponse } from 'next/server';
+import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from './lib/i18n/routing';
 
-export default createMiddleware(routing);
+const intlMiddleware = createIntlMiddleware(routing);
+
+export async function middleware(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request });
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return request.cookies.getAll(); },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          supabaseResponse = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          );
+        },
+      },
+    }
+  );
+
+  const { data: { user } } = await supabase.auth.getUser();
+
+  // Protect /publica — redirect unauthenticated users to home with auth prompt
+  if (!user && /\/publica/.test(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    url.searchParams.set('auth', '1');
+    const redirect = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach(c => redirect.cookies.set(c.name, c.value));
+    return redirect;
+  }
+
+  // Run i18n middleware and copy Supabase auth cookies to its response
+  const intlResponse = intlMiddleware(request);
+  supabaseResponse.cookies.getAll().forEach(c =>
+    intlResponse.cookies.set(c.name, c.value)
+  );
+  return intlResponse;
+}
 
 export const config = {
-  // Match all paths except API routes, static files, images
   matcher: ['/((?!api|_next|_vercel|.*\\..*).*)'],
 };

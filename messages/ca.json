@@ -119,6 +119,58 @@
       "desc": "Sales polivalents per a reunions, assajos, fotografia, formació o petits events."
     }
   },
+  "publish": {
+    "title": "Publica un espai",
+    "subtitle": "Omple el formulari per publicar el teu espai a Somespai.",
+    "sectionBasic": "Informació bàsica",
+    "sectionPricing": "Preu",
+    "sectionLocation": "Ubicació",
+    "sectionAmenities": "Equipaments inclosos",
+    "sectionPhotos": "Fotos",
+    "sectionContact": "Contacte",
+    "fieldTitle": "Títol",
+    "fieldTitlePlaceholder": "Ex: Traster sec i ventilat al centre de Gràcia",
+    "fieldType": "Tipus d'espai",
+    "fieldDescription": "Descripció",
+    "fieldDescriptionPlaceholder": "Descriu l'espai amb detall…",
+    "fieldPrice": "Preu (€)",
+    "fieldPriceUnit": "Periodicitat",
+    "unitMonth": "Al mes",
+    "unitDay": "Al dia",
+    "unitHour": "A l'hora",
+    "fieldSize": "Superfície (m²)",
+    "fieldAddress": "Adreça completa",
+    "fieldAddressPlaceholder": "Carrer, número, pis…",
+    "fieldNeighborhood": "Barri",
+    "fieldCity": "Ciutat",
+    "fieldContactUrl": "URL de contacte",
+    "fieldContactUrlPlaceholder": "https:// o mailto:",
+    "photosHelp": "Fins a 6 fotos · JPG, PNG, WebP · màx. 5 MB cadascuna",
+    "geolocating": "Cercant coordenades…",
+    "geoError": "No hem trobat l'adreça. Comprova-la i torna-ho a provar.",
+    "submit": "Publicar espai",
+    "submitting": "Publicant…",
+    "successTitle": "Espai publicat!",
+    "successDesc": "El teu espai ja és visible a Somespai.",
+    "viewSpace": "Veure l'espai",
+    "loginRequired": "Has d'estar identificat per publicar un espai."
+  },
+  "review": {
+    "title": "Ressenyes",
+    "noReviews": "Encara no hi ha ressenyes.",
+    "add": "Escriu una ressenya",
+    "rating": "Puntuació",
+    "body": "Comentari",
+    "bodyPlaceholder": "Com va ser l'experiència?",
+    "submit": "Publicar ressenya",
+    "submitting": "Publicant…",
+    "loginRequired": "Identifica't per escriure una ressenya.",
+    "alreadyReviewed": "Ja has resenyat aquest espai."
+  },
+  "user": {
+    "signOut": "Tancar sessió",
+    "mySpaces": "Els meus espais"
+  },
   "lang": {
     "label": "Idioma"
   },
