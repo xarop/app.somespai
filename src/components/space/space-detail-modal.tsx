@@ -209,13 +209,13 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
               className="detail__action-link"
             >
               <Icon name="pin" size={16} />
-              {t('detail.location')}
+              <span className="detail__action-label">{t('detail.location')}</span>
             </a>
           )}
 
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />
-            {t('detail.share')}
+            <span className="detail__action-label">{t('detail.share')}</span>
           </button>
         </div>
 

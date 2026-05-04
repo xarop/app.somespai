@@ -1079,6 +1079,12 @@
     font-weight: 600;
   }
 
+  @media (max-width: 639px) {
+    .detail__action-label {
+      display: none;
+    }
+  }
+
   .detail__action-link {
     display: inline-flex;
     align-items: center;
