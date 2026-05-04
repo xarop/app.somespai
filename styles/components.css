@@ -251,8 +251,15 @@
     font-weight: 700;
     font-style: italic;
     line-height: 1;
-    color: var(--ink);
+    color: #fff;
+    background: var(--primary);
+    border-color: var(--primary);
     justify-content: center;
+  }
+
+  .chip--info:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary-soft);
   }
 
   /* ── Map ──────────────────────────────────────────────────────────────── */
