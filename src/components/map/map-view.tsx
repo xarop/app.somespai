@@ -5,8 +5,8 @@ import maplibregl, { type Map as MapLibreMap, type Marker } from 'maplibre-gl';
 import type { Space } from '@/lib/schemas/space';
 import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
 
-// Carto Positron — clean minimal vector map, no API key required
-const CARTO_POSITRON = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+// Carto Voyager — clean vector map with good contrast, no API key required
+const CARTO_POSITRON = 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json';
 
 const TYPE_SVG: Record<Space['type'], string> = {
   storage: `<path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/>`,
