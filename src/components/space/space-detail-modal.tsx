@@ -194,6 +194,17 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
         )}
 
         <div className="detail__actions">
+          {primaryContact && (
+            <a
+              href={primaryContact.href}
+              {...(primaryContact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              data-variant="primary"
+              className="detail__action-link detail__action-cta"
+            >
+              {primaryContact.label}
+            </a>
+          )}
+
           {(space.address || space.city) && (
             <a
               href={`https://www.google.com/maps?q=${space.lat},${space.lng}`}
@@ -204,17 +215,6 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
             >
               <Icon name="pin" size={16} />
               {[space.address, space.city].filter(Boolean).join(', ')}
-            </a>
-          )}
-
-          {primaryContact && (
-            <a
-              href={primaryContact.href}
-              {...(primaryContact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              data-variant="primary"
-              className="detail__action-link detail__action-cta"
-            >
-              {primaryContact.label}
             </a>
           )}
 
