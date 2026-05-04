@@ -214,12 +214,11 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
               className="detail__action-link"
             >
               <Icon name="pin" size={16} />
-              {[space.address, space.city].filter(Boolean).join(', ')}
             </a>
           )}
 
-          <button type="button" data-variant="ghost" className="detail__action-share" onClick={handleShare}>
-            {t('detail.share')}
+          <button type="button" data-variant="ghost" onClick={handleShare}>
+            <Icon name="share" size={16} />
           </button>
         </div>
 
