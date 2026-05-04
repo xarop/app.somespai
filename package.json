@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit",
     "export": "next build",
     "postexport": "cp ./out/ca.html ./out/index.html || copy .\\out\\ca.html .\\out\\index.html",
-    "deploy:gh-pages": "cross-env NEXT_EXPORT=true next build && npm run postexport && npx gh-pages -d out"
+    "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
