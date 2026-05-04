@@ -137,6 +137,9 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
         ) : (
           <Icon name={TYPE_ICON[space.type]} size={88} className="glyph" />
         )}
+        <span className="detail__type-badge">
+          <Icon name={TYPE_ICON[space.type]} size={16} />
+        </span>
       </div>
 
       <div className="detail__body">

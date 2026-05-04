@@ -44,7 +44,13 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike }: SpaceCardPro
       }}
     >
       <div className="card__media" data-type={space.type}>
-        <Icon name={TYPE_ICON[space.type]} size={52} className="card__glyph" />
+        {space.photos[0]
+          ? <img src={space.photos[0]} alt="" className="card__photo" />
+          : <Icon name={TYPE_ICON[space.type]} size={52} className="card__glyph" />
+        }
+        <span className="card__type-badge">
+          <Icon name={TYPE_ICON[space.type]} size={14} />
+        </span>
         {space.isFeatured && <span className="card__featured">{t('card.featured')}</span>}
         <button
           type="button"

@@ -615,12 +615,47 @@
     background: linear-gradient(135deg, #e8a583 0%, #c45a2c 100%);
   }
 
+  .card__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s var(--ease);
+  }
+
+  .card:hover .card__photo {
+    transform: scale(1.04);
+  }
+
   .card__glyph {
     width: 52px;
     height: 52px;
     color: rgba(255, 252, 247, 0.55);
     stroke-width: 1;
     transition: transform var(--t-norm) var(--ease);
+  }
+
+  /* Type badge — top-left corner, on both card and hero */
+  .card__type-badge,
+  .detail__type-badge {
+    position: absolute;
+    top: var(--s-3);
+    left: var(--s-3);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255, 252, 247, 0.88);
+    backdrop-filter: blur(6px);
+    display: grid;
+    place-items: center;
+    color: var(--ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+  }
+
+  .detail__type-badge {
+    width: 34px;
+    height: 34px;
   }
 
   .card__media::before {
@@ -636,7 +671,7 @@
   .card__featured {
     position: absolute;
     top: var(--s-3);
-    left: var(--s-3);
+    left: calc(var(--s-3) + 36px);
     padding: 4px 10px;
     background: var(--gold);
     color: white;
