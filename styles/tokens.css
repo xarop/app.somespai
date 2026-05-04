@@ -47,6 +47,10 @@
     --type-room-soft:      #d4806f;
     --type-room-tint:      #f0d0ca;
 
+    --type-featured:       #b8893a;
+    --type-featured-soft:  #d4aa60;
+    --type-featured-tint:  #f5edd0;
+
     /* ── Glass (border only — no shadows) ────────────────────────────────── */
     --glass:        rgba(255, 252, 247, 0.72);
     --glass-strong: rgba(255, 252, 247, 0.92);

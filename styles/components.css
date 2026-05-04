@@ -362,6 +362,12 @@
     border-color: var(--ink);
   }
 
+  .chip[data-type="workspace"][aria-pressed="true"] { background: var(--type-workspace); border-color: var(--type-workspace); }
+  .chip[data-type="garden"][aria-pressed="true"]    { background: var(--type-garden);    border-color: var(--type-garden);    }
+  .chip[data-type="storage"][aria-pressed="true"]   { background: var(--type-storage);   border-color: var(--type-storage);   }
+  .chip[data-type="room"][aria-pressed="true"]      { background: var(--type-room);      border-color: var(--type-room);      }
+  .chip[data-type="featured"][aria-pressed="true"]  { background: var(--type-featured);  border-color: var(--type-featured);  }
+
   .chip svg {
     width: 16px;
     height: 16px;
@@ -380,6 +386,7 @@
   .chip[data-type="garden"]    .chip__icon { background: var(--type-garden-tint);    color: var(--type-garden);    }
   .chip[data-type="storage"]   .chip__icon { background: var(--type-storage-tint);   color: var(--type-storage);   }
   .chip[data-type="room"]      .chip__icon { background: var(--type-room-tint);       color: var(--type-room);      }
+  .chip[data-type="featured"]  .chip__icon { background: var(--type-featured-tint);  color: var(--type-featured);  }
 
   .chip[aria-pressed="true"] .chip__icon {
     background: rgba(255, 252, 247, 0.15);

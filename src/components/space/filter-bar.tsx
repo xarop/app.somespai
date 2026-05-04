@@ -48,7 +48,7 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
             type="button"
             className="chip"
             aria-pressed={active === f.id}
-            data-type={f.id !== 'all' && f.id !== 'featured' ? f.id : undefined}
+            data-type={f.id !== 'all' ? f.id : undefined}
             onClick={() => onChange(f.id)}
           >
             {f.iconName && (
