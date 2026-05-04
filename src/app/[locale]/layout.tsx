@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider, hasLocale } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
 import { routing } from '@/lib/i18n/routing';
@@ -32,7 +32,7 @@ interface LocaleLayoutProps {
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) notFound();
+  if (!(routing.locales as readonly string[]).includes(locale)) notFound();
 
   setRequestLocale(locale);
 
