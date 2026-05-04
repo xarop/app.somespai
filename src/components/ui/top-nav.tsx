@@ -105,6 +105,10 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
       </label>
 
       <div className="topnav__actions">
+        <a href="/publica" className="btn-publish">
+          {t('nav.publish')}
+        </a>
+
         <a href="/design-system" className="iconbtn" aria-label={t('nav.designSystem')} title={t('nav.designSystem')}>
           <Icon name="grid" size={20} />
         </a>

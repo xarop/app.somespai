@@ -119,6 +119,27 @@
     }
   }
 
+  /* ── Publish button ──────────────────────────────────────────────────── */
+  .btn-publish {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-2) var(--s-4);
+    border-radius: var(--r-pill);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--primary-ink);
+    background: var(--primary);
+    border: 1px solid var(--primary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background var(--t-fast) var(--ease);
+  }
+
+  .btn-publish:hover {
+    background: var(--primary-soft);
+    border-color: var(--primary-soft);
+  }
+
   /* ── Icon button ──────────────────────────────────────────────────────── */
   .iconbtn {
     width: 40px;
