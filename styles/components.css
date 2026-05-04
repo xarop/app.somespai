@@ -961,24 +961,18 @@
     border-top: 1px solid var(--glass-border);
   }
 
+  .detail__action-share {
+    grid-column: 1 / -1;
+  }
+
   .detail__actions button,
   .detail__action-link {
     justify-content: center;
     text-align: center;
   }
 
-  .detail__actions [data-variant="primary"] {
-    grid-column: 1 / -1;
-  }
-
-  @media (min-width: 640px) {
-    .detail__actions {
-      grid-template-columns: 2fr 1fr 1fr;
-    }
-
-    .detail__actions [data-variant="primary"] {
-      grid-column: auto;
-    }
+  .detail__action-cta {
+    font-weight: 600;
   }
 
   .detail__action-link {

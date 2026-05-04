@@ -121,6 +121,14 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
     ? `https://wa.me/${space.whatsapp.replace(/[^\d]/g, '')}`
     : null;
 
+  const contactOptions = {
+    web:      space.web          ? { href: space.web,                    label: t('detail.web'),      external: true  } : null,
+    phone:    space.phone        ? { href: `tel:${space.phone}`,         label: t('detail.phone'),    external: false } : null,
+    email:    space.emailContact ? { href: `mailto:${space.emailContact}`,label: t('detail.email'),   external: false } : null,
+    whatsapp: whatsappHref       ? { href: whatsappHref,                  label: t('detail.whatsapp'),external: true  } : null,
+  } as const;
+  const primaryContact = contactOptions[space.contactDefault] ?? Object.values(contactOptions).find(Boolean);
+
   return (
     <dialog ref={dialogRef} data-modal aria-labelledby="space-title">
       <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
@@ -199,60 +207,19 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
             </a>
           )}
 
-          {space.web && (
+          {primaryContact && (
             <a
-              href={space.web}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-variant={space.contactDefault === 'web' ? 'primary' : 'ghost'}
-              className="detail__action-link"
-              style={space.contactDefault === 'web' ? { fontWeight: 'bold' } : undefined}
+              href={primaryContact.href}
+              {...(primaryContact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              data-variant="primary"
+              className="detail__action-link detail__action-cta"
             >
-              <Icon name="globe" size={16} />
-              {t('detail.web')}
+              {primaryContact.label}
             </a>
           )}
 
-          {space.phone && (
-            <a
-              href={`tel:${space.phone}`}
-              data-variant={space.contactDefault === 'phone' ? 'primary' : 'ghost'}
-              className="detail__action-link"
-              style={space.contactDefault === 'phone' ? { fontWeight: 'bold' } : undefined}
-            >
-              <Icon name="phone" size={16} />
-              {t('detail.phone')}
-            </a>
-          )}
-
-          {space.emailContact && (
-            <a
-              href={`mailto:${space.emailContact}`}
-              data-variant={space.contactDefault === 'email' ? 'primary' : 'ghost'}
-              className="detail__action-link"
-              style={space.contactDefault === 'email' ? { fontWeight: 'bold' } : undefined}
-            >
-              <Icon name="mail" size={16} />
-              {t('detail.email')}
-            </a>
-          )}
-
-          {space.whatsapp && whatsappHref && (
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-variant={space.contactDefault === 'whatsapp' ? 'primary' : 'ghost'}
-              className="detail__action-link"
-              style={space.contactDefault === 'whatsapp' ? { fontWeight: 'bold' } : undefined}
-            >
-              <Icon name="share" size={16} />
-              {t('detail.whatsapp')}
-            </a>
-          )}
-
-          <button type="button" data-variant="ghost" onClick={handleShare}>
-            <Icon name="share" size={16} />{t('detail.share')}
+          <button type="button" data-variant="ghost" className="detail__action-share" onClick={handleShare}>
+            {t('detail.share')}
           </button>
         </div>
 
