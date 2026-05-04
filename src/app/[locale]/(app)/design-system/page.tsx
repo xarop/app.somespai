@@ -73,11 +73,12 @@ export default function DesignSystemPage() {
                 <span className="ds__type-meta">--t-{t.token}</span>
                 <span
                   style={{
-                    fontFamily: ['3xl', '2xl', 'xl'].includes(t.token)
-                      ? 'var(--serif)'
-                      : 'var(--sans)',
+                    fontFamily: 'var(--font)',
+                    fontVariationSettings: ['3xl', '2xl', 'xl'].includes(t.token)
+                      ? 'var(--rx-casual)'
+                      : 'var(--rx-sans)',
                     fontSize: t.size,
-                    fontWeight: ['3xl', '2xl', 'xl'].includes(t.token) ? 500 : 400,
+                    fontWeight: ['3xl', '2xl', 'xl'].includes(t.token) ? 700 : 400,
                     color: 'var(--ink)',
                   }}
                 >

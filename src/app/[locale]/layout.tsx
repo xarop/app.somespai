@@ -1,24 +1,15 @@
 import type { ReactNode } from 'react';
 import { notFound } from 'next/navigation';
 import { NextIntlClientProvider } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
-import { Fraunces, Geist, Geist_Mono } from 'next/font/google';
+import { getMessages, setRequestLocale } from 'next-intl/server';
+import { Recursive } from 'next/font/google';
 import { routing } from '@/lib/i18n/routing';
 
-const fraunces = Fraunces({
+const recursive = Recursive({
   subsets: ['latin'],
+  axes: ['CASL', 'MONO', 'slnt', 'CRSV'],
   display: 'swap',
-  variable: '--serif-font',
-});
-const geist = Geist({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--sans-font',
-});
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--mono-font',
+  variable: '--font-recursive',
 });
 
 export function generateStaticParams() {
@@ -35,19 +26,12 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   if (!(routing.locales as readonly string[]).includes(locale)) notFound();
 
   setRequestLocale(locale);
+  const messages = await getMessages();
 
   return (
-    <html
-      lang={locale}
-      className={`${fraunces.variable} ${geist.variable} ${geistMono.variable}`}
-    >
-      <body
-        style={{
-          // Override CSS tokens with Next.js-loaded fonts
-          // (the static var names already exist; these CSS vars are extra fallbacks)
-        }}
-      >
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+    <html lang={locale} className={recursive.variable}>
+      <body>
+        <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
       </body>
     </html>
   );

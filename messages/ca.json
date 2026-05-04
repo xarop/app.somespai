@@ -3,7 +3,8 @@
     "name": "somespai"
   },
   "nav": {
-    "searchPlaceholder": "Cerca espais a Vila de Gràcia…",
+    "searchPlaceholder": "Cerca espais a prop teu…",
+    "searchLocating": "Localitzant…",
     "signIn": "Entrar",
     "designSystem": "Sistema de disseny",
     "publish": "Publica un espai"
@@ -22,17 +23,21 @@
   "sheet": {
     "count": "{n, plural, =0 {Cap espai} one {# espai a Vila de Gràcia} other {# espais a Vila de Gràcia}}",
     "empty": "Cap espai amb aquest filtre. Prova-ho amb un altre.",
-    "sort": "Per proximitat"
+    "sortDistance": "Proximitat",
+    "sortPrice": "Preu",
+    "sortRating": "Puntuació"
   },
   "card": {
     "month": "/mes",
+    "day": "/dia",
+    "hour": "/h",
     "featured": "Destacat",
     "like": "M'agrada",
     "size": "{n} m²"
   },
   "detail": {
     "share": "Compartir",
-    "contact": "Contactar amb el propietari",
+    "contact": "Contactar",
     "size": "{n} m²",
     "reviews": "{n, plural, =0 {Encara cap ressenya} one {# ressenya} other {# ressenyes}}",
     "amenities": "Inclou",
@@ -44,6 +49,54 @@
     "email": "El teu correu",
     "send": "Envia'm l'enllaç",
     "sent": "Comprova la safata d'entrada"
+  },
+  "amenity": {
+    "wifi": "Wi-Fi",
+    "fiber": "Fibra simètrica",
+    "hot_desk": "Hot desk",
+    "fixed_desk": "Escriptori fix",
+    "monitor": "Monitor",
+    "locker": "Taquilla",
+    "meeting_room": "Sala de reunions",
+    "event_space": "Sala d'actes",
+    "whiteboard": "Pissarra",
+    "projector": "Projector",
+    "podcast_studio": "Estudi de podcast",
+    "ac": "Aire condicionat",
+    "heating": "Calefacció",
+    "dimmable_light": "Llum regulable",
+    "hardwood_floor": "Terra de fusta",
+    "coffee": "Cafè",
+    "kitchen": "Cuina",
+    "printer": "Impressora",
+    "printer_3d": "Impressora 3D",
+    "pa_system": "Sistema de so",
+    "audio": "Àudio",
+    "tools": "Eines",
+    "scale": "Bàscula",
+    "access_24h": "Accés 24h",
+    "cameras": "Càmeres de seguretat",
+    "van_access": "Accés furgoneta",
+    "terrace": "Terrassa",
+    "bbq": "Barbacoa",
+    "pool": "Piscina",
+    "shade": "Ombra",
+    "sea_view": "Vistes al mar",
+    "mountain_view": "Vistes a la muntanya",
+    "dry": "Sec",
+    "electricity": "Electricitat",
+    "community": "Comunitat",
+    "reception": "Recepció",
+    "concierge": "Consergeria",
+    "sustainable": "Certificat sostenible",
+    "stackable_chairs": "Cadires apilables",
+    "furniture": "Mobiliari",
+    "water": "Aigua",
+    "parking": "Aparcament",
+    "bike_parking": "Aparcament bicicletes",
+    "campus": "Campus",
+    "cellar": "Cava",
+    "soundproofed": "Insonoritzada"
   },
   "lang": {
     "label": "Idioma"

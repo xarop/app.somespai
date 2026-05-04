@@ -12,6 +12,7 @@
 3. **Place over product.** The map and the neighborhood lead. Listings serve the place.
 4. **Glass over solid.** Floating UI lets the map breathe. Glassmorphism is subtle, never loud.
 5. **Semantic before decorative.** A `<button>` looks like a button without `.btn-primary-large-rounded-shadow`.
+6. **Flat, no shadows.** Depth is expressed through borders and tonal contrast, never drop shadows.
 
 ---
 
@@ -56,11 +57,9 @@ All colors live as CSS custom properties on `:root`. Never hardcode hex values i
   --danger:  #b54336;
 
   /* Glass */
-  --glass:        rgba(255, 252, 247, 0.62);
-  --glass-strong: rgba(255, 252, 247, 0.88);
-  --glass-border: rgba(31, 28, 23, 0.08);
-  --glass-shadow: 0 8px 32px rgba(31, 28, 23, 0.08),
-                  0 2px 6px  rgba(31, 28, 23, 0.04);
+  --glass:        rgba(255, 252, 247, 0.72);
+  --glass-strong: rgba(255, 252, 247, 0.92);
+  --glass-border: rgba(31, 28, 23, 0.10);
 }
 ```
 
@@ -68,38 +67,41 @@ All colors live as CSS custom properties on `:root`. Never hardcode hex values i
 
 ---
 
-## 4. Typography
+## 4. Typography — Recursive
 
-Two families, one system.
-
-| Role     | Family                  | Weights        | Notes                         |
-|----------|-------------------------|----------------|-------------------------------|
-| Display  | **Fraunces** (variable) | 400 / 500 / 700 | Editorial, optical sizing 9–144 |
-| Body     | **Geist** (variable)    | 400 / 500 / 600 | Modern, neutral, very readable  |
-| Mono     | **Geist Mono**          | 400 / 500       | Code, IDs, addresses            |
+One variable font for everything. **Recursive** (Google Fonts) covers sans, mono, display, and italic from a single file.
 
 ```css
 :root {
-  --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --sans:  'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
-  --mono:  'Geist Mono', ui-monospace, monospace;
+  --font: var(--font-recursive), monospace;
+
+  /* Axis presets */
+  --rx-sans:   "MONO" 0, "CASL" 0,   "slnt" 0,   "CRSV" 0.5;
+  --rx-mono:   "MONO" 1, "CASL" 0,   "slnt" 0,   "CRSV" 0.5;
+  --rx-casual: "MONO" 0, "CASL" 0.5, "slnt" 0,   "CRSV" 0.5;
+  --rx-italic: "MONO" 0, "CASL" 0.5, "slnt" -10, "CRSV" 1;
 }
 ```
 
-### Type scale (modular, ratio 1.2)
+| Preset | Use |
+|---|---|
+| `--rx-sans` | Body text, labels, inputs |
+| `--rx-mono` | Code, IDs, addresses, data labels |
+| `--rx-casual` | Headings, prices, brand name |
+| `--rx-italic` | Emphasis, pull quotes |
 
-| Token        | Size    | Line  | Use                         |
-|--------------|---------|-------|-----------------------------|
-| `--t-xs`     | 12px    | 1.5   | Captions, meta              |
-| `--t-sm`     | 14px    | 1.5   | Secondary body              |
-| `--t-base`   | 16px    | 1.55  | Body                        |
-| `--t-lg`     | 19px    | 1.45  | Lead paragraph              |
-| `--t-xl`     | 24px    | 1.3   | h3 / Card title             |
-| `--t-2xl`    | 32px    | 1.2   | h2 / Section                |
-| `--t-3xl`    | 44px    | 1.1   | h1 / Hero (mobile)          |
-| `--t-4xl`    | 64px    | 1.05  | h1 / Hero (desktop)         |
+### Type scale
 
-Headings (h1, h2, h3) use the **serif** by default. Body, buttons, inputs use the **sans**. Never mix display and body weights inside the same element.
+| Token | Size | Use |
+|---|---|---|
+| `--t-xs` | 12px | Captions, meta |
+| `--t-sm` | 14px | Secondary body |
+| `--t-base` | 16px | Body |
+| `--t-lg` | 19px | Lead paragraph |
+| `--t-xl` | 24px | h3 / Card title |
+| `--t-2xl` | 32px | h2 / Section |
+| `--t-3xl` | 40px | h1 / Hero (mobile) |
+| `--t-4xl` | 56px | h1 / Hero (desktop) |
 
 ---
 
@@ -119,40 +121,38 @@ Linear scale (no t-shirt sizes — predictable).
 
 ---
 
-## 6. Radii & Elevation
+## 6. Radii & Depth
+
+Shapes are quasi-square — very subtle rounding, never pill-shaped containers.
 
 ```css
---r-sm:   8px;   /* chips, inputs */
---r-md:  14px;   /* buttons, small cards */
---r-lg:  22px;   /* cards, sheets */
---r-xl:  32px;   /* hero cards, modals */
---r-pill: 999px; /* filter chips, avatars */
+--r-sm:   2px;   /* small details */
+--r-md:   3px;   /* buttons, inputs, chips */
+--r-lg:   5px;   /* cards, sheets, nav */
+--r-xl:   7px;   /* modals, hero cards */
+--r-pill: 18px;  /* reserved for lang badges only */
 ```
 
-Elevation is **not** drop shadows on a white card. It's `--glass` over a real backdrop. When a shadow is needed, it's warm:
-
-```css
---shadow-1: 0 1px 2px  rgba(31, 28, 23, 0.06);
---shadow-2: 0 6px 18px rgba(31, 28, 23, 0.08);
---shadow-3: 0 18px 48px rgba(31, 28, 23, 0.12);
-```
+**No drop shadows.** Depth is expressed through:
+- `1px` borders using `--glass-border`
+- Tonal background contrast (`--bg` → `--bg-soft` → `--bg-deep`)
+- Glassmorphism blur over the map only
 
 ---
 
 ## 7. Motion
 
 ```css
---ease:      cubic-bezier(0.22, 1, 0.36, 1);   /* default */
---ease-out:  cubic-bezier(0.16, 1, 0.3, 1);    /* arrivals */
---ease-in:   cubic-bezier(0.7, 0, 0.84, 0);    /* departures */
+--ease:      cubic-bezier(0.22, 1, 0.36, 1);
+--ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+--ease-in:   cubic-bezier(0.7, 0, 0.84, 0);
 --t-fast:  160ms;
---t-base:  280ms;
+--t-norm:  280ms;
 --t-slow:  480ms;
 ```
 
 ### Rules
-- **Page enter**: staggered reveal of cards (40ms delta), fade + 8px y-translate.
-- **Hover**: lift 2px, never 4+ (we are not a casino).
+- **Hover**: translateY(-1px), never more.
 - **Modal**: 280ms fade + scale from 0.98 → 1.
 - **Reduced motion**: `@media (prefers-reduced-motion: reduce)` collapses all transitions to 0ms.
 
@@ -161,32 +161,32 @@ Elevation is **not** drop shadows on a white card. It's `--glass` over a real ba
 ## 8. Components — Anatomy
 
 ### Button
-States: `default · hover · focus-visible · active · disabled · loading`.
-Variants: `primary` (filled olive), `ghost` (outline), `subtle` (no border).
-**Never** add `.btn`, `.btn-large`, `.btn-rounded`. A `<button>` has the shape. Variants are `data-variant="ghost"`.
+States: `default · hover · focus-visible · active · disabled`.
+Variants: `primary` (filled ink), `ghost` (border), `subtle` (bg-soft).
+Variants via `data-variant="ghost"`. No extra class names.
 
 ### Card (`<article class="space-card">`)
-Photo (16:10), title (serif), price (ink), location (ink-soft), rating row.
-Hover: lift + image scale 1.03.
+Photo (16:10), title (`--rx-casual`), price, location, rating row.
+Hover: translateY(-1px). Border separates from bg, no shadow.
 
 ### Input (`<input>`, `<textarea>`)
-Floating label, glass background, 1px `--glass-border`, focus ring `--primary`.
+Glass background, 1px `--glass-border`, focus ring `--primary`.
 
 ### Filter chip (`<button data-chip>`)
-Pill, icon + label. Selected = `--primary` background, white text. Unselected = `--glass`.
+Small radius (`--r-md`), icon + label. Selected = `--ink` background.
 
 ### Bottom sheet (mobile)
-Glass surface, drag handle, snap points: `peek` (120px) · `half` (50vh) · `full` (90vh).
+Glass surface, drag handle, snap points: `peek` · `half` · `full`.
 
 ### Map marker
-Custom HTML marker. Type icon in a glass pill. Cluster: olive circle with count.
+Glass pill (`--r-md`). Type icon in a square glass badge. No shadow.
 
 ---
 
 ## 9. Iconography
 
-- Stroke-based, 1.5px, rounded caps. From Lucide-style set, redrawn for consistency.
-- 4 type icons (storage, workspace, garden, room) — hand-tuned, never stock photography.
+- Stroke-based, 1.5px, rounded caps (Lucide-style).
+- 4 type icons: storage, workspace, garden, room.
 
 ---
 
@@ -196,7 +196,6 @@ Custom HTML marker. Type icon in a glass pill. Cluster: olive circle with count.
 - Focus rings: **always** visible (`:focus-visible`), 2px `--primary`, 2px offset.
 - Semantic HTML first. ARIA only when HTML can't express the relationship.
 - All interactive elements reachable by keyboard. Modals trap focus.
-- Language attribute (`<html lang>`) updates with i18n switch.
 - `prefers-reduced-motion` respected.
 
 ---
@@ -204,7 +203,7 @@ Custom HTML marker. Type icon in a glass pill. Cluster: olive circle with count.
 ## 11. Glassmorphism — How and When
 
 **When**: floating UI over the map (search bar, filters, space card, bottom sheet, modals).
-**When not**: dense lists, forms inside a settings page, anywhere without a backdrop image/map.
+**When not**: dense lists, forms inside pages, anywhere without a backdrop image/map.
 
 ```css
 .glass {
@@ -212,11 +211,11 @@ Custom HTML marker. Type icon in a glass pill. Cluster: olive circle with count.
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  /* no box-shadow */
 }
 ```
 
-Fallback for browsers without `backdrop-filter`: `--glass-strong` (more opaque) is auto-applied via `@supports not`.
+Fallback for browsers without `backdrop-filter`: `--glass-strong` via `@supports not`.
 
 ---
 
@@ -226,10 +225,9 @@ Fallback for browsers without `backdrop-filter`: `--glass-strong` (more opaque) 
 - **Supported**: `ca`, `es`, `en`.
 - All UI strings live in `/messages/{locale}.json`. **Never** hardcode strings in components.
 - Date, number, currency: `Intl` API, locale-aware.
-- `<html lang>` and `<html dir>` updated on switch.
 
 ---
 
 ## 13. Design System Route
 
-`/design-system` renders an interactive gallery with live state previews of every component. Every new component must be added there before it ships to production. It doubles as a regression test surface.
+`/design-system` renders an interactive gallery with live state previews of every component. Every new component must be added there before it ships to production.

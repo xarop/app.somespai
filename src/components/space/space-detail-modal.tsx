@@ -113,7 +113,7 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
           </div>
           <p className="detail__price">
             {formattedPrice}
-            <small>{t('card.month')}</small>
+            <small>{t(`card.${space.priceUnit}`)}</small>
           </p>
         </header>
 
@@ -126,16 +126,39 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
             </small>
             <div className="detail__amenities" style={{ marginTop: 'var(--s-2)' }}>
               {space.amenities.map((a) => (
-                <span key={a} className="amenity">{a}</span>
+                <span key={a} className="amenity">{t(`amenity.${a}`)}</span>
               ))}
             </div>
           </div>
         )}
 
         <div className="detail__actions">
-          <button type="button" data-variant="primary">
+          <button
+            type="button"
+            data-variant="primary"
+            disabled={!space.contactUrl}
+            onClick={() => {
+              if (!space.contactUrl) return;
+              if (space.contactUrl.startsWith('mailto:')) {
+                window.location.href = space.contactUrl;
+              } else {
+                window.open(space.contactUrl, '_blank', 'noopener,noreferrer');
+              }
+            }}
+          >
+            <Icon name="user" size={16} />
             {t('detail.contact')}
           </button>
+          <a
+            href={`https://www.google.com/maps?q=${space.lat},${space.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-variant="ghost"
+            className="detail__action-link"
+          >
+            <Icon name="pin" size={16} />
+            {t('detail.location')}
+          </a>
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />
             {t('detail.share')}

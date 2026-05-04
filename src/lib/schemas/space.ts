@@ -25,6 +25,8 @@ export const spaceSchema = z.object({
   rating: z.number().min(0).max(5).default(0),
   reviewsCount: z.number().int().nonnegative().default(0),
   status: z.enum(['active', 'paused', 'removed']).default('active'),
+  priceUnit: z.enum(['month', 'day', 'hour']).default('month'),
+  contactUrl: z.string().nullable().default(null),
 });
 
 export type Space = z.infer<typeof spaceSchema>;

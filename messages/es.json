@@ -3,7 +3,8 @@
     "name": "somespai"
   },
   "nav": {
-    "searchPlaceholder": "Busca espacios en Vila de Gràcia…",
+    "searchPlaceholder": "Busca espacios cerca de ti…",
+    "searchLocating": "Localizando…",
     "signIn": "Entrar",
     "designSystem": "Sistema de diseño",
     "publish": "Publica un espacio"
@@ -22,17 +23,21 @@
   "sheet": {
     "count": "{n, plural, =0 {Sin espacios} one {# espacio en Vila de Gràcia} other {# espacios en Vila de Gràcia}}",
     "empty": "Sin resultados con este filtro. Prueba con otro.",
-    "sort": "Por cercanía"
+    "sortDistance": "Proximidad",
+    "sortPrice": "Precio",
+    "sortRating": "Puntuación"
   },
   "card": {
     "month": "/mes",
+    "day": "/día",
+    "hour": "/h",
     "featured": "Destacado",
     "like": "Me gusta",
     "size": "{n} m²"
   },
   "detail": {
     "share": "Compartir",
-    "contact": "Contactar con el propietario",
+    "contact": "Contactar",
     "size": "{n} m²",
     "reviews": "{n, plural, =0 {Aún sin reseñas} one {# reseña} other {# reseñas}}",
     "amenities": "Incluye",
@@ -44,6 +49,54 @@
     "email": "Tu correo",
     "send": "Envíame el enlace",
     "sent": "Revisa tu bandeja de entrada"
+  },
+  "amenity": {
+    "wifi": "Wi-Fi",
+    "fiber": "Fibra simétrica",
+    "hot_desk": "Hot desk",
+    "fixed_desk": "Escritorio fijo",
+    "monitor": "Monitor",
+    "locker": "Taquilla",
+    "meeting_room": "Sala de reuniones",
+    "event_space": "Sala de actos",
+    "whiteboard": "Pizarra",
+    "projector": "Proyector",
+    "podcast_studio": "Estudio de podcast",
+    "ac": "Aire acondicionado",
+    "heating": "Calefacción",
+    "dimmable_light": "Luz regulable",
+    "hardwood_floor": "Suelo de madera",
+    "coffee": "Café",
+    "kitchen": "Cocina",
+    "printer": "Impresora",
+    "printer_3d": "Impresora 3D",
+    "pa_system": "Sistema de sonido",
+    "audio": "Audio",
+    "tools": "Herramientas",
+    "scale": "Báscula",
+    "access_24h": "Acceso 24h",
+    "cameras": "Cámaras de seguridad",
+    "van_access": "Acceso furgoneta",
+    "terrace": "Terraza",
+    "bbq": "Barbacoa",
+    "pool": "Piscina",
+    "shade": "Sombra",
+    "sea_view": "Vistas al mar",
+    "mountain_view": "Vistas a la montaña",
+    "dry": "Seco",
+    "electricity": "Electricidad",
+    "community": "Comunidad",
+    "reception": "Recepción",
+    "concierge": "Conserjería",
+    "sustainable": "Certificado sostenible",
+    "stackable_chairs": "Sillas apilables",
+    "furniture": "Mobiliario",
+    "water": "Agua",
+    "parking": "Aparcamiento",
+    "bike_parking": "Aparcamiento bicicletas",
+    "campus": "Campus",
+    "cellar": "Bodega",
+    "soundproofed": "Insonorizada"
   },
   "lang": {
     "label": "Idioma"

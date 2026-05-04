@@ -1,11 +1,11 @@
 /* ============================================================================
-   Cascade layers — imported in declared order.
-   Order matters: tokens before elements, components before utilities.
+   Cascade layers — @import must come before @layer declarations (PostCSS rule).
+   Layer order is enforced by the first @layer statement each file declares.
    ============================================================================ */
-@layer reset, tokens, elements, components, utilities;
-
 @import 'maplibre-gl/dist/maplibre-gl.css';
 @import '../../styles/tokens.css';
 @import '../../styles/elements.css';
 @import '../../styles/components.css';
 @import '../../styles/utilities.css';
+
+@layer reset, tokens, elements, components, utilities;

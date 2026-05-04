@@ -11,9 +11,7 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.supabase.co' },
     ],
   },
-  experimental: {
-    optimizePackageImports: ['maplibre-gl'],
-  },
+  experimental: {},
 };
 
 export default withNextIntl(nextConfig);

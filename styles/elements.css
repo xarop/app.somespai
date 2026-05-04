@@ -1,6 +1,5 @@
 /* ============================================================================
    Elements — semantic styling for raw HTML, no class names needed
-   Layer: reset, then elements
    ============================================================================ */
 
 @layer reset {
@@ -29,7 +28,7 @@
   :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 2px;
   }
 
   ::selection { background: var(--primary-tint); color: var(--ink); }
@@ -37,32 +36,35 @@
 
 @layer elements {
   body {
-    font-family: var(--sans);
+    font-family: var(--font);
+    font-variation-settings: var(--rx-sans);
     font-size: var(--t-base);
+    font-weight: 400;
     line-height: 1.55;
     color: var(--ink);
     background: var(--bg);
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--serif);
-    font-weight: 500;
+    font-family: var(--font);
+    font-variation-settings: var(--rx-casual);
+    font-weight: 700;
     line-height: 1.15;
-    letter-spacing: -0.015em;
+    letter-spacing: -0.02em;
     color: var(--ink);
   }
-  h1 { font-size: var(--t-3xl); font-variation-settings: 'opsz' 96; }
-  h2 { font-size: var(--t-2xl); font-variation-settings: 'opsz' 48; }
-  h3 { font-size: var(--t-xl);  font-variation-settings: 'opsz' 24; }
-  h4 { font-size: var(--t-lg);  font-variation-settings: 'opsz' 18; }
+  h1 { font-size: var(--t-3xl); }
+  h2 { font-size: var(--t-2xl); }
+  h3 { font-size: var(--t-xl);  }
+  h4 { font-size: var(--t-lg);  }
 
   @media (min-width: 880px) {
-    h1 { font-size: var(--t-4xl); font-variation-settings: 'opsz' 144; }
+    h1 { font-size: var(--t-4xl); }
   }
 
   p { color: var(--ink-soft); }
   small { font-size: var(--t-sm); color: var(--ink-soft); }
-  strong { font-weight: 600; color: var(--ink); }
+  strong { font-weight: 700; color: var(--ink); }
 
   a {
     color: var(--primary);
@@ -71,7 +73,8 @@
   a:hover { color: var(--primary-soft); }
 
   button {
-    font-family: var(--sans);
+    font-family: var(--font);
+    font-variation-settings: var(--rx-sans);
     font-weight: 500;
     color: var(--ink);
     transition:
@@ -84,7 +87,8 @@
   button:disabled { opacity: 0.5; cursor: not-allowed; }
 
   input, textarea, select {
-    font-family: var(--sans);
+    font-family: var(--font);
+    font-variation-settings: var(--rx-sans);
     background: var(--glass-strong);
     border: 1px solid var(--glass-border);
     border-radius: var(--r-md);
@@ -118,7 +122,11 @@
     margin: var(--s-5) 0;
   }
 
-  code, pre, kbd { font-family: var(--mono); font-size: 0.92em; }
+  code, pre, kbd {
+    font-family: var(--font);
+    font-variation-settings: var(--rx-mono);
+    font-size: 0.92em;
+  }
   code { background: var(--bg-soft); padding: 2px 6px; border-radius: var(--r-sm); }
 
   dialog {

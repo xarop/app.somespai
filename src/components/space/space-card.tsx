@@ -74,7 +74,7 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike }: SpaceCardPro
         <div className="card__footer">
           <p className="card__price">
             {formattedPrice}
-            <span className="card__price-unit">{t('card.month')}</span>
+            <span className="card__price-unit">{t(`card.${space.priceUnit}`)}</span>
           </p>
           <p className="card__rating">
             <Icon name="star" size={14} />

@@ -29,17 +29,19 @@
     --warning: #b8893a;
     --danger:  #b54336;
 
-    /* ── Glass ────────────────────────────────────────────────────────────── */
-    --glass:        rgba(255, 252, 247, 0.62);
-    --glass-strong: rgba(255, 252, 247, 0.88);
-    --glass-border: rgba(31, 28, 23, 0.08);
-    --glass-shadow: 0 8px 32px rgba(31, 28, 23, 0.08),
-                    0 2px 6px  rgba(31, 28, 23, 0.04);
+    /* ── Glass (border only — no shadows) ────────────────────────────────── */
+    --glass:        rgba(255, 252, 247, 0.72);
+    --glass-strong: rgba(255, 252, 247, 0.92);
+    --glass-border: rgba(31, 28, 23, 0.10);
 
-    /* ── Typography ───────────────────────────────────────────────────────── */
-    --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-    --sans:  'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    --mono:  'Geist Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+    /* ── Typography — Recursive variable font ────────────────────────────── */
+    --font: var(--font-recursive), monospace;
+
+    /* Axis presets */
+    --rx-sans:   "MONO" 0, "CASL" 0, "slnt" 0, "CRSV" 0.5;
+    --rx-mono:   "MONO" 1, "CASL" 0, "slnt" 0, "CRSV" 0.5;
+    --rx-casual: "MONO" 0, "CASL" 0.5, "slnt" 0, "CRSV" 0.5;
+    --rx-italic: "MONO" 0, "CASL" 0.5, "slnt" -10, "CRSV" 1;
 
     --t-xs:   0.75rem;
     --t-sm:   0.875rem;
@@ -60,17 +62,12 @@
     --c-md: 880px;
     --c-lg: 1200px;
 
-    /* ── Radii ────────────────────────────────────────────────────────────── */
-    --r-sm:   8px;
-    --r-md:  14px;
-    --r-lg:  22px;
-    --r-xl:  32px;
-    --r-pill: 999px;
-
-    /* ── Shadows (warm) ───────────────────────────────────────────────────── */
-    --shadow-1: 0 1px 2px  rgba(31, 28, 23, 0.06);
-    --shadow-2: 0 6px 18px rgba(31, 28, 23, 0.08);
-    --shadow-3: 0 18px 48px rgba(31, 28, 23, 0.12);
+    /* ── Radii — quasi-square, very subtle ───────────────────────────────── */
+    --r-sm:   2px;
+    --r-md:   3px;
+    --r-lg:   5px;
+    --r-xl:   7px;
+    --r-pill: 18px;
 
     /* ── Motion ───────────────────────────────────────────────────────────── */
     --ease:      cubic-bezier(0.22, 1, 0.36, 1);

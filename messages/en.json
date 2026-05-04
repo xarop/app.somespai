@@ -3,7 +3,8 @@
     "name": "somespai"
   },
   "nav": {
-    "searchPlaceholder": "Search spaces in Vila de Gràcia…",
+    "searchPlaceholder": "Search spaces near you…",
+    "searchLocating": "Locating…",
     "signIn": "Sign in",
     "designSystem": "Design system",
     "publish": "Publish a space"
@@ -22,17 +23,21 @@
   "sheet": {
     "count": "{n, plural, =0 {No spaces} one {# space in Vila de Gràcia} other {# spaces in Vila de Gràcia}}",
     "empty": "No spaces match this filter. Try another.",
-    "sort": "Sorted by distance"
+    "sortDistance": "Nearest",
+    "sortPrice": "Price",
+    "sortRating": "Rating"
   },
   "card": {
     "month": "/mo",
+    "day": "/day",
+    "hour": "/hr",
     "featured": "Featured",
     "like": "Like",
     "size": "{n} m²"
   },
   "detail": {
     "share": "Share",
-    "contact": "Contact owner",
+    "contact": "Contact",
     "size": "{n} m²",
     "reviews": "{n, plural, =0 {No reviews yet} one {# review} other {# reviews}}",
     "amenities": "Includes",
@@ -44,6 +49,54 @@
     "email": "Your email",
     "send": "Send me the link",
     "sent": "Check your inbox"
+  },
+  "amenity": {
+    "wifi": "Wi-Fi",
+    "fiber": "Symmetric fibre",
+    "hot_desk": "Hot desk",
+    "fixed_desk": "Fixed desk",
+    "monitor": "Monitor",
+    "locker": "Locker",
+    "meeting_room": "Meeting room",
+    "event_space": "Event space",
+    "whiteboard": "Whiteboard",
+    "projector": "Projector",
+    "podcast_studio": "Podcast studio",
+    "ac": "Air conditioning",
+    "heating": "Heating",
+    "dimmable_light": "Dimmable lighting",
+    "hardwood_floor": "Hardwood floor",
+    "coffee": "Coffee",
+    "kitchen": "Kitchen",
+    "printer": "Printer",
+    "printer_3d": "3D printer",
+    "pa_system": "PA system",
+    "audio": "Audio system",
+    "tools": "Tools",
+    "scale": "Scale",
+    "access_24h": "24h access",
+    "cameras": "Security cameras",
+    "van_access": "Van access",
+    "terrace": "Terrace",
+    "bbq": "BBQ",
+    "pool": "Swimming pool",
+    "shade": "Shade",
+    "sea_view": "Sea view",
+    "mountain_view": "Mountain view",
+    "dry": "Dry",
+    "electricity": "Electricity",
+    "community": "Community",
+    "reception": "Reception",
+    "concierge": "Concierge",
+    "sustainable": "Sustainability certified",
+    "stackable_chairs": "Stackable chairs",
+    "furniture": "Furniture",
+    "water": "Water",
+    "parking": "Parking",
+    "bike_parking": "Bike parking",
+    "campus": "Campus",
+    "cellar": "Wine cellar",
+    "soundproofed": "Soundproofed"
   },
   "lang": {
     "label": "Language"
