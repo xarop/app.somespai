@@ -226,7 +226,7 @@
   .btn-publish {
     display: inline-flex;
     align-items: center;
-    padding: var(--s-2) var(--s-4);
+    padding: var(--s-3) var(--s-4);
     border-radius: var(--r-sm);
     font-size: var(--t-sm);
     font-weight: 600;
@@ -427,7 +427,7 @@
   }
 
   .chip[aria-pressed="true"] .chip__icon {
-    background: rgba(255, 252, 247, 0.15);
+    background: transparent;
     color: var(--bg);
   }
 
