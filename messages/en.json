@@ -15,8 +15,8 @@
   "filter": {
     "all": "All",
     "storage": "Storage",
-    "workspace": "Studios",
-    "garden": "Gardens",
+    "workspace": "Offices",
+    "garden": "Outdoors",
     "room": "Rooms",
     "featured": "Featured"
   },
