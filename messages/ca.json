@@ -14,10 +14,10 @@
   },
   "filter": {
     "all": "Tots",
-    "storage": "Trasters",
-    "workspace": "Escriptoris",
-    "garden": "Exteriors",
-    "room": "Sales",
+    "storage": "Traster",
+    "workspace": "Estudi",
+    "garden": "Exterior",
+    "room": "Sala",
     "featured": "Destacats"
   },
   "sheet": {

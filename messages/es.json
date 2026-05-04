@@ -14,10 +14,10 @@
   },
   "filter": {
     "all": "Todos",
-    "storage": "Trasteros",
-    "workspace": "Escritorios",
-    "garden": "Exteriores",
-    "room": "Salas",
+    "storage": "Trastero",
+    "workspace": "Estudio",
+    "garden": "Exterior",
+    "room": "Sala",
     "featured": "Destacados"
   },
   "sheet": {
