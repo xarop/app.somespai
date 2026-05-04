@@ -139,7 +139,7 @@ npx supabase link --project-ref nkdmysztmgerwhrklzhx
 npx supabase db push
 
 # Carrega les dades inicials (27 espais)
-npx supabase db execute --file supabase/seed.sql
+npx supabase db query --linked -f supabase/seed.sql
 ```
 
 **Quan s'afegeix una nova migració:**
