@@ -5,22 +5,8 @@ import maplibregl, { type Map as MapLibreMap, type Marker } from 'maplibre-gl';
 import type { Space } from '@/lib/schemas/space';
 import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
 
-const TILE_FALLBACK_STYLE: maplibregl.StyleSpecification = {
-  version: 8,
-  sources: {
-    osm: {
-      type: 'raster',
-      tiles: [
-        'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        'https://c.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      ],
-      tileSize: 256,
-      attribution: '© OpenStreetMap contributors',
-    },
-  },
-  layers: [{ id: 'osm', type: 'raster', source: 'osm', paint: { 'raster-saturation': -0.4 } }],
-};
+// Carto Positron — clean minimal vector map, no API key required
+const CARTO_POSITRON = 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
 
 const TYPE_SVG: Record<Space['type'], string> = {
   storage: `<path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/>`,
@@ -53,8 +39,7 @@ export function MapView({ spaces, activeSpaceId, onSelect, userCenter }: MapView
     const container = containerRef.current;
     if (!container || mapRef.current) return;
 
-    const style: string | maplibregl.StyleSpecification =
-      process.env.NEXT_PUBLIC_MAP_TILES_URL || TILE_FALLBACK_STYLE;
+    const style: string = process.env.NEXT_PUBLIC_MAP_TILES_URL || CARTO_POSITRON;
 
     const center = userCenter ?? GRACIA_CENTER;
 
