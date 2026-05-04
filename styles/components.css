@@ -227,7 +227,7 @@
     display: inline-flex;
     align-items: center;
     padding: var(--s-2) var(--s-4);
-    border-radius: var(--r-pill);
+    border-radius: var(--r-sm);
     font-size: var(--t-sm);
     font-weight: 600;
     color: var(--primary-ink);
@@ -799,11 +799,10 @@
     height: 36px;
     display: grid;
     place-items: center;
-    background: var(--glass-strong);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-radius: var(--r-sm);
-    color: var(--ink);
+    color: var(--glass-strong);
     transition: transform var(--t-fast) var(--ease);
   }
 
