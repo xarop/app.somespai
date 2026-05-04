@@ -137,7 +137,13 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
         </label>
 
         <div className="topnav__actions">
-          <a href="/publica" className="btn-publish">
+          <a
+            href="/publica"
+            className="btn-publish"
+            onClick={(e) => {
+              if (!user) { e.preventDefault(); setAuthOpen(true); }
+            }}
+          >
             {t('nav.publish')}
           </a>
 

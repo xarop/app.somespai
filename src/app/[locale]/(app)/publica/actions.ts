@@ -4,10 +4,13 @@ import { createClient } from '@/lib/supabase/server';
 import { slugify } from '@/lib/geo';
 import { redirect } from 'next/navigation';
 
-export async function createSpaceAction(formData: FormData) {
+export async function createSpaceAction(
+  _prev: string | null,
+  formData: FormData,
+): Promise<string | null> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Not authenticated');
+  if (!user) return 'Not authenticated';
 
   const title = (formData.get('title') as string).trim();
   const type = formData.get('type') as string;
@@ -24,6 +27,8 @@ export async function createSpaceAction(formData: FormData) {
   const lng = parseFloat(formData.get('lng') as string);
   const contactUrl = (formData.get('contact_url') as string)?.trim() || null;
   const amenities = formData.getAll('amenities') as string[];
+
+  if (isNaN(lat) || isNaN(lng)) return 'Invalid coordinates — geocode the address first';
 
   // Upload photos
   const photos: string[] = [];
@@ -71,7 +76,7 @@ export async function createSpaceAction(formData: FormData) {
     .select('slug')
     .single();
 
-  if (error) throw new Error(error.message);
+  if (error) return error.message;
 
   redirect(`/espai/${space.slug}`);
 }

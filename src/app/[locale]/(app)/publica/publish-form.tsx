@@ -23,17 +23,7 @@ export function PublishForm() {
   const tAmenity = useTranslations('amenity');
   const tFilter = useTranslations('filter');
 
-  const [state, formAction, isPending] = useActionState(
-    async (_prev: null | string, formData: FormData) => {
-      try {
-        await createSpaceAction(formData);
-        return null;
-      } catch (e) {
-        return (e as Error).message;
-      }
-    },
-    null
-  );
+  const [state, formAction, isPending] = useActionState(createSpaceAction, null);
 
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [lat, setLat] = useState('41.4047');
