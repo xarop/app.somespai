@@ -243,14 +243,16 @@
   }
 
   .chip--info {
-    padding: var(--s-2);
-    color: var(--ink-mute);
-    border-style: dashed;
-  }
-
-  .chip--info:hover {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: var(--t-lg);
+    font-weight: 700;
+    font-style: italic;
+    line-height: 1;
     color: var(--ink);
-    border-style: solid;
+    justify-content: center;
   }
 
   /* ── Map ──────────────────────────────────────────────────────────────── */

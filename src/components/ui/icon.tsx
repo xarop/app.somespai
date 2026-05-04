@@ -76,8 +76,8 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
   arrowLeft: <path d="M19 12H5M12 19l-7-7 7-7" />,
   info: (
     <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 8h.01M12 12v4" />
+      <circle cx="12" cy="7" r="1.2" fill="currentColor" stroke="none" />
+      <line x1="12" y1="11" x2="12" y2="18" strokeWidth={2.2} strokeLinecap="round" />
     </>
   ),
   ruler: (

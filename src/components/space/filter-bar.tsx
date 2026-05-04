@@ -39,7 +39,7 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
           aria-label={t('typeInfo.title')}
           onClick={() => setInfoOpen(true)}
         >
-          <Icon name="info" size={16} />
+          <i aria-hidden="true">i</i>
         </button>
 
         {FILTERS.map((f) => (
