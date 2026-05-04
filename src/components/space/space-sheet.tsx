@@ -15,9 +15,10 @@ interface SpaceSheetProps {
   onSortChange: (sort: SortId) => void;
   onSelect: (space: Space) => void;
   onToggleLike: (id: string) => void;
+  locationLabel: string | null;
 }
 
-export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike }: SpaceSheetProps) {
+export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, locationLabel }: SpaceSheetProps) {
   const t = useTranslations();
 
   const sortLabel: Record<SortId, string> = {
@@ -39,7 +40,11 @@ export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onT
     <section className="sheet glass" aria-label="Spaces">
       <span className="sheet__handle" aria-hidden="true" />
       <header className="sheet__header">
-        <h2 className="sheet__count">{t('sheet.count', { n: spaces.length })}</h2>
+        <h2 className="sheet__count">
+          {locationLabel
+            ? t('sheet.count', { n: spaces.length, location: locationLabel })
+            : t('sheet.countAll', { n: spaces.length })}
+        </h2>
         <div className="sheet__sort-bar" role="group">
           {SORT_OPTIONS.map((id) => (
             <button

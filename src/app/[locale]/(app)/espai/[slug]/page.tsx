@@ -1,19 +1,22 @@
+import { notFound } from 'next/navigation';
+import { setRequestLocale } from 'next-intl/server';
+import { getSpaceBySlug, getAllSlugs } from '@/lib/supabase/spaces';
+import { SpaceDetailClient } from './space-detail-client';
+
 // Supported locales for static export
 const SUPPORTED_LOCALES = ['ca', 'es', 'en'];
 
-export function generateStaticParams() {
-  // For each locale and each mock space, return a param object
-  return SUPPORTED_LOCALES.flatMap((locale) =>
-    MOCK_SPACES.map((space) => ({
-      locale,
-      slug: space.slug,
-    }))
-  );
+export async function generateStaticParams() {
+  try {
+    const slugs = await getAllSlugs();
+    return SUPPORTED_LOCALES.flatMap((locale) =>
+      slugs.map((slug) => ({ locale, slug })),
+    );
+  } catch {
+    // Supabase unavailable at build time (e.g. static export without DB).
+    return [];
+  }
 }
-import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
-import { MOCK_SPACES } from '@/lib/data/mock-spaces';
-import { SpaceDetailClient } from './space-detail-client';
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -21,7 +24,7 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const space = MOCK_SPACES.find((s) => s.slug === slug);
+  const space = await getSpaceBySlug(slug);
   if (!space) return {};
   return {
     title: space.title,
@@ -38,7 +41,7 @@ export default async function SpaceDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const space = MOCK_SPACES.find((s) => s.slug === slug);
+  const space = await getSpaceBySlug(slug);
   if (!space) notFound();
 
   return <SpaceDetailClient space={space} />;

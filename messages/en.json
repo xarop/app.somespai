@@ -21,7 +21,8 @@
     "featured": "Featured"
   },
   "sheet": {
-    "count": "{n, plural, =0 {No spaces} one {# space in Vila de Gràcia} other {# spaces in Vila de Gràcia}}",
+    "count": "{n, plural, =0 {No spaces} one {# space in {location}} other {# spaces in {location}}}",
+    "countAll": "{n, plural, =0 {No spaces found} one {# space found} other {# spaces found}}",
     "empty": "No spaces match this filter. Try another.",
     "sortDistance": "Nearest",
     "sortPrice": "Price",

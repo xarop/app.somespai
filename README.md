@@ -22,71 +22,107 @@ Tot el codi en anglès. Tota la UI traduïble.
 
 Llegeix abans de tocar el codi:
 
-- [`design.md`](./design.md) — sistema de disseny (colors, tipografia, components)
-- [`agents.md`](./agents.md) — arquitectura, model de dades, convencions
+- [`DESIGN.md`](./DESIGN.md) — sistema de disseny (colors, tipografia, components)
+- [`AGENTS.md`](./AGENTS.md) — arquitectura, model de dades, convencions
 
 I la ruta interactiva: `/design-system`.
 
 ---
 
-## Setup
+## Setup local
 
-### 1. Requirements
+### 1. Requisits
 
-- Node.js 20+
-- pnpm (recommended) or npm
-- A Supabase project (or local `supabase start`)
+- Node.js 20+ / Bun
+- [Supabase CLI](https://supabase.com/docs/guides/cli) (`npm i -g supabase`)
+- Docker (per al Supabase local)
 
-### 2. Install
+### 2. Instal·la dependències
 
 ```bash
-pnpm install
+bun install
+```
+
+### 3. Variables d'entorn
+
+```bash
 cp .env.example .env.local
-# Fill in NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
+# Edita .env.local amb les claus del teu projecte Supabase
 ```
 
-### 3. Database
+Per a desenvolupament local, `npx supabase start` genera les claus automàticament i les pots copiar des de `npx supabase status`.
 
-Run the migration on your Supabase project:
+### 4. Base de dades local
 
 ```bash
-psql $DATABASE_URL -f supabase/migrations/0001_init.sql
+# Arrenca Supabase local (Docker)
+npx supabase start
+
+# Aplica totes les migracions i el seed amb les dades inicials
+npx supabase db reset --local
 ```
 
-Or via Supabase dashboard SQL editor: paste the contents of `supabase/migrations/0001_init.sql`.
+El `db reset` aplica les migracions de `supabase/migrations/` i executa `supabase/seed.sql` (27 espais reals de Barcelona).
 
-### 4. Run
+### 5. Arrenca l'app
 
 ```bash
-pnpm dev
-# → http://localhost:3000
+bun dev
+# → http://localhost:3000/ca
 ```
 
-Catalan is the default. Try also `/es` and `/en`.
+Català és el locale per defecte. Prova també `/es` i `/en`.
 
 ---
 
-## Phase 1 — what's built
+## Migracions
 
-- ✅ Repo structure (`src/app`, `src/components`, `src/lib`, `messages`, `styles`)
-- ✅ `design.md`, `agents.md`, `README.md`
-- ✅ CSS layered system (`tokens` → `elements` → `components` → `utilities`)
-- ✅ i18n with `ca`, `es`, `en` (CA default)
-- ✅ Home page: MapLibre map centered on Vila de Gràcia + filterable list
-- ✅ Mock data (10 spaces in Vila de Gràcia)
-- ✅ Shareable URLs (`/[locale]/espai/[slug]`)
-- ✅ `/design-system` interactive component gallery
-- ✅ Postgres + PostGIS migration ready
-- ✅ Supabase client stubs (browser + server)
+| Fitxer | Contingut |
+|--------|-----------|
+| `0001_init.sql` | Esquema inicial: `profiles`, `spaces`, `reviews`, `favorites`, RLS, RPC `nearby_spaces` |
+| `0002_add_space_extra_fields.sql` | Afegeix `price_unit`, `contact_url`, `rating`, `reviews_count`, columnes generades `lat`/`lng` |
 
-## Phase 2 — next
+Per desplegar en producció (Supabase Cloud):
 
-- Magic-link auth flow + profile
-- Create listing form (`/publica`) with photo upload
-- Reviews + favorites (RLS-backed)
-- Web Share API integration on detail page
-- Admin import endpoint
-- Premium UI (featured spaces, verified badge)
+```bash
+npx supabase db push
+```
+
+---
+
+## Arquitectura de dades
+
+Les pàgines principals són **Server Components** que fan fetch a Supabase i passen les dades als Client Components:
+
+```
+page.tsx (server) → getSpaces() → HomeClient (client)
+espai/[slug]/page.tsx (server) → getSpaceBySlug() → SpaceDetailClient (client)
+```
+
+Totes les queries van per `src/lib/supabase/spaces.ts`. Cap component de client toca Supabase directament.
+
+---
+
+## Phase 1 — fet
+
+- ✅ Estructura del repo (`src/app`, `src/components`, `src/lib`, `messages`, `styles`)
+- ✅ Sistema CSS en capes (`tokens` → `elements` → `components` → `utilities`)
+- ✅ i18n amb `ca`, `es`, `en` (CA per defecte)
+- ✅ Home: mapa MapLibre centrat a Vila de Gràcia + llista filtrable
+- ✅ 27 espais reals de Barcelona (Gràcia, Poblenou, Eixample, Teià) carregats des de Supabase
+- ✅ URLs compartibles (`/[locale]/espai/[slug]`)
+- ✅ `/design-system` galeria interactiva de components
+- ✅ Postgres + PostGIS operatiu en local i en cloud
+- ✅ RLS configurat (default deny, políiques per taula)
+
+## Phase 2 — pendent
+
+- Auth amb magic-link + perfil d'usuari
+- Formulari de creació d'espai (`/publica`) amb pujada de fotos
+- Ressenyes + preferits (RLS)
+- Web Share API a la pàgina de detall
+- Endpoint d'importació admin (`/api/admin/import`)
+- UI premium (espais destacats, badge verificat)
 
 ---
 

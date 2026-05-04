@@ -21,7 +21,8 @@
     "featured": "Destacats"
   },
   "sheet": {
-    "count": "{n, plural, =0 {Cap espai} one {# espai a Vila de Gràcia} other {# espais a Vila de Gràcia}}",
+    "count": "{n, plural, =0 {Cap espai} one {# espai a {location}} other {# espais a {location}}}",
+    "countAll": "{n, plural, =0 {Cap espai trobat} one {# espai trobat} other {# espais trobats}}",
     "empty": "Cap espai amb aquest filtre. Prova-ho amb un altre.",
     "sortDistance": "Proximitat",
     "sortPrice": "Preu",

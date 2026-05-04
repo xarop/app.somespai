@@ -21,7 +21,8 @@
     "featured": "Destacados"
   },
   "sheet": {
-    "count": "{n, plural, =0 {Sin espacios} one {# espacio en Vila de Gràcia} other {# espacios en Vila de Gràcia}}",
+    "count": "{n, plural, =0 {Sin espacios} one {# espacio en {location}} other {# espacios en {location}}}",
+    "countAll": "{n, plural, =0 {Sin resultados} one {# espacio encontrado} other {# espacios encontrados}}",
     "empty": "Sin resultados con este filtro. Prueba con otro.",
     "sortDistance": "Proximidad",
     "sortPrice": "Precio",

@@ -1007,7 +1007,6 @@
     .sheet {
       top: var(--t-base);
       right: var(--s-7);
-      bottom: var(--s-7);
       left: auto;
       width: 380px;
       border-radius: var(--r-lg);
@@ -1036,4 +1035,8 @@
       right: calc(380px + var(--s-5));
     }
   }
+}
+
+.maplibregl-ctrl-bottom-right {
+  z-index: 50 !important;
 }
