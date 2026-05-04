@@ -19,10 +19,10 @@ const FILTERS: ReadonlyArray<{
   labelKey: string;
 }> = [
   { id: 'all', iconName: null, labelKey: 'filter.all' },
-  { id: 'storage', iconName: 'storage', labelKey: 'filter.storage' },
   { id: 'workspace', iconName: 'workspace', labelKey: 'filter.workspace' },
   { id: 'garden', iconName: 'garden', labelKey: 'filter.garden' },
   { id: 'room', iconName: 'room', labelKey: 'filter.room' },
+  { id: 'storage', iconName: 'storage', labelKey: 'filter.storage' },
   { id: 'featured', iconName: 'star', labelKey: 'filter.featured' },
 ];
 
