@@ -51,7 +51,11 @@ export function FilterBar({ active, onChange }: FilterBarProps) {
             data-type={f.id !== 'all' && f.id !== 'featured' ? f.id : undefined}
             onClick={() => onChange(f.id)}
           >
-            {f.iconName && <Icon name={f.iconName} size={16} />}
+            {f.iconName && (
+              <span className="chip__icon">
+                <Icon name={f.iconName} size={16} />
+              </span>
+            )}
             <span>{t(f.labelKey)}</span>
           </button>
         ))}
