@@ -127,6 +127,15 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
     else map.once('load', fly);
   }, [spaces]);
 
+  // Fly to user location when geolocation resolves
+  useEffect(() => {
+    if (!userCenter) return;
+    const map = mapRef.current;
+    const fly = () => map?.flyTo({ center: [userCenter.lng, userCenter.lat], zoom: 15, duration: 1000 });
+    if (map?.loaded()) fly();
+    else map?.once('load', fly);
+  }, [userCenter]);
+
   // Update data-hover attribute without re-creating markers
   useEffect(() => {
     for (const [id, marker] of markersRef.current) {
