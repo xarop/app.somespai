@@ -50,6 +50,7 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
   const [newRating, setNewRating] = useState(5);
   const [newBody, setNewBody] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [reviewsLoaded, setReviewsLoaded] = useState(false);
 
@@ -100,13 +101,16 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
     e.preventDefault();
     if (!space || submitting) return;
     setSubmitting(true);
+    setReviewError(null);
     try {
       await addReview(space.id, newRating, newBody);
       const updated = await getReviews(space.id);
       setReviews(updated);
       setUserRating(newRating);
       setNewBody('');
-    } catch { /* ignore */ }
+    } catch (err) {
+      setReviewError(err instanceof Error ? err.message : 'Error desconegut');
+    }
     setSubmitting(false);
   }
 
@@ -268,6 +272,9 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
                 onChange={e => setNewBody(e.target.value)}
                 placeholder={t('review.bodyPlaceholder')}
               />
+              {reviewError && (
+                <p className="reviews__error">{reviewError}</p>
+              )}
               <button type="submit" data-variant="primary" disabled={submitting} style={{ alignSelf: 'flex-start' }}>
                 {submitting ? t('review.submitting') : t('review.submit')}
               </button>
