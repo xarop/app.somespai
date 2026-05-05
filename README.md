@@ -205,13 +205,26 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 - ✅ Endpoint d'importació admin: `POST /api/admin/import` (autenticació per service role key)
 - ✅ Badge verificat per espais amb `ownerVerified`
 
-**Endpoint d'importació:**
+**Endpoint d'importació (API):**
 
 ```bash
 curl -X POST https://app.somespai.net/api/admin/import \
   -H "Authorization: Bearer <SUPABASE_SERVICE_ROLE_KEY>" \
   -H "Content-Type: application/json" \
   -d '[{"slug":"...", "title":"...", ...}]'
+```
+
+**Eina d'importació massiva (Script):**
+
+L'eina `scripts/bulk-scraper.ts` permet importar llistats d'espais cercant a la xarxa a través de Google Places API i incloent les imatges optimitzades a WebP. Deixa els espais al panell com a "Pausats" per a la seva revisió.
+Calen les variables d'entorn següents a `.env.local`: `GOOGLE_PLACES_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, i `SUPABASE_SERVICE_ROLE_KEY`.
+
+```bash
+# Exemple per descarregar trasters de Badalona passant-los al tipus 'storage':
+bun run scripts/bulk-scraper.ts "trasteros en Badalona" storage
+
+# Exemple per sales de coworking de Gràcia passant-los al tipus 'workspace':
+bun run scripts/bulk-scraper.ts "coworking a Gràcia" workspace
 ```
 
 ## Phase 3 — fet
