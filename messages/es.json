@@ -183,7 +183,28 @@
   },
   "user": {
     "signOut": "Cerrar sesión",
-    "mySpaces": "Mis espacios"
+    "mySpaces": "Mis espacios",
+    "noSpaces": "Todavía no has publicado ningún espacio.",
+    "statusActive": "Publicado",
+    "statusPaused": "Pausado",
+    "editSpace": "Editar"
+  },
+  "edit": {
+    "title": "Edita tu espacio",
+    "subtitle": "Modifica los datos de tu espacio.",
+    "sectionStatus": "Estado y visibilidad",
+    "fieldStatus": "Estado",
+    "statusActive": "Publicado (visible)",
+    "statusPaused": "Pausado (no visible)",
+    "submit": "Guardar cambios",
+    "submitting": "Guardando…",
+    "photosKeep": "Fotos actuales",
+    "photosAdd": "Añadir fotos nuevas · JPG, PNG, WebP · máx. 10 MB cada una",
+    "deleteSpace": "Borrar espacio",
+    "deleteConfirm": "¿Seguro que quieres borrar este espacio? Esta acción no se puede deshacer.",
+    "deleting": "Borrando…",
+    "confirm": "Confirmar borrado",
+    "cancel": "Cancelar"
   },
   "lang": {
     "label": "Idioma"
@@ -242,7 +263,8 @@
     "deleteConfirm": "¿Seguro que quieres borrar este espacio? Esta acción no se puede deshacer.",
     "empty": "Ningún espacio con este filtro.",
     "sectionStatus": "Estado y visibilidad",
-    "fieldRegion": "Región"
+    "fieldRegion": "Región",
+    "searchPlaceholder": "Buscar por título, dirección…"
   },
   "ds": {
     "title": "Sistema de diseño",

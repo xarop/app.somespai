@@ -18,6 +18,7 @@ interface SpaceDetailModalProps {
   space: Space | null;
   onClose: () => void;
   isAdmin?: boolean;
+  currentUserId?: string;
 }
 
 function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
@@ -39,7 +40,7 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
   );
 }
 
-export function SpaceDetailModal({ space, onClose, isAdmin }: SpaceDetailModalProps) {
+export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -135,7 +136,7 @@ export function SpaceDetailModal({ space, onClose, isAdmin }: SpaceDetailModalPr
       <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
         <Icon name="close" size={18} />
       </button>
-      {isAdmin && (
+      {isAdmin ? (
         <a
           href={`/${locale}/admin?edit=${space.id}`}
           className="modal__admin-edit"
@@ -143,7 +144,15 @@ export function SpaceDetailModal({ space, onClose, isAdmin }: SpaceDetailModalPr
         >
           <Icon name="pencil" size={15} />
         </a>
-      )}
+      ) : currentUserId && space.ownerId === currentUserId ? (
+        <a
+          href={`/${locale}/editar/${space.slug}`}
+          className="modal__admin-edit"
+          title="Editar"
+        >
+          <Icon name="pencil" size={15} />
+        </a>
+      ) : null}
 
       <div className="detail__hero" data-type={space.type}>
         {space.photos[0] ? (

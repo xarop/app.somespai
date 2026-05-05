@@ -17,9 +17,10 @@ interface SpaceSheetProps {
   onToggleLike: (id: string) => void;
   locationLabel: string | null;
   isAdmin: boolean;
+  currentUserId?: string;
 }
 
-export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, locationLabel, isAdmin }: SpaceSheetProps) {
+export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, locationLabel, isAdmin, currentUserId }: SpaceSheetProps) {
   const t = useTranslations();
 
   const sortLabel: Record<SortId, string> = {
@@ -69,6 +70,7 @@ export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onT
             onSelect={onSelect}
             onToggleLike={onToggleLike}
             isAdmin={isAdmin}
+            currentUserId={currentUserId}
           />
         ))}
       </div>

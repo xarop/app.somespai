@@ -14,7 +14,11 @@ const nextConfig = {
       { protocol: 'https', hostname: '**.supabase.co' },
     ],
   },
-  experimental: {},
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '10mb',
+    },
+  },
   output: isExport ? 'export' : undefined,
   // Para rutas relativas en export estático
   basePath: isExport ? '/app.somespai' : undefined,

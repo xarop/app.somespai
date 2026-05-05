@@ -17,9 +17,10 @@ interface SpaceCardProps {
   onSelect: (space: Space) => void;
   onToggleLike: (id: string) => void;
   isAdmin?: boolean;
+  currentUserId?: string;
 }
 
-export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin }: SpaceCardProps) {
+export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin, currentUserId }: SpaceCardProps) {
   const t = useTranslations();
   const locale = useLocale();
 
@@ -65,7 +66,7 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin }: Spa
         >
           <Icon name="heart" size={18} />
         </button>
-        {isAdmin && (
+        {isAdmin ? (
           <a
             href={`/${locale}/admin?edit=${space.id}`}
             className="card__admin-edit"
@@ -74,7 +75,16 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin }: Spa
           >
             <Icon name="pencil" size={13} />
           </a>
-        )}
+        ) : currentUserId && space.ownerId === currentUserId ? (
+          <a
+            href={`/${locale}/editar/${space.slug}`}
+            className="card__admin-edit"
+            title="Editar"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Icon name="pencil" size={13} />
+          </a>
+        ) : null}
       </div>
 
       <div className="card__body">

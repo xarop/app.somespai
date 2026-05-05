@@ -183,7 +183,28 @@
   },
   "user": {
     "signOut": "Sign out",
-    "mySpaces": "My spaces"
+    "mySpaces": "My spaces",
+    "noSpaces": "You haven't published any spaces yet.",
+    "statusActive": "Published",
+    "statusPaused": "Paused",
+    "editSpace": "Edit"
+  },
+  "edit": {
+    "title": "Edit your space",
+    "subtitle": "Update the details of your space.",
+    "sectionStatus": "Status and visibility",
+    "fieldStatus": "Status",
+    "statusActive": "Published (visible)",
+    "statusPaused": "Paused (hidden)",
+    "submit": "Save changes",
+    "submitting": "Saving…",
+    "photosKeep": "Current photos",
+    "photosAdd": "Add new photos · JPG, PNG, WebP · max. 10 MB each",
+    "deleteSpace": "Delete space",
+    "deleteConfirm": "Are you sure you want to delete this space? This action cannot be undone.",
+    "deleting": "Deleting…",
+    "confirm": "Confirm delete",
+    "cancel": "Cancel"
   },
   "lang": {
     "label": "Language"
@@ -242,7 +263,8 @@
     "deleteConfirm": "Are you sure you want to delete this space? This action cannot be undone.",
     "empty": "No spaces match this filter.",
     "sectionStatus": "Status and visibility",
-    "fieldRegion": "Region"
+    "fieldRegion": "Region",
+    "searchPlaceholder": "Search by title, address…"
   },
   "ds": {
     "title": "Design system",

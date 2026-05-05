@@ -61,6 +61,33 @@ export async function getSpaceBySlug(slug: string): Promise<Space | null> {
   return data ? rowToSpace(data) : null;
 }
 
+/** Fetch all non-removed spaces owned by a user. */
+export async function getSpacesByOwner(userId: string): Promise<Space[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('spaces')
+    .select('*')
+    .eq('owner_id', userId)
+    .neq('status', 'removed')
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(rowToSpace);
+}
+
+/** Fetch a space by slug+owner for editing (includes paused, excludes removed). */
+export async function getSpaceBySlugForOwner(slug: string, userId: string): Promise<Space | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('spaces')
+    .select('*')
+    .eq('slug', slug)
+    .eq('owner_id', userId)
+    .neq('status', 'removed')
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data ? rowToSpace(data) : null;
+}
+
 /** Fetch all active slugs (used for static param generation). */
 export async function getAllSlugs(): Promise<string[]> {
   const supabase = await createClient();

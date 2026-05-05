@@ -25,9 +25,10 @@ function distanceSq(a: { lat: number; lng: number }, b: { lat: number; lng: numb
 interface HomeClientProps {
   initialSpaces: Space[];
   isAdmin: boolean;
+  currentUserId?: string;
 }
 
-export function HomeClient({ initialSpaces, isAdmin }: HomeClientProps) {
+export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClientProps) {
   const [filter, setFilter] = useState<FilterId>('all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortId>('distance');
@@ -107,11 +108,13 @@ export function HomeClient({ initialSpaces, isAdmin }: HomeClientProps) {
           onToggleLike={toggleLike}
           locationLabel={locationLabel}
           isAdmin={isAdmin}
+          currentUserId={currentUserId}
         />
         <SpaceDetailModal
           space={selectedSpace}
           onClose={() => setSelectedSpace(null)}
           isAdmin={isAdmin}
+          currentUserId={currentUserId}
         />
       </div>
     </div>

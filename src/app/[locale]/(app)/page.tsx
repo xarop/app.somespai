@@ -6,5 +6,5 @@ export default async function HomePage() {
   const [spaces, supabase] = await Promise.all([getSpaces(), createClient()]);
   const { data: { user } } = await supabase.auth.getUser();
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
-  return <HomeClient initialSpaces={spaces} isAdmin={isAdmin} />;
+  return <HomeClient initialSpaces={spaces} isAdmin={isAdmin} currentUserId={user?.id} />;
 }

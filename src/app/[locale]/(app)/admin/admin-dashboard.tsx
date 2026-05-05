@@ -13,6 +13,7 @@ import {
 } from './actions';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
+type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room'] as const;
 
@@ -351,6 +352,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
 
 export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { spaces: Space[]; initialEditId?: string }) {
   const t = useTranslations('admin');
+  const tFilter = useTranslations('filter');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [spaces, setSpacesOptimistic] = useOptimistic(
@@ -359,6 +361,9 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
   );
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
+  const [featuredOnly, setFeaturedOnly] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -376,7 +381,17 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
   };
 
   const featured = initialSpaces.filter(s => s.isFeatured).length;
-  const filtered = statusFilter === 'all' ? spaces : spaces.filter(s => s.status === statusFilter);
+  const filtered = spaces.filter(s => {
+    if (statusFilter !== 'all' && s.status !== statusFilter) return false;
+    if (typeFilter !== 'all' && s.type !== typeFilter) return false;
+    if (featuredOnly && !s.isFeatured) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      return [s.title, s.address, s.neighborhood, s.city, s.description]
+        .some(f => f?.toLowerCase().includes(q));
+    }
+    return true;
+  });
 
   function handleToggleStatus(space: Space) {
     const next = space.status === 'active' ? 'paused' : 'active';
@@ -431,7 +446,19 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </div>
       </div>
 
-      {/* Filter tabs */}
+      {/* Search */}
+      <div className="admin-search-wrap">
+        <Icon name="search" size={16} />
+        <input
+          type="search"
+          className="admin-search-input"
+          placeholder={t('searchPlaceholder')}
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Filter tabs — status */}
       <div className="admin-filter-bar">
         {(['all', 'active', 'paused', 'removed'] as StatusFilter[]).map(f => (
           <button key={f} type="button"
@@ -441,6 +468,24 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
             <span className="admin-filter-tab__count">{counts[f]}</span>
           </button>
         ))}
+      </div>
+
+      {/* Filter row — type + featured */}
+      <div className="admin-filter-bar admin-filter-bar--types">
+        {(['all', 'storage', 'workspace', 'garden', 'room'] as TypeFilter[]).map(type => (
+          <button key={type} type="button"
+            className={`admin-filter-tab${typeFilter === type ? ' admin-filter-tab--active' : ''}`}
+            onClick={() => setTypeFilter(type)}>
+            {type === 'all' ? t('filter_all') : (
+              <><Icon name={type} size={13} />{tFilter(type)}</>
+            )}
+          </button>
+        ))}
+        <button type="button"
+          className={`admin-filter-tab admin-filter-tab--featured${featuredOnly ? ' admin-filter-tab--active' : ''}`}
+          onClick={() => setFeaturedOnly(v => !v)}>
+          ★ {t('statsFeatured')}
+        </button>
       </div>
 
       {/* Table */}

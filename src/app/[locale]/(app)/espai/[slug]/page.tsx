@@ -48,5 +48,5 @@ export default async function SpaceDetailPage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   const isAdmin = user?.email === process.env.ADMIN_EMAIL;
 
-  return <SpaceDetailClient space={space} isAdmin={isAdmin} />;
+  return <SpaceDetailClient space={space} isAdmin={isAdmin} currentUserId={user?.id} />;
 }

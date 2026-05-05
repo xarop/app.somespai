@@ -169,6 +169,9 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
                   <div className="dropmenu__item dropmenu__item--muted">
                     {user.email}
                   </div>
+                  <a href={`/${locale}/perfil`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                    {t('user.mySpaces')}
+                  </a>
                   <button type="button" role="menuitem" onClick={handleSignOut}>
                     {t('user.signOut')}
                   </button>

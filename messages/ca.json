@@ -183,7 +183,28 @@
   },
   "user": {
     "signOut": "Tancar sessió",
-    "mySpaces": "Els meus espais"
+    "mySpaces": "Els meus espais",
+    "noSpaces": "Encara no has publicat cap espai.",
+    "statusActive": "Publicat",
+    "statusPaused": "Pausat",
+    "editSpace": "Editar"
+  },
+  "edit": {
+    "title": "Edita el teu espai",
+    "subtitle": "Modifica les dades del teu espai.",
+    "sectionStatus": "Estat i visibilitat",
+    "fieldStatus": "Estat",
+    "statusActive": "Publicat (visible)",
+    "statusPaused": "Pausat (no visible)",
+    "submit": "Desar canvis",
+    "submitting": "Desant…",
+    "photosKeep": "Fotos actuals",
+    "photosAdd": "Afegir fotos noves · JPG, PNG, WebP · màx. 10 MB cadascuna",
+    "deleteSpace": "Esborrar espai",
+    "deleteConfirm": "Segur que vols esborrar aquest espai? Aquesta acció no es pot desfer.",
+    "deleting": "Esborrant…",
+    "confirm": "Confirmar esborrat",
+    "cancel": "Cancel·lar"
   },
   "lang": {
     "label": "Idioma"
@@ -242,7 +263,8 @@
     "deleteConfirm": "Segur que vols esborrar aquest espai? Aquesta acció no es pot desfer.",
     "empty": "Cap espai amb aquest filtre.",
     "sectionStatus": "Estat i visibilitat",
-    "fieldRegion": "Regió"
+    "fieldRegion": "Regió",
+    "searchPlaceholder": "Cerca per títol, adreça…"
   },
   "ds": {
     "title": "Sistema de disseny",

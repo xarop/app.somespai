@@ -1675,10 +1675,45 @@
   .admin-stat--removed .admin-stat__value { color: var(--danger); }
   .admin-stat--featured .admin-stat__value { color: var(--gold); }
 
+  .admin-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    background: var(--bg-soft);
+    color: var(--ink-mute);
+  }
+
+  .admin-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: var(--t-sm);
+    color: var(--ink);
+    outline: none;
+  }
+
+  .admin-search-input::placeholder {
+    color: var(--ink-mute);
+  }
+
   .admin-filter-bar {
     display: flex;
     gap: var(--s-1);
     flex-wrap: wrap;
+  }
+
+  .admin-filter-bar--types .admin-filter-tab--featured {
+    margin-left: auto;
+    color: var(--gold);
+    border-color: var(--gold);
+  }
+
+  .admin-filter-bar--types .admin-filter-tab--featured.admin-filter-tab--active {
+    background: var(--gold);
+    color: #fff;
   }
 
   .admin-filter-tab {
@@ -2108,6 +2143,64 @@
 
   [data-variant="danger"]:hover {
     background: #9e3629;
+  }
+
+  /* ── Profile page (Els meus espais) ──────────────────────────────────────── */
+  .perfil-spaces {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .perfil-space-row {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    background: var(--bg-soft);
+    border-radius: var(--r-md);
+  }
+
+  .perfil-space-row__info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+  }
+
+  .perfil-space-row__title {
+    font-weight: 600;
+    font-size: var(--t-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .perfil-space-row__status {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .perfil-space-row__status--active { color: var(--status-active, #2d9b5e); }
+  .perfil-space-row__status--paused { color: var(--ink-mute); }
+
+  .perfil-space-row__edit {
+    flex-shrink: 0;
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--primary);
+    text-decoration: none;
+    padding: var(--s-2) var(--s-3);
+    border: 1.5px solid var(--primary);
+    border-radius: var(--r-sm);
+  }
+
+  .perfil-space-row__edit:hover {
+    background: var(--primary);
+    color: var(--primary-ink);
   }
 }
 
