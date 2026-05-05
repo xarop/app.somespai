@@ -90,7 +90,7 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 ## Desplegament a producció
 
 ### Vercel
-
+URL develop: https://app-somespai.vercel.app 
 URL producció: https://app-somespai.vercel.app
 Dashboard: https://vercel.com/xarops-projects/app-somespai
 CNAME app cname.vercel-dns.com
