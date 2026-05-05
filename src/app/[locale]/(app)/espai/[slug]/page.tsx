@@ -25,17 +25,21 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const space = await getSpaceBySlug(slug);
-  if (!space) return {};
-  return {
-    title: space.title,
-    description: space.description ?? undefined,
-    openGraph: {
+  try {
+    const space = await getSpaceBySlug(slug);
+    if (!space) return {};
+    return {
       title: space.title,
       description: space.description ?? undefined,
-      type: 'website',
-    },
-  };
+      openGraph: {
+        title: space.title,
+        description: space.description ?? undefined,
+        type: 'website',
+      },
+    };
+  } catch {
+    return {};
+  }
 }
 
 export default async function SpaceDetailPage({ params }: PageProps) {
