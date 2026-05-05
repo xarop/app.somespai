@@ -111,6 +111,16 @@ export function SpaceTypesInfoModal({ open, onClose, onSelectType }: SpaceTypesI
             </li>
           ))}
         </ul>
+
+        <div style={{ marginTop: 'var(--s-4)', paddingTop: 'var(--s-3)', borderTop: '1px solid var(--glass-border)' }}>
+          <a
+            href="ajuda"
+            style={{ fontSize: 'var(--t-sm)', color: 'var(--ink-mute)', textDecoration: 'underline', textUnderlineOffset: '2px' }}
+            onClick={onClose}
+          >
+            {t('helpLink')}
+          </a>
+        </div>
       </div>
     </dialog>
   );
