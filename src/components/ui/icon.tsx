@@ -104,6 +104,22 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
     </>
   ),
+  map: (
+    <>
+      <path d="M3 6l6-3 6 3 6-3v13l-6 3-6-3-6 3V6z" />
+      <path d="M9 3v13M15 6v13" />
+    </>
+  ),
+  list: (
+    <>
+      <line x1="9" y1="6" x2="20" y2="6" strokeLinecap="round" />
+      <line x1="9" y1="12" x2="20" y2="12" strokeLinecap="round" />
+      <line x1="9" y1="18" x2="20" y2="18" strokeLinecap="round" />
+      <circle cx="4.5" cy="6" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="4.5" cy="12" r="1.5" fill="currentColor" stroke="none" />
+      <circle cx="4.5" cy="18" r="1.5" fill="currentColor" stroke="none" />
+    </>
+  ),
 };
 
 export type IconName = keyof typeof ICON_PATHS;
