@@ -1,5 +1,7 @@
 'use server';
 
+import sharp from 'sharp';
+import { slugify } from '@/lib/geo';
 import { createClient } from '@/lib/supabase/server';
 import {
   setSpaceStatusAdmin,
@@ -63,6 +65,88 @@ export async function updateReviewAction(
 export async function deleteReviewAction(id: string, spaceId: string): Promise<void> {
   await requireAdmin();
   await deleteReviewAdmin(id, spaceId);
+}
+
+export async function quickImportAction(
+  _prev: string | null,
+  formData: FormData
+): Promise<string | 'ok'> {
+  await requireAdmin();
+  const supabase = await createClient();
+
+  const title = (formData.get('title') as string) || 'Espai Importat';
+  const type = (formData.get('type') as string) || 'storage';
+  const description = (formData.get('description') as string) || '';
+  const address = (formData.get('address') as string) || '';
+  const priceRaw = parseFloat(formData.get('price') as string);
+  const sizeRaw = formData.get('size_m2') as string;
+  const web = formData.get('web') as string;
+  const amenities = formData.getAll('amenities') as string[];
+  const lat = parseFloat(formData.get('lat') as string);
+  const lng = parseFloat(formData.get('lng') as string);
+  
+  if (isNaN(lat) || isNaN(lng)) return 'Coordenades invàlides';
+
+  // Unique slug
+  let slug = slugify(title) || 'espai';
+  const { count } = await supabase.from('spaces').select('id', { count: 'exact', head: true }).eq('slug', slug);
+  if (count && count > 0) slug = `${slug}-${Date.now().toString(36)}`;
+
+  // Handle Photo
+  const photos: string[] = [];
+  const file = formData.get('photo') as File | null;
+  const photoUrl = formData.get('photoUrl') as string | null;
+
+  try {
+    let buffer: Buffer | null = null;
+    if (file && file.size > 0) {
+      const ab = await file.arrayBuffer();
+      buffer = Buffer.from(ab);
+    } else if (photoUrl) {
+      const res = await fetch(photoUrl);
+      if (res.ok) {
+        const ab = await res.arrayBuffer();
+        buffer = Buffer.from(ab);
+      }
+    }
+
+    if (buffer) {
+      const webpBuffer = await sharp(buffer)
+        .resize({ width: 1200, withoutEnlargement: true })
+        .webp({ quality: 80 })
+        .toBuffer();
+      
+      const path = `admin-import/${Date.now()}-${Math.random().toString(36).slice(2)}.webp`;
+      const { error } = await supabase.storage.from('space-photos').upload(path, webpBuffer, { contentType: 'image/webp' });
+      if (!error) {
+        const { data: { publicUrl } } = supabase.storage.from('space-photos').getPublicUrl(path);
+        photos.push(publicUrl);
+      }
+    }
+  } catch (error) {
+    console.error('Photo import error:', error);
+  }
+
+  const { error: insertError } = await supabase.from('spaces').insert({
+    slug,
+    title,
+    type,
+    description,
+    price_cents: isNaN(priceRaw) ? 0 : Math.round(priceRaw * 100),
+    size_m2: sizeRaw ? parseFloat(sizeRaw) : null,
+    address,
+    location: `SRID=4326;POINT(${lng} ${lat})`,
+    amenities,
+    photos,
+    web,
+    contact_default: 'web',
+    status: 'paused',
+    owner_id: (await supabase.auth.getUser()).data.user?.id
+  });
+
+  if (insertError) return `DB Error: ${insertError.message}`;
+  
+  return 'ok';
 }
 
 export async function updateSpaceFullAction(
