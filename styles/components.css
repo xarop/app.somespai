@@ -1996,6 +1996,54 @@
     padding: var(--s-2) 0;
   }
 
+  /* ── Admin photo management ───────────────────────────────────────────── */
+  .admin-modal--full {
+    width: min(760px, 100%);
+  }
+
+  .admin-photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--s-2);
+    margin-bottom: var(--s-3);
+  }
+
+  .admin-photo-item {
+    position: relative;
+  }
+
+  .admin-photo-thumb {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--r-md);
+    border: 1px solid var(--glass-border);
+    display: block;
+  }
+
+  .admin-photo-remove {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(181, 67, 54, 0.85);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    transition: background var(--t-fast) var(--ease);
+  }
+
+  .admin-photo-remove:hover {
+    background: var(--danger);
+  }
+
   /* Danger variant button */
   [data-variant="danger"] {
     background: var(--danger);

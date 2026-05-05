@@ -240,7 +240,9 @@
     "cancel": "Cancel·lar",
     "confirm": "Confirmar",
     "deleteConfirm": "Segur que vols esborrar aquest espai? Aquesta acció no es pot desfer.",
-    "empty": "Cap espai amb aquest filtre."
+    "empty": "Cap espai amb aquest filtre.",
+    "sectionStatus": "Estat i visibilitat",
+    "fieldRegion": "Regió"
   },
   "ds": {
     "title": "Sistema de disseny",

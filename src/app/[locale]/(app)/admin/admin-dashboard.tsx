@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useOptimistic } from 'react';
+import { useState, useTransition, useOptimistic, useActionState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import type { Space } from '@/lib/schemas/space';
@@ -8,13 +8,24 @@ import { Icon } from '@/components/ui/icon';
 import {
   setStatusAction,
   setFeaturedAction,
-  updateSpaceAction,
   deleteSpaceAction,
+  updateSpaceFullAction,
 } from './actions';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room'] as const;
+
+const AMENITY_GROUPS: Record<string, string[]> = {
+  'Connectivitat': ['wifi', 'fiber', 'hot_desk', 'fixed_desk', 'monitor', 'locker'],
+  'Reunions': ['meeting_room', 'event_space', 'whiteboard', 'podcast_studio'],
+  'Confort': ['ac', 'heating', 'dimmable_light', 'hardwood_floor'],
+  'Serveis': ['coffee', 'kitchen', 'printer', 'printer_3d'],
+  'Accés': ['access_24h', 'cameras', 'van_access', 'parking', 'bike_parking'],
+  'Exterior': ['terrace', 'bbq', 'pool', 'shade', 'sea_view', 'mountain_view'],
+  'Equipament': ['projector', 'audio', 'tools', 'tables', 'chairs', 'electricity', 'water'],
+  'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],
+};
 
 function formatPrice(priceCents: number, unit: string): string {
   const price = (priceCents / 100).toFixed(0);
@@ -22,11 +33,7 @@ function formatPrice(priceCents: number, unit: string): string {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return (
-    <span className={`status-badge status-badge--${status}`}>
-      {status}
-    </span>
-  );
+  return <span className={`status-badge status-badge--${status}`}>{status}</span>;
 }
 
 function TypeBadge({ type }: { type: string }) {
@@ -38,176 +45,279 @@ function TypeBadge({ type }: { type: string }) {
   );
 }
 
+/* ── Full edit modal ─────────────────────────────────────────────────────── */
+
 interface EditModalProps {
   space: Space;
   onClose: () => void;
-  onSave: (data: Partial<Space>) => void;
-  isPending: boolean;
+  onSuccess: () => void;
 }
 
-function EditModal({ space, onClose, onSave, isPending }: EditModalProps) {
+function EditModal({ space, onClose, onSuccess }: EditModalProps) {
   const t = useTranslations('admin');
   const tFilter = useTranslations('filter');
-  const [form, setForm] = useState({
-    title: space.title,
-    description: space.description ?? '',
-    type: space.type,
-    priceCents: space.priceCents,
-    priceUnit: space.priceUnit,
-    sizeM2: space.sizeM2 ?? '',
-    neighborhood: space.neighborhood,
-    city: space.city,
-    status: space.status,
-    isFeatured: space.isFeatured,
-  });
+  const tAmenity = useTranslations('amenity');
+  const tPublish = useTranslations('publish');
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    onSave({
-      title: form.title,
-      description: form.description || null,
-      type: form.type as Space['type'],
-      priceCents: Number(form.priceCents),
-      priceUnit: form.priceUnit as Space['priceUnit'],
-      sizeM2: form.sizeM2 !== '' ? Number(form.sizeM2) : null,
-      neighborhood: form.neighborhood,
-      city: form.city,
-      status: form.status as Space['status'],
-      isFeatured: form.isFeatured,
-    });
+  const boundAction = updateSpaceFullAction.bind(null, space.id);
+  const [state, formAction, isPending] = useActionState(boundAction, null);
+
+  useEffect(() => {
+    if (state === 'ok') { onSuccess(); onClose(); }
+  }, [state, onClose, onSuccess]);
+
+  const [keptPhotos, setKeptPhotos] = useState<string[]>(space.photos);
+  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [lat, setLat] = useState(String(space.lat));
+  const [lng, setLng] = useState(String(space.lng));
+  const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const addressRef = useRef<HTMLInputElement>(null);
+
+  async function geocode() {
+    const addr = addressRef.current?.value;
+    if (!addr) return;
+    setGeoState('loading');
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`,
+        { headers: { 'Accept-Language': 'ca,es,en' } },
+      );
+      const data = await res.json();
+      if (data[0]) { setLat(data[0].lat); setLng(data[0].lon); setGeoState('idle'); }
+      else setGeoState('error');
+    } catch { setGeoState('error'); }
+  }
+
+  function handleNewPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files ?? []).slice(0, 10);
+    setNewPreviews(files.map(f => URL.createObjectURL(f)));
   }
 
   return (
     <div className="admin-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="admin-modal">
+      <div className="admin-modal admin-modal--full">
         <header className="admin-modal__header">
-          <h2>{t('editTitle')}</h2>
-          <button type="button" className="admin-modal__close" onClick={onClose} aria-label="Tancar">
-            ✕
-          </button>
+          <h2>{t('editTitle')} — {space.slug}</h2>
+          <button type="button" className="admin-modal__close" onClick={onClose}>✕</button>
         </header>
-        <form onSubmit={handleSubmit} className="admin-modal__body">
-          <label className="field">
-            <span className="field__label">{t('fieldTitle')}</span>
-            <input
-              type="text"
-              className="field__input"
-              value={form.title}
-              onChange={(e) => setForm(f => ({ ...f, title: e.target.value }))}
-              required
-              maxLength={120}
-            />
-          </label>
 
-          <label className="field">
-            <span className="field__label">{t('fieldDescription')}</span>
-            <textarea
-              className="field__input field__textarea"
-              rows={3}
-              maxLength={2000}
-              value={form.description}
-              onChange={(e) => setForm(f => ({ ...f, description: e.target.value }))}
-            />
-          </label>
+        <form action={formAction} className="admin-modal__body">
+          {state && state !== 'ok' && <div className="form-error">{state}</div>}
 
-          <div className="field-row">
-            <div className="field">
-              <span className="field__label">{t('fieldType')}</span>
-              <select
-                className="field__input field__select"
-                value={form.type}
-                onChange={(e) => setForm(f => ({ ...f, type: e.target.value as Space['type'] }))}
-              >
-                {SPACE_TYPES.map(type => (
-                  <option key={type} value={type}>{tFilter(type)}</option>
-                ))}
-              </select>
-            </div>
-            <div className="field">
-              <span className="field__label">{t('fieldStatus')}</span>
-              <select
-                className="field__input field__select"
-                value={form.status}
-                onChange={(e) => setForm(f => ({ ...f, status: e.target.value as Space['status'] }))}
-              >
-                <option value="active">{t('statusActive')}</option>
-                <option value="paused">{t('statusPaused')}</option>
-                <option value="removed">{t('statusRemoved')}</option>
-              </select>
-            </div>
-          </div>
+          {/* ── Bàsic ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionBasic')}</legend>
 
-          <div className="field-row">
-            <label className="field field--grow">
-              <span className="field__label">{t('fieldPrice')} (€)</span>
-              <input
-                type="number"
-                className="field__input"
-                min={0}
-                step={1}
-                value={form.priceCents}
-                onChange={(e) => setForm(f => ({ ...f, priceCents: Number(e.target.value) }))}
-              />
-            </label>
-            <div className="field">
-              <span className="field__label">{t('fieldPriceUnit')}</span>
-              <select
-                className="field__input field__select"
-                value={form.priceUnit}
-                onChange={(e) => setForm(f => ({ ...f, priceUnit: e.target.value as Space['priceUnit'] }))}
-              >
-                <option value="month">{t('unitMonth')}</option>
-                <option value="day">{t('unitDay')}</option>
-                <option value="hour">{t('unitHour')}</option>
-              </select>
-            </div>
             <label className="field">
-              <span className="field__label">{t('fieldSize')} (m²)</span>
-              <input
-                type="number"
-                className="field__input"
-                min={0}
-                step={0.1}
-                value={form.sizeM2}
-                onChange={(e) => setForm(f => ({ ...f, sizeM2: e.target.value }))}
-              />
+              <span className="field__label">{tPublish('fieldTitle')} *</span>
+              <input name="title" type="text" className="field__input" required maxLength={120}
+                defaultValue={space.title} />
             </label>
-          </div>
 
-          <div className="field-row">
-            <label className="field field--grow">
-              <span className="field__label">{t('fieldNeighborhood')}</span>
-              <input
-                type="text"
-                className="field__input"
-                value={form.neighborhood}
-                onChange={(e) => setForm(f => ({ ...f, neighborhood: e.target.value }))}
-              />
-            </label>
-            <label className="field field--grow">
-              <span className="field__label">{t('fieldCity')}</span>
-              <input
-                type="text"
-                className="field__input"
-                value={form.city}
-                onChange={(e) => setForm(f => ({ ...f, city: e.target.value }))}
-              />
-            </label>
-          </div>
+            <div className="field">
+              <span className="field__label">{tPublish('fieldType')} *</span>
+              <div className="type-picker">
+                {SPACE_TYPES.map(type => (
+                  <label key={type} className="type-option">
+                    <input type="radio" name="type" value={type} required
+                      defaultChecked={space.type === type} />
+                    <span><Icon name={type} size={18} />{tFilter(type)}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-          <label className="checkbox-item admin-featured-check">
-            <input
-              type="checkbox"
-              checked={form.isFeatured}
-              onChange={(e) => setForm(f => ({ ...f, isFeatured: e.target.checked }))}
-            />
-            <span>{t('fieldFeatured')}</span>
-          </label>
+            <label className="field">
+              <span className="field__label">{tPublish('fieldDescription')}</span>
+              <textarea name="description" className="field__input field__textarea"
+                rows={4} maxLength={2000} defaultValue={space.description ?? ''} />
+            </label>
+          </fieldset>
+
+          {/* ── Estat i destacat ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{t('sectionStatus')}</legend>
+            <div className="field-row">
+              <div className="field">
+                <span className="field__label">{t('fieldStatus')}</span>
+                <select name="status" className="field__input field__select" defaultValue={space.status}>
+                  <option value="active">{t('statusActive')}</option>
+                  <option value="paused">{t('statusPaused')}</option>
+                  <option value="removed">{t('statusRemoved')}</option>
+                </select>
+              </div>
+              <div className="field" style={{ justifyContent: 'flex-end' }}>
+                <label className="checkbox-item admin-featured-check">
+                  <input type="checkbox" name="is_featured" value="true"
+                    defaultChecked={space.isFeatured} />
+                  <span>{t('fieldFeatured')}</span>
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          {/* ── Preu ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionPricing')}</legend>
+            <div className="field-row">
+              <label className="field field--grow">
+                <span className="field__label">{tPublish('fieldPrice')} *</span>
+                <input name="price" type="number" className="field__input" required min="0" step="0.01"
+                  defaultValue={(space.priceCents / 100).toFixed(2)} />
+              </label>
+              <div className="field">
+                <span className="field__label">{tPublish('fieldPriceUnit')}</span>
+                <select name="price_unit" className="field__input field__select" defaultValue={space.priceUnit}>
+                  <option value="month">{tPublish('unitMonth')}</option>
+                  <option value="day">{tPublish('unitDay')}</option>
+                  <option value="hour">{tPublish('unitHour')}</option>
+                </select>
+              </div>
+              <label className="field">
+                <span className="field__label">{tPublish('fieldSize')}</span>
+                <input name="size_m2" type="number" className="field__input" min="0" step="0.1"
+                  defaultValue={space.sizeM2 ?? ''} />
+              </label>
+            </div>
+          </fieldset>
+
+          {/* ── Ubicació ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionLocation')}</legend>
+            <div className="field-row field-row--address">
+              <label className="field field--grow">
+                <span className="field__label">{tPublish('fieldAddress')}</span>
+                <input ref={addressRef} name="address" type="text" className="field__input"
+                  defaultValue={space.address ?? ''} onBlur={geocode} />
+              </label>
+              <button type="button" className="field__geo-btn" onClick={geocode}
+                disabled={geoState === 'loading'}>
+                <Icon name="pin" size={16} />
+              </button>
+            </div>
+            {geoState === 'loading' && <p className="field__hint">{tPublish('geolocating')}</p>}
+            {geoState === 'error' && <p className="field__hint field__hint--error">{tPublish('geoError')}</p>}
+            {lat && lng && geoState !== 'error' && (
+              <p className="field__hint">📍 {parseFloat(lat).toFixed(5)}, {parseFloat(lng).toFixed(5)}</p>
+            )}
+            <input type="hidden" name="lat" value={lat} />
+            <input type="hidden" name="lng" value={lng} />
+
+            <div className="field-row">
+              <label className="field field--grow">
+                <span className="field__label">{tPublish('fieldNeighborhood')}</span>
+                <input name="neighborhood" type="text" className="field__input"
+                  defaultValue={space.neighborhood} />
+              </label>
+              <label className="field field--grow">
+                <span className="field__label">{tPublish('fieldCity')}</span>
+                <input name="city" type="text" className="field__input"
+                  defaultValue={space.city} />
+              </label>
+              <label className="field field--grow">
+                <span className="field__label">{t('fieldRegion')}</span>
+                <input name="region" type="text" className="field__input"
+                  defaultValue={space.region} />
+              </label>
+            </div>
+          </fieldset>
+
+          {/* ── Equipaments ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionAmenities')}</legend>
+            {Object.entries(AMENITY_GROUPS).map(([group, items]) => (
+              <div key={group} className="amenity-group">
+                <p className="amenity-group__label">{group}</p>
+                <div className="checkbox-grid">
+                  {items.map(id => (
+                    <label key={id} className="checkbox-item">
+                      <input type="checkbox" name="amenities" value={id}
+                        defaultChecked={space.amenities.includes(id)} />
+                      <span>{tAmenity(id as Parameters<typeof tAmenity>[0])}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </fieldset>
+
+          {/* ── Fotos ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionPhotos')}</legend>
+
+            {keptPhotos.length > 0 && (
+              <div className="admin-photo-grid">
+                {keptPhotos.map((url, i) => (
+                  <div key={i} className="admin-photo-item">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={url} alt="" className="admin-photo-thumb" />
+                    <button
+                      type="button"
+                      className="admin-photo-remove"
+                      onClick={() => setKeptPhotos(p => p.filter((_, j) => j !== i))}
+                      aria-label="Eliminar foto"
+                    >✕</button>
+                    <input type="hidden" name="kept_photo" value={url} />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <label className="field">
+              <span className="field__label field__hint">{tPublish('photosHelp')}</span>
+              <input name="new_photos" type="file" className="field__input" multiple accept="image/*"
+                onChange={handleNewPhotos} />
+            </label>
+
+            {newPreviews.length > 0 && (
+              <div className="photo-previews">
+                {newPreviews.map((src, i) => (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img key={i} src={src} alt="" className="photo-preview" />
+                ))}
+              </div>
+            )}
+          </fieldset>
+
+          {/* ── Contacte ── */}
+          <fieldset className="fieldset">
+            <legend className="fieldset__legend">{tPublish('sectionContact')}</legend>
+            <label className="field">
+              <span className="field__label">{tPublish('fieldWeb')}</span>
+              <input name="web" type="url" className="field__input" placeholder="https://"
+                defaultValue={space.web ?? ''} />
+            </label>
+            <label className="field">
+              <span className="field__label">{tPublish('fieldPhone')}</span>
+              <input name="phone" type="tel" className="field__input"
+                defaultValue={space.phone ?? ''} />
+            </label>
+            <label className="field">
+              <span className="field__label">{tPublish('fieldEmail')}</span>
+              <input name="email_contact" type="email" className="field__input"
+                defaultValue={space.emailContact ?? ''} />
+            </label>
+            <label className="field">
+              <span className="field__label">{tPublish('fieldWhatsapp')}</span>
+              <input name="whatsapp" type="tel" className="field__input"
+                defaultValue={space.whatsapp ?? ''} />
+            </label>
+            <div className="field">
+              <span className="field__label">{tPublish('contactDefault')}</span>
+              <div className="type-picker">
+                {(['web', 'phone', 'email', 'whatsapp'] as const).map(opt => (
+                  <label key={opt} className="type-option">
+                    <input type="radio" name="contact_default" value={opt}
+                      defaultChecked={space.contactDefault === opt} />
+                    <span>{tPublish(`contact_${opt}` as Parameters<typeof tPublish>[0])}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </fieldset>
 
           <div className="admin-modal__footer">
-            <button type="button" onClick={onClose} disabled={isPending}>
-              {t('cancel')}
-            </button>
+            <button type="button" onClick={onClose} disabled={isPending}>{t('cancel')}</button>
             <button type="submit" data-variant="primary" disabled={isPending}>
               {isPending ? t('saving') : t('save')}
             </button>
@@ -218,13 +328,11 @@ function EditModal({ space, onClose, onSave, isPending }: EditModalProps) {
   );
 }
 
-interface ConfirmDialogProps {
-  message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
-}
+/* ── Confirm dialog ──────────────────────────────────────────────────────── */
 
-function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogProps) {
+function ConfirmDialog({ message, onConfirm, onCancel }: {
+  message: string; onConfirm: () => void; onCancel: () => void;
+}) {
   const t = useTranslations('admin');
   return (
     <div className="admin-modal-overlay" onClick={(e) => e.target === e.currentTarget && onCancel()}>
@@ -238,6 +346,8 @@ function ConfirmDialog({ message, onConfirm, onCancel }: ConfirmDialogProps) {
     </div>
   );
 }
+
+/* ── Main dashboard ──────────────────────────────────────────────────────── */
 
 export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
   const t = useTranslations('admin');
@@ -260,17 +370,12 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
   };
 
   const featured = initialSpaces.filter(s => s.isFeatured).length;
-
-  const filtered = statusFilter === 'all'
-    ? spaces
-    : spaces.filter(s => s.status === statusFilter);
+  const filtered = statusFilter === 'all' ? spaces : spaces.filter(s => s.status === statusFilter);
 
   function handleToggleStatus(space: Space) {
     const next = space.status === 'active' ? 'paused' : 'active';
     startTransition(async () => {
-      setSpacesOptimistic(prev =>
-        prev.map(s => s.id === space.id ? { ...s, status: next } : s)
-      );
+      setSpacesOptimistic(prev => prev.map(s => s.id === space.id ? { ...s, status: next } : s));
       await setStatusAction(space.id, next);
       router.refresh();
     });
@@ -279,34 +384,8 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
   function handleToggleFeatured(space: Space) {
     const next = !space.isFeatured;
     startTransition(async () => {
-      setSpacesOptimistic(prev =>
-        prev.map(s => s.id === space.id ? { ...s, isFeatured: next } : s)
-      );
+      setSpacesOptimistic(prev => prev.map(s => s.id === space.id ? { ...s, isFeatured: next } : s));
       await setFeaturedAction(space.id, next);
-      router.refresh();
-    });
-  }
-
-  function handleSaveEdit(data: Partial<Space>) {
-    if (!editingSpace) return;
-    const id = editingSpace.id;
-    setEditingSpace(null);
-    startTransition(async () => {
-      setSpacesOptimistic(prev =>
-        prev.map(s => s.id === id ? { ...s, ...data } : s)
-      );
-      await updateSpaceAction(id, {
-        title: data.title,
-        description: data.description,
-        type: data.type,
-        priceCents: data.priceCents,
-        priceUnit: data.priceUnit,
-        sizeM2: data.sizeM2,
-        neighborhood: data.neighborhood,
-        city: data.city,
-        status: data.status,
-        isFeatured: data.isFeatured,
-      });
       router.refresh();
     });
   }
@@ -349,12 +428,9 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
       {/* Filter tabs */}
       <div className="admin-filter-bar">
         {(['all', 'active', 'paused', 'removed'] as StatusFilter[]).map(f => (
-          <button
-            key={f}
-            type="button"
+          <button key={f} type="button"
             className={`admin-filter-tab${statusFilter === f ? ' admin-filter-tab--active' : ''}`}
-            onClick={() => setStatusFilter(f)}
-          >
+            onClick={() => setStatusFilter(f)}>
             {t(`filter_${f}` as Parameters<typeof t>[0])}
             <span className="admin-filter-tab__count">{counts[f]}</span>
           </button>
@@ -380,12 +456,8 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
             {filtered.map(space => (
               <tr key={space.id} className={`admin-row admin-row--${space.status}`}>
                 <td className="admin-cell admin-cell--title">
-                  <a
-                    href={`/espai/${space.slug}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="admin-space-link"
-                  >
+                  <a href={`/espai/${space.slug}`} target="_blank" rel="noopener noreferrer"
+                    className="admin-space-link">
                     {space.title}
                   </a>
                 </td>
@@ -397,51 +469,30 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
                 </td>
                 <td>{formatPrice(space.priceCents, space.priceUnit)}</td>
                 <td>
-                  {space.rating > 0 ? (
-                    <span className="admin-rating">★ {space.rating.toFixed(1)}</span>
-                  ) : (
-                    <span className="admin-rating admin-rating--none">—</span>
-                  )}
+                  {space.rating > 0
+                    ? <span className="admin-rating">★ {space.rating.toFixed(1)}</span>
+                    : <span className="admin-rating admin-rating--none">—</span>}
                 </td>
                 <td>
-                  <button
-                    type="button"
+                  <button type="button"
                     className={`admin-featured-btn${space.isFeatured ? ' admin-featured-btn--on' : ''}`}
-                    onClick={() => handleToggleFeatured(space)}
-                    disabled={isPending}
-                    aria-label={space.isFeatured ? t('unfeature') : t('feature')}
-                    title={space.isFeatured ? t('unfeature') : t('feature')}
-                  >
-                    ★
+                    onClick={() => handleToggleFeatured(space)} disabled={isPending}
+                    title={space.isFeatured ? t('unfeature') : t('feature')}>★
                   </button>
                 </td>
                 <td>
                   <div className="admin-actions">
-                    <button
-                      type="button"
-                      className="admin-action-btn"
-                      onClick={() => handleToggleStatus(space)}
-                      disabled={isPending}
-                      title={space.status === 'active' ? t('pauseSpace') : t('activateSpace')}
-                    >
+                    <button type="button" className="admin-action-btn"
+                      onClick={() => handleToggleStatus(space)} disabled={isPending}
+                      title={space.status === 'active' ? t('pauseSpace') : t('activateSpace')}>
                       {space.status === 'active' ? t('pause') : t('activate')}
                     </button>
-                    <button
-                      type="button"
-                      className="admin-action-btn admin-action-btn--edit"
-                      onClick={() => setEditingSpace(space)}
-                      disabled={isPending}
-                      title={t('editSpace')}
-                    >
+                    <button type="button" className="admin-action-btn admin-action-btn--edit"
+                      onClick={() => setEditingSpace(space)} disabled={isPending}>
                       {t('edit')}
                     </button>
-                    <button
-                      type="button"
-                      className="admin-action-btn admin-action-btn--delete"
-                      onClick={() => setDeletingId(space.id)}
-                      disabled={isPending}
-                      title={t('deleteSpace')}
-                    >
+                    <button type="button" className="admin-action-btn admin-action-btn--delete"
+                      onClick={() => setDeletingId(space.id)} disabled={isPending}>
                       {t('delete')}
                     </button>
                   </div>
@@ -450,17 +501,14 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
             ))}
           </tbody>
         </table>
-        {filtered.length === 0 && (
-          <p className="admin-empty">{t('empty')}</p>
-        )}
+        {filtered.length === 0 && <p className="admin-empty">{t('empty')}</p>}
       </div>
 
       {editingSpace && (
         <EditModal
           space={editingSpace}
           onClose={() => setEditingSpace(null)}
-          onSave={handleSaveEdit}
-          isPending={isPending}
+          onSuccess={() => router.refresh()}
         />
       )}
 

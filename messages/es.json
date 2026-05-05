@@ -240,7 +240,9 @@
     "cancel": "Cancelar",
     "confirm": "Confirmar",
     "deleteConfirm": "¿Seguro que quieres borrar este espacio? Esta acción no se puede deshacer.",
-    "empty": "Ningún espacio con este filtro."
+    "empty": "Ningún espacio con este filtro.",
+    "sectionStatus": "Estado y visibilidad",
+    "fieldRegion": "Región"
   },
   "ds": {
     "title": "Sistema de diseño",

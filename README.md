@@ -93,6 +93,7 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 
 URL producció: https://app-somespai.vercel.app
 Dashboard: https://vercel.com/xarops-projects/app-somespai
+CNAME app cname.vercel-dns.com
 
 **Primer desplegament (una sola vegada):**
 

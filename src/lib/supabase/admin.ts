@@ -104,3 +104,64 @@ export async function deleteSpaceAdmin(id: string): Promise<void> {
   const { error } = await supabase.from('spaces').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }
+
+export type AdminSpaceFullUpdate = {
+  title: string;
+  description: string | null;
+  type: string;
+  priceCents: number;
+  priceUnit: string;
+  sizeM2: number | null;
+  address: string | null;
+  neighborhood: string;
+  city: string;
+  region: string;
+  lat: number;
+  lng: number;
+  amenities: string[];
+  photos: string[];
+  phone: string | null;
+  emailContact: string | null;
+  whatsapp: string | null;
+  web: string | null;
+  contactDefault: string;
+  status: string;
+  isFeatured: boolean;
+};
+
+export async function updateSpaceFullAdmin(id: string, data: AdminSpaceFullUpdate): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('spaces').update({
+    title: data.title,
+    description: data.description,
+    type: data.type,
+    price_cents: data.priceCents,
+    price_unit: data.priceUnit,
+    size_m2: data.sizeM2,
+    address: data.address,
+    neighborhood: data.neighborhood,
+    city: data.city,
+    region: data.region,
+    location: `SRID=4326;POINT(${data.lng} ${data.lat})`,
+    amenities: data.amenities,
+    photos: data.photos,
+    phone: data.phone,
+    email_contact: data.emailContact,
+    whatsapp: data.whatsapp,
+    web: data.web,
+    contact_default: data.contactDefault,
+    status: data.status,
+    is_featured: data.isFeatured,
+  }).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+export async function uploadAdminPhoto(spaceId: string, file: File): Promise<string | null> {
+  const supabase = createAdminClient();
+  const ext = file.name.split('.').pop() ?? 'jpg';
+  const path = `admin/${spaceId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from('space-photos').upload(path, file);
+  if (error) return null;
+  const { data: { publicUrl } } = supabase.storage.from('space-photos').getPublicUrl(path);
+  return publicUrl;
+}
