@@ -10,7 +10,8 @@
     "publish": "Publish a space",
     "close": "Close",
     "privacy": "Privacy",
-    "terms": "Terms of use"
+    "terms": "Terms of use",
+    "help": "Help"
   },
   "view": {
     "back": "Back to map",
@@ -129,7 +130,8 @@
     "room": {
       "label": "Rooms",
       "desc": "Multipurpose rooms for meetings, rehearsals, photography, training or small events."
-    }
+    },
+    "helpLink": "More information on the help page →"
   },
   "publish": {
     "title": "Publish a space",
@@ -282,5 +284,24 @@
       "cards": "Space card",
       "markers": "Map markers"
     }
+  },
+  "help": {
+    "back": "Home",
+    "title": "How somespai works",
+    "intro": "somespai connects owners of underused spaces with people who need them — directly, without intermediaries.",
+    "step1Title": "Explore the map",
+    "step1Body": "Discover available spaces on the interactive map or switch to list view. Each pin is a real space in the neighbourhood.",
+    "step2Title": "Filter and search",
+    "step2Body": "Select the type of space you need: storage, studio, outdoor or room. Sort by proximity, price or rating.",
+    "step3Title": "View the details",
+    "step3Body": "Click on any space to see photos, amenities, price and direct contact details for the owner.",
+    "step4Title": "Publish your space",
+    "step4Body": "Have an unused unit, courtyard or room? Publish it in under 5 minutes and start receiving direct contacts.",
+    "mobileTitle": "On mobile",
+    "mobileDesc": "Tap any pin to see the space. Use the floating button to switch between map and list view.",
+    "desktopTitle": "On desktop",
+    "desktopDesc": "The space list appears on the right. On the left, the map updates in real time as you browse.",
+    "ctaExplore": "Explore spaces",
+    "ctaPublish": "Publish a space"
   }
 }

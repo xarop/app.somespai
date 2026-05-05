@@ -221,6 +221,11 @@ export function TopNav({ query, onQueryChange, onLocationFound, children }: TopN
 
           <div className="dropmenu__divider" />
 
+          <a href={`/${locale}/ajuda`} role="menuitem" onClick={() => setMenuOpen(false)}>
+            <Icon name="info" size={16} />
+            {t('nav.help')}
+          </a>
+
           <a href="/design-system" role="menuitem" onClick={() => setMenuOpen(false)}>
             <Icon name="grid" size={16} />
             {t('nav.designSystem')}

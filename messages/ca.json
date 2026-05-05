@@ -10,7 +10,8 @@
     "publish": "Publica un espai",
     "close": "Tanca",
     "privacy": "Privacitat",
-    "terms": "Termes d'\u00fas"
+    "terms": "Termes d'\u00fas",
+    "help": "Ajuda"
   },
   "view": {
     "back": "Tornar al mapa",
@@ -129,7 +130,8 @@
     "room": {
       "label": "Sales",
       "desc": "Sales polivalents per a reunions, assajos, fotografia, formació o petits events."
-    }
+    },
+    "helpLink": "Més informació a la pàgina d'ajuda →"
   },
   "publish": {
     "title": "Publica un espai",
@@ -281,6 +283,23 @@
       "chips": "Chips de filtre",
       "cards": "Targeta d'espai",
       "markers": "Marcadors de mapa"
-    }
-  }
+    }  },
+  "help": {
+    "back": "Inici",
+    "title": "Com funciona somespai",
+    "intro": "somespai connecta propietaris d'espais infrautilitzats amb persones que els necessiten, de forma directa i sense intermediaris.",
+    "step1Title": "Explora el mapa",
+    "step1Body": "Descobreix els espais disponibles al mapa interactiu o canvia a la vista en llista. Cada pin \u00e9s un espai real al barri.",
+    "step2Title": "Filtra i cerca",
+    "step2Body": "Selecciona el tipus d'espai: traster, estudi, exterior o sala. Ordena per proximitat, preu o puntuaci\u00f3.",
+    "step3Title": "Consulta els detalls",
+    "step3Body": "Fes clic a qualsevol espai per veure fotos, equipaments, preu i les dades de contacte directe amb el propietari.",
+    "step4Title": "Publica el teu espai",
+    "step4Body": "Tens un local, pati o sala infrautilitzada? Publica'l en menys de 5 minuts i comença a rebre contactes.",
+    "mobileTitle": "En m\u00f2bil",
+    "mobileDesc": "Toca qualsevol pin per veure l'espai. Usa el bot\u00f3 flotant per canviar entre mapa i llista.",
+    "desktopTitle": "En ordinador",
+    "desktopDesc": "A la dreta apareix la llista d'espais. A l'esquerra, el mapa s'actualitza en temps real mentre navegues.",
+    "ctaExplore": "Explora espais",
+    "ctaPublish": "Publica un espai"  }
 }

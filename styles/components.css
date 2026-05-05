@@ -2470,6 +2470,399 @@
     background: var(--primary);
     color: var(--primary-ink);
   }
+
+  /* ── Help space types section ─────────────────────────────────────────── */
+  .help-types {
+    margin-bottom: var(--s-8);
+  }
+
+  .help-types__title {
+    font-size: var(--t-xl);
+    font-weight: 700;
+    margin-bottom: var(--s-4);
+  }
+
+  .help-types__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-3);
+  }
+
+  .help-type-item {
+    display: flex;
+    gap: var(--s-3);
+    align-items: flex-start;
+    padding: var(--s-3);
+    border-radius: var(--r-md);
+  }
+
+  .help-type-item__icon {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: var(--r-sm);
+    color: #fff;
+  }
+
+  .help-type-item__label {
+    font-weight: 600;
+    margin-bottom: var(--s-1);
+    font-size: var(--t-sm);
+  }
+
+  .help-type-item__desc {
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    .help-types__list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ── Help page ────────────────────────────────────────────────────────── */
+  .help-steps {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--s-8);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .help-step {
+    display: grid;
+    grid-template-columns: 48px 40px 1fr;
+    align-items: start;
+    gap: var(--s-3);
+    padding: var(--s-5) 0;
+    border-bottom: 1px solid var(--glass-border);
+  }
+
+  .help-step:last-child {
+    border-bottom: none;
+  }
+
+  .help-step__num {
+    font-family: var(--font);
+    font-variation-settings: var(--rx-mono);
+    font-size: var(--t-xs);
+    font-weight: 700;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+    padding-top: 3px;
+  }
+
+  .help-step__icon {
+    color: var(--primary);
+    padding-top: 2px;
+  }
+
+  .help-step__title {
+    font-size: var(--t-lg);
+    font-weight: 700;
+    margin-bottom: var(--s-2);
+    line-height: 1.3;
+  }
+
+  .help-step__body {
+    font-size: var(--t-base);
+    color: var(--ink-soft);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* ── Device mockups ───────────────────────────────────────────────────── */
+  .help-devices {
+    display: grid;
+    grid-template-columns: .5fr 1.5fr;
+    gap: var(--s-6);
+    margin-bottom: var(--s-8);
+    align-items: start;
+  }
+
+  .help-device-block__label {
+    font-size: var(--t-sm);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-mute);
+    margin-bottom: var(--s-3);
+  }
+
+  .help-device-block__desc {
+    font-size: var(--t-sm);
+    color: var(--ink-soft);
+    margin-top: var(--s-3);
+    line-height: 1.5;
+  }
+
+  /* Base mock frame */
+  .help-mock {
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-lg);
+    background: var(--bg-soft);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Mobile: portrait phone ratio */
+  .help-mock--mobile {
+    aspect-ratio: 9 / 17;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Desktop: wide screen */
+  .help-mock--desktop {
+    aspect-ratio: 16 / 10;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Nav bar */
+  .help-mock__nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .help-mock__nav--wide {
+    padding: 6px 12px;
+    gap: 8px;
+  }
+
+  .help-mock__logo {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    flex-shrink: 0;
+  }
+
+  .help-mock__search-bar {
+    flex: 1;
+    height: 12px;
+    border-radius: 6px;
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+  }
+
+  .help-mock__avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: var(--r-sm);
+    background: var(--border);
+    flex-shrink: 0;
+  }
+
+  .help-mock__publish {
+    width: 36px;
+    height: 12px;
+    border-radius: 6px;
+    background: var(--primary);
+    flex-shrink: 0;
+  }
+
+  /* Filter bar */
+  .help-mock__filterbar {
+    display: flex;
+    gap: 4px;
+    padding: 6px 10px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .help-mock__filterbar--wide {
+    padding: 6px 12px;
+  }
+
+  .help-mock__chip {
+    height: 10px;
+    width: 24px;
+    border-radius: 5px;
+    background: var(--border);
+    display: block;
+  }
+
+  .help-mock__chip--active {
+    background: var(--ink);
+    width: 28px;
+  }
+
+  /* Map area */
+  .help-mock__map {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .help-mock__map--wide {
+    flex: 1;
+  }
+
+  .help-mock__map-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #e8f0e8 0%, #d4e4d0 40%, #c8dfc8 100%);
+  }
+
+  /* Simplified road lines using box-shadow */
+  .help-mock__map-bg::before,
+  .help-mock__map-bg::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.7);
+  }
+
+  .help-mock__map-bg::before {
+    top: 30%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    transform: rotate(-8deg);
+    transform-origin: left center;
+  }
+
+  .help-mock__map-bg::after {
+    top: 0;
+    bottom: 0;
+    left: 40%;
+    width: 2px;
+    transform: rotate(5deg);
+    transform-origin: top center;
+  }
+
+  /* Pins */
+  .help-mock__pin {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-radius: 50% 50% 50% 0;
+    transform: translate(-50%, -100%) rotate(-45deg);
+    background: var(--ink);
+    border: 1.5px solid var(--bg);
+    display: block;
+  }
+
+  .help-mock__pin--active {
+    background: var(--primary);
+    width: 13px;
+    height: 13px;
+  }
+
+  /* Floating toggle button */
+  .help-mock__toggle {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 7px;
+    font-weight: 700;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+
+  /* Desktop body layout */
+  .help-mock__body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+  }
+
+  .help-mock__sidebar {
+    width: 38%;
+    flex-shrink: 0;
+    background: var(--bg);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    overflow: hidden;
+  }
+
+  .help-mock__card {
+    height: 40px;
+    border-radius: var(--r-sm);
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  /* ── Help CTA ─────────────────────────────────────────────────────────── */
+  .help-cta {
+    display: flex;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .help-cta .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-3) var(--s-5);
+    background: var(--primary);
+    color: var(--primary-ink);
+    border-radius: var(--r-pill);
+    font-weight: 700;
+    font-size: var(--t-sm);
+    text-decoration: none;
+    transition: opacity var(--t-fast) var(--ease);
+  }
+
+  .help-cta .btn-primary:hover {
+    opacity: 0.85;
+  }
+
+  .help-cta .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--s-3) var(--s-5);
+    background: transparent;
+    color: var(--ink);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-pill);
+    font-weight: 700;
+    font-size: var(--t-sm);
+    text-decoration: none;
+    transition: border-color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+  }
+
+  .help-cta .btn-secondary:hover {
+    border-color: var(--ink);
+    background: var(--bg-soft);
+  }
+
+  @media (max-width: 600px) {
+    .help-devices {
+      grid-template-columns: 1fr;
+    }
+
+    .help-step {
+      grid-template-columns: 36px 32px 1fr;
+      gap: var(--s-2);
+    }
+  }
 }
 
 .maplibregl-ctrl-bottom-right {
