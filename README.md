@@ -263,6 +263,25 @@ Llista tots els espais publicats (i pausats) per l'usuari autenticat, amb accés
 
 ---
 
+## Migració de dades Local a Producció
+
+Si has executat diverses tasques d'importació en local (amb l'script `scripts/bulk-scraper.ts`) i vols pujar tots aquests espais a la teva instància de Supabase a producció, segueix aquests passos:
+
+1. **Genera o actualitza el dump local** de només les dades:
+   ```bash
+   npx supabase db dump --local --data-only -f supabase/data_dump.sql
+   ```
+2. **Puja-ho a Producció**:
+   Atès que utilitzar instruccions via terminal pot fallar segons el caràcters de les contrasenyes o configuracions, la manera més recomanada i segura és l'editor SQL integrat:
+   - Aneu al dashboard del projecte a Supabase: `https://supabase.com/dashboard/project/<PROJECT_REF>/sql/new`
+   - Obriu l'arxiu llegit temporalment `supabase/data_dump.sql` en el vostre editor de codi.
+   - Copieu tot el contingut de l'arxiu i enganxeu-ho a la caixa de l'editor SQL del navegador web.
+   - Premeu el botó verd **Run** avall a la dreta. 
+
+Totes les dades (espais configurats prèviament o generats amb l'scraper a local) passaran instintivament a l'entorn remot mantinguent relacions, URLs de les imatges, etc.
+
+---
+
 ## License
 
 Proprietary. © Somespai.
