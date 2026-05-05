@@ -283,7 +283,8 @@
       "chips": "Chips de filtro",
       "cards": "Tarjeta de espacio",
       "markers": "Marcadores de mapa"
-    }  },
+    }
+  },
   "help": {
     "back": "Inicio",
     "title": "C\u00f3mo funciona somespai",
@@ -301,5 +302,6 @@
     "desktopTitle": "En ordenador",
     "desktopDesc": "A la derecha aparece la lista de espacios. A la izquierda, el mapa se actualiza en tiempo real mientras navegas.",
     "ctaExplore": "Explorar espacios",
-    "ctaPublish": "Publicar un espacio"  }
+    "ctaPublish": "Publicar un espacio"
+  }
 }
