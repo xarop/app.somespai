@@ -7,7 +7,10 @@
     "searchLocating": "Localizando…",
     "signIn": "Entrar",
     "designSystem": "Sistema de diseño",
-    "publish": "Publica un espacio"
+    "publish": "Publica un espacio",
+    "close": "Cerrar",
+    "privacy": "Privacidad",
+    "terms": "T\u00e9rminos de uso"
   },
   "view": {
     "back": "Volver al mapa"

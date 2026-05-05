@@ -7,7 +7,10 @@
     "searchLocating": "Locating…",
     "signIn": "Sign in",
     "designSystem": "Design system",
-    "publish": "Publish a space"
+    "publish": "Publish a space",
+    "close": "Close",
+    "privacy": "Privacy",
+    "terms": "Terms of use"
   },
   "view": {
     "back": "Back to map"
