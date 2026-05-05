@@ -67,7 +67,7 @@ export function TopNav({ query, onQueryChange, onLocationFound, children }: TopN
         const { latitude: lat, longitude: lng } = coords;
         onLocationFound?.(lat, lng);
         const name = await reverseGeocode(lat, lng);
-        setPlaceholder(name ? `Cerca espais a ${name}…` : t('nav.searchPlaceholder'));
+        setPlaceholder(name ? t('nav.searchNear', { location: name }) : t('nav.searchPlaceholder'));
       },
       () => setPlaceholder(t('nav.searchPlaceholder')),
       { timeout: 6000, maximumAge: 60_000 },

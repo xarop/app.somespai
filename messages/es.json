@@ -5,6 +5,7 @@
   "nav": {
     "searchPlaceholder": "Busca espacios cerca de ti…",
     "searchLocating": "Localizando…",
+    "searchNear": "Busca espacios en {location}…",
     "signIn": "Entrar",
     "designSystem": "Sistema de diseño",
     "publish": "Publica un espacio",

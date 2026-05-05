@@ -5,6 +5,7 @@
   "nav": {
     "searchPlaceholder": "Search spaces near you…",
     "searchLocating": "Locating…",
+    "searchNear": "Search spaces in {location}…",
     "signIn": "Sign in",
     "designSystem": "Design system",
     "publish": "Publish a space",

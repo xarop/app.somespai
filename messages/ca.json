@@ -5,6 +5,7 @@
   "nav": {
     "searchPlaceholder": "Cerca espais a prop teu…",
     "searchLocating": "Localitzant…",
+    "searchNear": "Cerca espais a {location}…",
     "signIn": "Entrar",
     "designSystem": "Sistema de disseny",
     "publish": "Publica un espai",
