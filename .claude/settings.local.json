@@ -5,7 +5,10 @@
       "Bash(npx tsc *)",
       "Bash(npx next *)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(vercel build *)",
+      "Bash(vercel logs *)",
+      "Bash(git push *)"
     ]
   }
 }

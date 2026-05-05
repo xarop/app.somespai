@@ -1,5 +1,6 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import type { Space } from '@/lib/schemas/space';
+import type { Review } from './reviews';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToSpace(row: Record<string, any>): Space {
@@ -154,6 +155,58 @@ export async function updateSpaceFullAdmin(id: string, data: AdminSpaceFullUpdat
     is_featured: data.isFeatured,
   }).eq('id', id);
   if (error) throw new Error(error.message);
+}
+
+/* ── Reviews ─────────────────────────────────────────────────────────────── */
+
+export async function getReviewsAdmin(spaceId: string): Promise<Review[]> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('id, space_id, author_id, rating, body, created_at, profiles(display_name)')
+    .eq('space_id', spaceId)
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map((r) => ({
+    id: r.id,
+    spaceId: r.space_id,
+    authorId: r.author_id,
+    authorEmail: (r.profiles as { display_name?: string } | null)?.display_name ?? 'Usuari',
+    rating: r.rating,
+    body: r.body ?? null,
+    createdAt: r.created_at,
+  }));
+}
+
+async function recalcSpaceRating(spaceId: string): Promise<void> {
+  const supabase = createAdminClient();
+  const { data } = await supabase.from('reviews').select('rating').eq('space_id', spaceId);
+  const reviews = data ?? [];
+  const count = reviews.length;
+  const avg = count > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / count : 0;
+  await supabase.from('spaces').update({ rating: avg, reviews_count: count }).eq('id', spaceId);
+}
+
+export async function updateReviewAdmin(
+  id: string,
+  spaceId: string,
+  rating: number,
+  body: string | null,
+): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase
+    .from('reviews')
+    .update({ rating, body: body?.trim() || null })
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+  await recalcSpaceRating(spaceId);
+}
+
+export async function deleteReviewAdmin(id: string, spaceId: string): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('reviews').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+  await recalcSpaceRating(spaceId);
 }
 
 export async function uploadAdminPhoto(spaceId: string, file: File): Promise<string | null> {

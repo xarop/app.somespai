@@ -94,6 +94,12 @@ export function PublishForm() {
           <textarea name="description" className="field__input field__textarea"
             rows={4} maxLength={2000} placeholder={t('fieldDescriptionPlaceholder')} />
         </label>
+
+        <label className="field">
+            <span className="field__label">{t('fieldSize')}</span>
+            <input name="size_m2" type="number" className="field__input" min="0" step="0.1"
+              placeholder="25" />
+          </label>
       </fieldset>
 
       {/* ── Pricing ── */}
@@ -114,11 +120,7 @@ export function PublishForm() {
               <option value="hour">{t('unitHour')}</option>
             </select>
           </label>
-          <label className="field">
-            <span className="field__label">{t('fieldSize')}</span>
-            <input name="size_m2" type="number" className="field__input" min="0" step="0.1"
-              placeholder="25" />
-          </label>
+          
         </div>
       </fieldset>
 
