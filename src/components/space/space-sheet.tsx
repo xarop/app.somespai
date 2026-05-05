@@ -16,9 +16,10 @@ interface SpaceSheetProps {
   onSelect: (space: Space) => void;
   onToggleLike: (id: string) => void;
   locationLabel: string | null;
+  isAdmin: boolean;
 }
 
-export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, locationLabel }: SpaceSheetProps) {
+export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, locationLabel, isAdmin }: SpaceSheetProps) {
   const t = useTranslations();
 
   const sortLabel: Record<SortId, string> = {
@@ -67,6 +68,7 @@ export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onT
             liked={likedIds.has(space.id)}
             onSelect={onSelect}
             onToggleLike={onToggleLike}
+            isAdmin={isAdmin}
           />
         ))}
       </div>

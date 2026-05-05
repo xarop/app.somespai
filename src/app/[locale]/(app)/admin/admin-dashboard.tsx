@@ -349,7 +349,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
 
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 
-export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
+export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { spaces: Space[]; initialEditId?: string }) {
   const t = useTranslations('admin');
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -361,6 +361,12 @@ export function AdminDashboard({ spaces: initialSpaces }: { spaces: Space[] }) {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!initialEditId) return;
+    const space = initialSpaces.find(s => s.id === initialEditId);
+    if (space) setEditingSpace(space);
+  }, [initialEditId, initialSpaces]);
 
   const counts = {
     all: initialSpaces.length,

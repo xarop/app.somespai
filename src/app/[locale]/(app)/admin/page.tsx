@@ -4,7 +4,12 @@ import { getTranslations } from 'next-intl/server';
 import { getAllSpacesAdmin } from '@/lib/supabase/admin';
 import { AdminDashboard } from './admin-dashboard';
 
-export default async function AdminPage() {
+interface AdminPageProps {
+  searchParams: Promise<{ edit?: string }>;
+}
+
+export default async function AdminPage({ searchParams }: AdminPageProps) {
+  const { edit } = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -25,7 +30,7 @@ export default async function AdminPage() {
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{t('subtitle', { count: spaces.length })}</p>
         </header>
-        <AdminDashboard spaces={spaces} />
+        <AdminDashboard spaces={spaces} initialEditId={edit} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import { getSpaceBySlug, getAllSlugs } from '@/lib/supabase/spaces';
+import { createClient } from '@/lib/supabase/server';
 import { SpaceDetailClient } from './space-detail-client';
 
 // Supported locales for static export
@@ -41,8 +42,11 @@ export default async function SpaceDetailPage({ params }: PageProps) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
 
-  const space = await getSpaceBySlug(slug);
+  const [space, supabase] = await Promise.all([getSpaceBySlug(slug), createClient()]);
   if (!space) notFound();
 
-  return <SpaceDetailClient space={space} />;
+  const { data: { user } } = await supabase.auth.getUser();
+  const isAdmin = user?.email === process.env.ADMIN_EMAIL;
+
+  return <SpaceDetailClient space={space} isAdmin={isAdmin} />;
 }

@@ -17,6 +17,7 @@ const TYPE_ICON: Record<Space['type'], IconName> = {
 interface SpaceDetailModalProps {
   space: Space | null;
   onClose: () => void;
+  isAdmin?: boolean;
 }
 
 function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
@@ -38,7 +39,7 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
   );
 }
 
-export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
+export function SpaceDetailModal({ space, onClose, isAdmin }: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -134,6 +135,15 @@ export function SpaceDetailModal({ space, onClose }: SpaceDetailModalProps) {
       <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
         <Icon name="close" size={18} />
       </button>
+      {isAdmin && (
+        <a
+          href={`/${locale}/admin?edit=${space.id}`}
+          className="modal__admin-edit"
+          title="Editar a l'admin"
+        >
+          <Icon name="pencil" size={15} />
+        </a>
+      )}
 
       <div className="detail__hero" data-type={space.type}>
         {space.photos[0] ? (
