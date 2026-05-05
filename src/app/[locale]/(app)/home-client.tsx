@@ -1,11 +1,13 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import { TopNav } from '@/components/ui/top-nav';
 import { FilterBar, type FilterId } from '@/components/space/filter-bar';
 import { SpaceSheet, type SortId } from '@/components/space/space-sheet';
 import { SpaceDetailModal } from '@/components/space/space-detail-modal';
+import { Icon } from '@/components/ui/icon';
 import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
 import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
 import { createClient } from '@/lib/supabase/client';
@@ -29,12 +31,14 @@ interface HomeClientProps {
 }
 
 export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClientProps) {
+  const t = useTranslations();
   const [filter, setFilter] = useState<FilterId>('all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortId>('distance');
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [view, setView] = useState<'map' | 'list'>('map');
 
   // Load favorites when user logs in
   useEffect(() => {
@@ -93,7 +97,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
       <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })}>
         <FilterBar active={filter} onChange={setFilter} />
       </TopNav>
-      <div className="mapwrap">
+      <div className="mapwrap" data-view={view}>
         <MapView
           spaces={filteredSpaces}
           activeSpaceId={selectedSpace?.id ?? null}
@@ -118,6 +122,16 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
           currentUserId={currentUserId}
         />
       </div>
+
+      <button
+        type="button"
+        className="view-toggle"
+        onClick={() => setView(v => v === 'map' ? 'list' : 'map')}
+        aria-label={view === 'map' ? t('view.showList') : t('view.showMap')}
+      >
+        <Icon name={view === 'map' ? 'list' : 'map'} size={16} />
+        {view === 'map' ? t('view.showList') : t('view.showMap')}
+      </button>
     </div>
   );
 }

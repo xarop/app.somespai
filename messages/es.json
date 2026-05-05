@@ -13,7 +13,9 @@
     "terms": "T\u00e9rminos de uso"
   },
   "view": {
-    "back": "Volver al mapa"
+    "back": "Volver al mapa",
+    "showMap": "Mapa",
+    "showList": "Lista"
   },
   "filter": {
     "all": "Todos",

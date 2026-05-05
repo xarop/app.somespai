@@ -35,8 +35,8 @@
     display: grid;
     grid-template-areas: "brand actions" "search search" "filters filters";
     grid-template-columns: 1fr auto;
-    gap: var(--s-2) var(--s-3);
-    margin: var(--s-3) var(--s-3) var(--s-2);
+    gap: var(--s-5) var(--s-3);
+    margin: var(--s-4) var(--s-4) var(--s-3);
     border-radius: var(--r-lg);
   }
 
@@ -599,9 +599,6 @@
     font-weight: 700;
     font-style: italic;
     line-height: 1;
-    color: var(--primary-ink);
-    background: var(--primary);
-    border-color: var(--primary);
     justify-content: center;
   }
 
@@ -614,6 +611,82 @@
   .mapwrap {
     position: relative;
     overflow: hidden;
+  }
+
+  /* ── Mobile list view ─────────────────────────────────────────────────── */
+  @media (max-width: 879px) {
+    .mapwrap[data-view="map"] .sheet {
+      display: none;
+    }
+
+    .mapwrap[data-view="list"] {
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .mapwrap[data-view="list"] .mapwrap__canvas {
+      display: none;
+    }
+
+    .mapwrap[data-view="list"] .sheet {
+      position: static;
+      max-height: none;
+      flex: 1;
+      border-radius: 0;
+      overflow-y: visible;
+    }
+
+    .mapwrap[data-view="list"] .sheet__handle {
+      display: none;
+    }
+
+    .mapwrap[data-view="list"] .cards {
+      flex-direction: column;
+      overflow-x: hidden;
+      overflow-y: visible;
+      scroll-snap-type: none;
+      padding: 0 var(--s-4) calc(var(--s-7) + env(safe-area-inset-bottom, 0px));
+    }
+
+    .mapwrap[data-view="list"] .cards .card {
+      width: auto;
+      max-width: none;
+    }
+  }
+
+  /* ── View toggle button ───────────────────────────────────────────────── */
+  .view-toggle {
+    position: fixed;
+    bottom: calc(var(--s-7) + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-4);
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: var(--r-pill);
+    font-family: var(--font);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(31, 28, 23, 0.3);
+    white-space: nowrap;
+    transition: opacity var(--t-fast) var(--ease);
+  }
+
+  .view-toggle:hover {
+    opacity: 0.85;
+  }
+
+  @media (min-width: 880px) {
+    .view-toggle {
+      display: none;
+    }
   }
 
   .mapwrap__canvas {

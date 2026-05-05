@@ -13,7 +13,9 @@
     "terms": "Termes d'\u00fas"
   },
   "view": {
-    "back": "Tornar al mapa"
+    "back": "Tornar al mapa",
+    "showMap": "Mapa",
+    "showList": "Llista"
   },
   "filter": {
     "all": "Tots",

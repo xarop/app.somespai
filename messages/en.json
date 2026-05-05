@@ -13,7 +13,9 @@
     "terms": "Terms of use"
   },
   "view": {
-    "back": "Back to map"
+    "back": "Back to map",
+    "showMap": "Map",
+    "showList": "List"
   },
   "filter": {
     "all": "All",
