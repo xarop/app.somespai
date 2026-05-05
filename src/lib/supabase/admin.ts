@@ -110,6 +110,7 @@ export type AdminSpaceFullUpdate = {
   title: string;
   description: string | null;
   type: string;
+  ownerId: string | null;
   priceCents: number;
   priceUnit: string;
   sizeM2: number | null;
@@ -136,6 +137,7 @@ export async function updateSpaceFullAdmin(id: string, data: AdminSpaceFullUpdat
     title: data.title,
     description: data.description,
     type: data.type,
+    owner_id: data.ownerId,
     price_cents: data.priceCents,
     price_unit: data.priceUnit,
     size_m2: data.sizeM2,

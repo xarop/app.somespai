@@ -74,6 +74,7 @@ export async function updateSpaceFullAction(
 
   const title = (formData.get('title') as string ?? '').trim();
   const type = formData.get('type') as string;
+  const ownerId = (formData.get('owner_id') as string ?? '').trim() || null;
   const description = (formData.get('description') as string ?? '').trim() || null;
   const priceRaw = parseFloat(formData.get('price') as string);
   const priceCents = isNaN(priceRaw) ? 0 : Math.round(priceRaw * 100);
@@ -109,7 +110,7 @@ export async function updateSpaceFullAction(
 
   try {
     await updateSpaceFullAdmin(spaceId, {
-      title, type, description, priceCents, priceUnit, sizeM2,
+      title, type, ownerId, description, priceCents, priceUnit, sizeM2,
       address, neighborhood, city, region, lat, lng,
       amenities, photos,
       phone, emailContact, whatsapp, web, contactDefault,
