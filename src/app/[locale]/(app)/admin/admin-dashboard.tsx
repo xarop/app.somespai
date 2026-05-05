@@ -32,8 +32,7 @@ const AMENITY_GROUPS: Record<string, string[]> = {
   'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],
 };
 
-function formatPrice(priceCents: number, unit: string): string {
-  const price = (priceCents / 100).toFixed(0);
+function formatPrice(priceCents: number, unit: string): string {  if (priceCents === 0) return '?';  const price = (priceCents / 100).toFixed(0);
   return `${price}€/${unit === 'month' ? 'mes' : unit === 'day' ? 'dia' : 'h'}`;
 }
 

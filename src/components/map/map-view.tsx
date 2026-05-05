@@ -87,7 +87,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
         el.setAttribute('data-active', String(space.id === activeSpaceId));
         el.setAttribute('data-featured', String(!!space.isFeatured));
         el.setAttribute('data-type', space.type);
-        el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${priceLabel(space.priceCents)}</span></div>`;
+        el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${space.priceCents > 0 ? priceLabel(space.priceCents) : '?'}</span></div>`;
         el.addEventListener('click', (e) => { e.stopPropagation(); onSelect?.(space); });
 
         const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })

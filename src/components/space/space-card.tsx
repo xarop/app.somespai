@@ -26,11 +26,13 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, onHover, isAdm
   const locale = useLocale();
 
   const localeMap: Record<string, string> = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
-  const formattedPrice = new Intl.NumberFormat(localeMap[locale] ?? 'ca-ES', {
-    style: 'currency',
-    currency: 'EUR',
-    maximumFractionDigits: 0,
-  }).format(space.priceCents / 100);
+  const formattedPrice = space.priceCents > 0
+    ? new Intl.NumberFormat(localeMap[locale] ?? 'ca-ES', {
+        style: 'currency',
+        currency: 'EUR',
+        maximumFractionDigits: 0,
+      }).format(space.priceCents / 100)
+    : '?';
 
   return (
     <article

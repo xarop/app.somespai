@@ -201,11 +201,11 @@ export function EditSpaceForm({ space }: Props) {
           <label className="field field--grow">
             <span className="field__label">{t('fieldNeighborhood')}</span>
             <input name="neighborhood" type="text" className="field__input"
-              defaultValue={space.neighborhood} />
+              defaultValue={space.neighborhood || ''} />
           </label>
           <label className="field field--grow">
             <span className="field__label">{t('fieldCity')}</span>
-            <input name="city" type="text" className="field__input" defaultValue={space.city} />
+            <input name="city" type="text" className="field__input" defaultValue={space.city || ''} />
           </label>
         </div>
       </fieldset>
