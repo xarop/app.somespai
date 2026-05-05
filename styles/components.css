@@ -1785,6 +1785,12 @@
     margin: 0;
   }
 
+  .reviews__error {
+    color: var(--danger);
+    font-size: var(--t-sm);
+    margin: 0;
+  }
+
   .reviews__empty {
     color: var(--ink-mute);
     font-size: var(--t-sm);
