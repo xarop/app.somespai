@@ -8,8 +8,12 @@ import {
   updateSpaceFullAdmin,
   uploadAdminPhoto,
   deleteSpaceAdmin,
+  getReviewsAdmin,
+  updateReviewAdmin,
+  deleteReviewAdmin,
   type AdminSpaceUpdate,
 } from '@/lib/supabase/admin';
+import type { Review } from '@/lib/supabase/reviews';
 
 async function requireAdmin(): Promise<void> {
   const supabase = await createClient();
@@ -39,6 +43,26 @@ export async function updateSpaceAction(id: string, data: AdminSpaceUpdate) {
 export async function deleteSpaceAction(id: string) {
   await requireAdmin();
   await deleteSpaceAdmin(id);
+}
+
+export async function getAdminReviewsAction(spaceId: string): Promise<Review[]> {
+  await requireAdmin();
+  return getReviewsAdmin(spaceId);
+}
+
+export async function updateReviewAction(
+  id: string,
+  spaceId: string,
+  rating: number,
+  body: string | null,
+): Promise<void> {
+  await requireAdmin();
+  await updateReviewAdmin(id, spaceId, rating, body);
+}
+
+export async function deleteReviewAction(id: string, spaceId: string): Promise<void> {
+  await requireAdmin();
+  await deleteReviewAdmin(id, spaceId);
 }
 
 export async function updateSpaceFullAction(

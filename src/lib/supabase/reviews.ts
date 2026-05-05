@@ -33,6 +33,13 @@ export async function addReview(spaceId: string, rating: number, body: string): 
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
+
+  // Ensure a profile row exists (guard against accounts created before the trigger)
+  await supabase.from('profiles').upsert(
+    { id: user.id, display_name: user.email },
+    { onConflict: 'id', ignoreDuplicates: true },
+  );
+
   const { error } = await supabase.from('reviews').insert({
     space_id: spaceId,
     author_id: user.id,
