@@ -18,6 +18,7 @@ interface TopNavProps {
   query: string;
   onQueryChange: (value: string) => void;
   onLocationFound?: (lat: number, lng: number) => void;
+  children?: React.ReactNode;
 }
 
 async function reverseGeocode(lat: number, lng: number): Promise<string | null> {
@@ -41,7 +42,7 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | null> 
   }
 }
 
-export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
+export function TopNav({ query, onQueryChange, onLocationFound, children }: TopNavProps) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
@@ -51,7 +52,8 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   // Geolocation placeholder
   useEffect(() => {
@@ -83,16 +85,10 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Close menu on outside click
+  // Scroll lock
   useEffect(() => {
-    if (!menuOpen) return;
-    const handler = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
 
   function switchLocale(next: string) {
@@ -112,6 +108,7 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
   }
 
   const userInitial = user?.email?.charAt(0).toUpperCase() ?? null;
+  const year = new Date().getFullYear();
 
   return (
     <>
@@ -147,71 +144,116 @@ export function TopNav({ query, onQueryChange, onLocationFound }: TopNavProps) {
             {t('nav.publish')}
           </a>
 
-          <div className="menu-wrap" ref={menuRef}>
-            <button
-              type="button"
-              className="iconbtn menu-toggle"
-              aria-label="Menú"
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(v => !v)}
-            >
-              {userInitial ? (
-                <span className="user-initial">{userInitial}</span>
-              ) : (
-                <Icon name="menu" size={20} />
-              )}
-            </button>
-
-            <div className="dropmenu glass" role="menu" hidden={!menuOpen}>
-              {/* Auth */}
-              {user ? (
-                <>
-                  <div className="dropmenu__item dropmenu__item--muted">
-                    {user.email}
-                  </div>
-                  <a href={`/${locale}/perfil`} role="menuitem" onClick={() => setMenuOpen(false)}>
-                    {t('user.mySpaces')}
-                  </a>
-                  <button type="button" role="menuitem" onClick={handleSignOut}>
-                    {t('user.signOut')}
-                  </button>
-                </>
-              ) : (
-                <button type="button" role="menuitem" onClick={handleAuthClick}>
-                  <Icon name="user" size={16} />
-                  {t('nav.signIn')}
-                </button>
-              )}
-
-              <div className="dropmenu__divider" />
-
-              {/* Language */}
-              <div className="dropmenu__item dropmenu__item--label">{t('lang.label')}</div>
-              {LOCALES.map((l) => (
-                <button
-                  key={l.code}
-                  type="button"
-                  role="menuitemradio"
-                  aria-checked={locale === l.code}
-                  onClick={() => switchLocale(l.code)}
-                >
-                  <span className="lang-code">{l.code.toUpperCase()}</span>
-                  <span>{l.label}</span>
-                  {locale === l.code && <Icon name="check" size={14} />}
-                </button>
-              ))}
-
-              <div className="dropmenu__divider" />
-
-              {/* Design system link */}
-              <a href="/design-system" role="menuitem" onClick={() => setMenuOpen(false)}>
-                <Icon name="grid" size={16} />
-                {t('nav.designSystem')}
-              </a>
-            </div>
-          </div>
+          <button
+            ref={buttonRef}
+            type="button"
+            className="iconbtn menu-toggle"
+            aria-label="Menú"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(v => !v)}
+          >
+            {userInitial ? (
+              <span className="user-initial">{userInitial}</span>
+            ) : (
+              <Icon name="menu" size={22} />
+            )}
+          </button>
         </div>
+
+        {children && <div className="topnav__filters">{children}</div>}
       </header>
+
+      {/* Backdrop — outside header to escape backdrop-filter stacking context */}
+      {menuOpen && (
+        <div
+          className="nav-drawer__backdrop"
+          aria-hidden="true"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* Drawer — outside header for same reason */}
+      <div
+        ref={drawerRef}
+        className="dropmenu glass"
+        role="menu"
+        data-open={menuOpen ? 'true' : 'false'}
+      >
+        {/* Header */}
+        <div className="dropmenu__header">
+          <div className="dropmenu__brand">
+            <svg width="26" height="26" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <rect width="102.813" height="102.813" rx="51.4065" fill="var(--primary)"/>
+              <path d="M23.4217 70.6662C22.0036 70.6662 20.9078 70.2795 20.1344 69.506C19.3867 68.7583 19.0128 67.6754 19.0128 66.2574V36.5557C19.0128 35.1376 19.3867 34.0548 20.1344 33.3071C20.9078 32.5336 22.0036 32.1469 23.4217 32.1469H29.5322V35.7435H24.1178C23.2927 35.7435 22.8802 36.1561 22.8802 36.9811V65.7546C22.8802 66.5796 23.2927 66.9922 24.1178 66.9922H29.5322V70.6662H23.4217Z" fill="var(--primary-ink)"/>
+              <path d="M73.281 70.6662V66.9922H78.6953C79.5204 66.9922 79.9329 66.5796 79.9329 65.7546V36.9811C79.9329 36.1561 79.5204 35.7435 78.6953 35.7435H73.281V32.1469H79.3915C80.8095 32.1469 81.8924 32.5336 82.6401 33.3071C83.4136 34.0548 83.8003 35.1376 83.8003 36.5557V66.2574C83.8003 67.6754 83.4136 68.7583 82.6401 69.506C81.8924 70.2795 80.8095 70.6662 79.3915 70.6662H73.281Z" fill="var(--primary-ink)"/>
+            </svg>
+            <span className="dropmenu__title">{t('brand.name')}</span>
+          </div>
+          <button
+            type="button"
+            className="dropmenu__close"
+            aria-label={t('nav.close')}
+            onClick={() => setMenuOpen(false)}
+          >
+            <Icon name="close" size={20} />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="dropmenu__body">
+          {user ? (
+            <>
+              <div className="dropmenu__item dropmenu__item--muted">{user.email}</div>
+              <a href={`/${locale}/perfil`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                <Icon name="user" size={16} />
+                {t('user.mySpaces')}
+              </a>
+              <button type="button" role="menuitem" onClick={handleSignOut}>
+                {t('user.signOut')}
+              </button>
+            </>
+          ) : (
+            <button type="button" role="menuitem" onClick={handleAuthClick}>
+              <Icon name="user" size={16} />
+              {t('nav.signIn')}
+            </button>
+          )}
+
+          <div className="dropmenu__divider" />
+
+          <a href="/design-system" role="menuitem" onClick={() => setMenuOpen(false)}>
+            <Icon name="grid" size={16} />
+            {t('nav.designSystem')}
+          </a>
+        </div>
+
+        {/* Footer — languages */}
+        <div className="dropmenu__footer">
+          <div className="dropmenu__item dropmenu__item--label">{t('lang.label')}</div>
+          {LOCALES.map((l) => (
+            <button
+              key={l.code}
+              type="button"
+              role="menuitemradio"
+              aria-checked={locale === l.code}
+              onClick={() => switchLocale(l.code)}
+            >
+              <span className="lang-code">{l.code}</span>
+              <span>{l.label}</span>
+              {locale === l.code && <Icon name="check" size={14} />}
+            </button>
+          ))}
+        </div>
+
+        {/* Copyright */}
+        <div className="dropmenu__copyright">
+          <span>© {year} somespai by <a href="https://xarop.com" target="_blank" rel="noopener noreferrer">xarop.com</a></span>
+          <nav>
+            <a href={`/${locale}/privacitat`} onClick={() => setMenuOpen(false)}>{t('nav.privacy')}</a>
+            <a href={`/${locale}/termes`} onClick={() => setMenuOpen(false)}>{t('nav.terms')}</a>
+          </nav>
+        </div>
+      </div>
 
       <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
     </>

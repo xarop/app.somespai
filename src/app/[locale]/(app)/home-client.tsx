@@ -90,7 +90,9 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
 
   return (
     <div className="app">
-      <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })} />
+      <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })}>
+        <FilterBar active={filter} onChange={setFilter} />
+      </TopNav>
       <div className="mapwrap">
         <MapView
           spaces={filteredSpaces}
@@ -98,7 +100,6 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
           onSelect={setSelectedSpace}
           userCenter={userCenter}
         />
-        <FilterBar active={filter} onChange={setFilter} />
         <SpaceSheet
           spaces={filteredSpaces}
           likedIds={likedIds}

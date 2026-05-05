@@ -33,10 +33,10 @@
     position: relative;
     z-index: 50;
     display: grid;
-    grid-template-areas: "brand actions" "search search";
+    grid-template-areas: "brand actions" "search search" "filters filters";
     grid-template-columns: 1fr auto;
     gap: var(--s-2) var(--s-3);
-    margin: var(--s-3);
+    margin: var(--s-3) var(--s-3) var(--s-2);
     border-radius: var(--r-lg);
   }
 
@@ -100,21 +100,26 @@
     align-items: center;
   }
 
-  /* ── Hamburger / dropmenu ─────────────────────────────────────────────── */
+  .topnav__filters {
+    grid-area: filters;
+    margin: 0 calc(-1 * var(--s-1));
+  }
+
+  /* ── Hamburger / Nav drawer ────────────────────────────────────────────── */
   .menu-wrap {
     position: relative;
   }
 
   .menu-toggle {
     border-radius: var(--r-pill);
-    width: auto;
-    padding: 0 var(--s-3);
-    gap: var(--s-2);
+    width: 48px;
+    height: 48px;
+    padding: 0;
   }
 
   .user-initial {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: var(--primary);
     color: var(--primary-ink);
@@ -125,22 +130,104 @@
     line-height: 1;
   }
 
+  /* ── Backdrop ─────────────────────────────────────────────────────────── */
+  .nav-drawer__backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(31, 28, 23, 0.45);
+    z-index: 99;
+    animation: backdropIn var(--t-norm) var(--ease);
+  }
+
+  @keyframes backdropIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* ── Drawer (full-screen slide from right) ────────────────────────────── */
   .dropmenu {
-    position: absolute;
-    top: calc(100% + var(--s-2));
+    position: fixed;
+    top: 0;
     right: 0;
-    min-width: 200px;
-    border-radius: var(--r-lg);
-    border: 1px solid var(--glass-border);
+    height: 100dvh;
+    width: 100%;
+    border-radius: 0;
+    border: none;
     background-color: var(--bg);
-    overflow: hidden;
     z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition:
+      transform var(--t-norm) var(--ease-out),
+      visibility 0s var(--t-norm);
+  }
+
+  .dropmenu[data-open="true"] {
+    transform: translateX(0);
+    visibility: visible;
+    transition:
+      transform var(--t-norm) var(--ease-out),
+      visibility 0s 0s;
+  }
+
+  /* Drawer header */
+  .dropmenu__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s-4) var(--s-4) var(--s-4) var(--s-3);
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+  }
+
+  .dropmenu__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .dropmenu__title {
+    font-family: var(--font);
+    font-variation-settings: var(--rx-casual);
+    font-weight: 700;
+    font-size: var(--t-lg);
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+
+  .dropmenu__close {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: var(--r-md);
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background var(--t-fast) var(--ease);
+  }
+
+  .dropmenu__close:hover {
+    background: var(--bg-soft);
+  }
+
+  /* Drawer body */
+  .dropmenu__body {
+    flex: 1;
     display: flex;
     flex-direction: column;
   }
 
-  .dropmenu[hidden] {
-    display: none;
+  /* Drawer footer (languages) */
+  .dropmenu__footer {
+    border-top: 1px solid var(--glass-border);
+    flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   .dropmenu button,
@@ -208,17 +295,82 @@
     min-width: 28px;
   }
 
+  /* ── Copyright strip ─────────────────────────────────────────────────── */
+  .dropmenu__copyright {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    border-top: 1px solid var(--glass-border);
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+    padding-bottom: calc(var(--s-3) + env(safe-area-inset-bottom, 0px));
+    white-space: nowrap;
+  }
+
+  .dropmenu__copyright span a {
+    padding: 0;
+    font-size: inherit;
+    color: var(--ink-mute);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: transparent;
+    display: inline;
+  }
+
+  .dropmenu__copyright span a:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+
+  .dropmenu__copyright nav {
+    display: flex;
+    gap: var(--s-3);
+    flex-shrink: 0;
+  }
+
+  .dropmenu__copyright nav a {
+    padding: 0;
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: transparent;
+  }
+
+  .dropmenu__copyright nav a:hover {
+    background: transparent;
+    color: var(--ink);
+  }
+
   @media (min-width: 640px) {
     .topnav {
-      grid-template-areas: "brand search actions";
+      grid-template-areas: "brand search actions" "filters filters filters";
       grid-template-columns: auto 1fr auto;
-      padding: var(--s-2) var(--s-4);
+      padding: var(--s-2) var(--s-4) 0;
+      margin-bottom: 0;
     }
 
     .topnav__search {
       width: auto;
       max-width: none;
       justify-self: stretch;
+    }
+
+    .topnav__filters {
+      padding-bottom: var(--s-2);
+    }
+
+    /* Desktop: same drawer, capped width */
+    .dropmenu {
+      width: 380px;
+    }
+
+    .menu-toggle {
+      width: 44px;
+      height: 44px;
     }
   }
 
@@ -316,17 +468,13 @@
 
   /* ── Filter bar ───────────────────────────────────────────────────────── */
   .filterbar {
-    position: absolute;
-    top: var(--t-base);
-    left: var(--s-3);
-    right: var(--s-3);
-    z-index: 40;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: var(--s-2);
     overflow-x: auto;
     overflow-y: hidden;
-    padding: var(--s-1);
+    padding: var(--s-1) var(--s-1) var(--s-2);
     scrollbar-width: none;
   }
 
