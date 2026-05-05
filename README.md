@@ -161,9 +161,23 @@ Les pàgines principals són **Server Components** que fan fetch a Supabase i pa
 ```
 page.tsx (server) → getSpaces() → HomeClient (client)
 espai/[slug]/page.tsx (server) → getSpaceBySlug() → SpaceDetailClient (client)
+admin/page.tsx (server, admin only) → getAllSpacesAdmin() → AdminDashboard (client)
+editar/[slug]/page.tsx (server, owner only) → getSpaceBySlugForOwner() → EditSpaceForm (client)
+perfil/page.tsx (server, auth) → getSpacesByOwner() → llista d'espais
 ```
 
-Totes les queries van per `src/lib/supabase/spaces.ts`. Cap component de client toca Supabase directament.
+Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacions d'admin utilitzen el service-role client a `src/lib/supabase/admin.ts`.
+
+---
+
+## Variables d'entorn
+
+| Variable | On es troba |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase dashboard → Settings → API |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase dashboard → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Settings → API (secret) |
+| `ADMIN_EMAIL` | Correu de l'administrador (accés al dashboard `/admin`) |
 
 ---
 
@@ -199,6 +213,40 @@ curl -X POST https://app.somespai.net/api/admin/import \
   -H "Content-Type: application/json" \
   -d '[{"slug":"...", "title":"...", ...}]'
 ```
+
+## Phase 3 — fet
+
+### Dashboard d'administrador (`/[locale]/admin`)
+
+Accés exclusiu a l'usuari amb `ADMIN_EMAIL`. Protegit per middleware i guard de servidor.
+
+**Funcionalitats:**
+- Taula de tots els espais (totes les estats: actius, pausats, eliminats)
+- Estadístiques: total, publicats, pausats, eliminats, destacats
+- Filtres: estat · tipus d'espai · destacats · cerca lliure de text
+- Accions ràpides per fila: publicar/pausar, destacar/treure destacat, eliminar
+- Modal d'edició completa: tots els camps del DB (títol, tipus, descripció, preu, ubicació amb geocodificació, amenitats, fotos, contacte, estat, destacat)
+- Gestió de fotos: eliminar existents + pujar noves (fins a 10 MB per foto)
+- Icona d'edició directa (✏) als cards i a la fitxa de l'espai quan l'usuari és admin
+
+**Accés:** `https://app.somespai.net/ca/admin`
+
+### Edició d'espais per propietari (`/[locale]/editar/[slug]`)
+
+Els usuaris autenticats poden editar els seus propis espais.
+
+**Funcionalitats:**
+- Formulari complet pre-emplenat amb les dades actuals
+- Gestió de fotos: eliminar existents + pujar noves
+- Control d'estat: publicar o pausar (no visible temporalment)
+- Eliminació de l'espai amb confirmació
+- Icona d'edició directa (✏) als cards i a la fitxa quan l'usuari és el propietari
+
+### Perfil d'usuari (`/[locale]/perfil`)
+
+Llista tots els espais publicats (i pausats) per l'usuari autenticat, amb accés directe a l'edició.
+
+**Accés:** menú superior → "Els meus espais" (quan s'és autenticat)
 
 ---
 
