@@ -14,7 +14,6 @@ import {
   updateReviewAction,
   deleteReviewAction,
 } from './actions';
-import { QuickImportModal } from './components/quick-import-modal';
 import type { Review } from '@/lib/supabase/reviews';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
@@ -505,29 +504,6 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
   };
 
   const featured = initialSpaces.filter(s => s.isFeatured).length;
-  
-  // Importer state
-  const [showImport, setShowImport] = useState(false);
-  const [importData, setImportData] = useState({});
-
-  useEffect(() => {
-    // Check URL parameters for bookmarklet hook
-    if (typeof window !== 'undefined') {
-      const p = new URLSearchParams(window.location.search);
-      if (p.get('import')) {
-        setImportData({
-          title: p.get('title') || '',
-          address: p.get('address') || '',
-          web: p.get('web') || '',
-          photoUrl: p.get('img') || ''
-        });
-        setShowImport(true);
-        // Clean URL
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-    }
-  }, []);
-
   const filtered = spaces.filter(s => {
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
     if (typeFilter !== 'all' && s.type !== typeFilter) return false;
@@ -593,25 +569,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </div>
       </div>
 
-      {/* Search & Actions */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', alignItems: 'center' }}>
-        <div className="admin-search-wrap" style={{ margin: 0, flex: 1 }}>
-          <Icon name="search" size={16} />
-          <input
-            type="search"
-            className="admin-search-input"
-            placeholder={t('searchPlaceholder')}
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <button 
-          className="admin-btn admin-btn--primary"
-          onClick={() => setShowImport(true)}
-          style={{ whiteSpace: 'nowrap' }}
-        >
-          ⚡ Importació Ràpida
-        </button>
+      {/* Search */}
+      <div className="admin-search-wrap">
+        <Icon name="search" size={16} />
+        <input
+          type="search"
+          className="admin-search-input"
+          placeholder={t('searchPlaceholder')}
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
       </div>
 
       {/* Filter tabs — status */}
@@ -724,20 +691,6 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           message={t('deleteConfirm')}
           onConfirm={() => handleDelete(deletingId)}
           onCancel={() => setDeletingId(null)}
-        />
-      )}
-
-      {showImport && (
-        <QuickImportModal
-          initialData={importData}
-          onClose={() => {
-            setShowImport(false);
-            setImportData({});
-          }}
-          onSuccess={() => {
-            alert('Space imported as Paused successfully!');
-            router.refresh();
-          }}
         />
       )}
     </div>
