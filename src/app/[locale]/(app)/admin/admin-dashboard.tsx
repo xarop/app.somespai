@@ -226,6 +226,12 @@ function EditModal({ space, onClose, onSuccess }: EditModalProps) {
             <legend className="fieldset__legend">{tPublish('sectionBasic')}</legend>
 
             <label className="field">
+              <span className="field__label">Owner ID (UUID)</span>
+              <input name="owner_id" type="text" className="field__input"
+                defaultValue={space.ownerId ?? ''} placeholder="Ex: d4b3... (opcional)" />
+            </label>
+
+            <label className="field">
               <span className="field__label">{tPublish('fieldTitle')} *</span>
               <input name="title" type="text" className="field__input" required maxLength={120}
                 defaultValue={space.title} />
@@ -616,12 +622,13 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           <thead>
             <tr>
               <th>{t('colTitle')}</th>
+              <th className="admin-cell--center">Prop.</th>
               <th>{t('colType')}</th>
               <th>{t('colStatus')}</th>
               <th>{t('colLocation')}</th>
               <th>{t('colPrice')}</th>
-              <th>{t('colRating')}</th>
-              <th>{t('colFeatured')}</th>
+              <th className="admin-cell--center">{t('colRating')}</th>
+              <th className="admin-cell--center">{t('colFeatured')}</th>
               <th>{t('colActions')}</th>
             </tr>
           </thead>
@@ -634,6 +641,9 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
                     {space.title}
                   </a>
                 </td>
+                <td className="admin-cell--center" title={space.ownerId ?? 'Sense amo'}>
+                  {space.ownerId ? <span style={{ color: 'green' }}>✓</span> : <span style={{ color: 'red' }}>✕</span>}
+                </td>
                 <td><TypeBadge type={space.type} /></td>
                 <td><StatusBadge status={space.status} /></td>
                 <td className="admin-cell--location">
@@ -641,12 +651,12 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
                   <span className="admin-cell--city">{space.city}</span>
                 </td>
                 <td>{formatPrice(space.priceCents, space.priceUnit)}</td>
-                <td>
+                <td className="admin-cell--center">
                   {space.rating > 0
                     ? <span className="admin-rating">★ {space.rating.toFixed(1)}</span>
                     : <span className="admin-rating admin-rating--none">—</span>}
                 </td>
-                <td>
+                <td className="admin-cell--center">
                   <button type="button"
                     className={`admin-featured-btn${space.isFeatured ? ' admin-featured-btn--on' : ''}`}
                     onClick={() => handleToggleFeatured(space)} disabled={isPending}

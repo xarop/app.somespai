@@ -2020,12 +2020,12 @@
   }
 
   .admin-table thead th {
-    padding: var(--s-3) var(--s-4);
+    padding: var(--s-2) var(--s-2);
     text-align: left;
     font-size: var(--t-xs);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     color: var(--ink-mute);
     border-bottom: 1px solid var(--glass-border);
     white-space: nowrap;
@@ -2052,12 +2052,16 @@
   }
 
   .admin-table td {
-    padding: var(--s-3) var(--s-4);
+    padding: var(--s-2) var(--s-3);
     vertical-align: middle;
   }
 
   .admin-cell--title {
-    max-width: 260px;
+    max-width: 200px;
+  }
+
+  .admin-cell--center {
+    text-align: center;
   }
 
   .admin-space-link {
@@ -2182,12 +2186,12 @@
 
   .admin-actions {
     display: flex;
-    gap: var(--s-1);
+    gap: 4px;
     flex-wrap: nowrap;
   }
 
   .admin-action-btn {
-    padding: 4px 10px;
+    padding: 2px 6px;
     border-radius: var(--r-sm);
     border: 1px solid var(--glass-border);
     background: var(--bg);
