@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
+import type { MapViewProps } from '@/components/map/map-view';
 import { TopNav } from '@/components/ui/top-nav';
 import { FilterBar, type FilterId } from '@/components/space/filter-bar';
 import { SpaceSheet, type SortId } from '@/components/space/space-sheet';
@@ -13,7 +14,7 @@ import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
 import { createClient } from '@/lib/supabase/client';
 import type { Space } from '@/lib/schemas/space';
 
-const MapView = dynamic(
+const MapView = dynamic<MapViewProps>(
   () => import('@/components/map/map-view').then((m) => m.MapView),
   { ssr: false, loading: () => <div className="mapwrap__canvas" style={{ background: 'var(--bg-soft)' }} /> },
 );
@@ -37,6 +38,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
   const [sort, setSort] = useState<SortId>('distance');
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
+  const [hoveredSpaceId, setHoveredSpaceId] = useState<string | null>(null);
   const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [view, setView] = useState<'map' | 'list'>('map');
 
@@ -98,12 +100,15 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
         <FilterBar active={filter} onChange={setFilter} />
       </TopNav>
       <div className="mapwrap" data-view={view}>
-        <MapView
-          spaces={filteredSpaces}
-          activeSpaceId={selectedSpace?.id ?? null}
-          onSelect={setSelectedSpace}
-          userCenter={userCenter}
-        />
+        <div className="mapwrap__canvas">
+          <MapView
+            spaces={filteredSpaces}
+            activeSpaceId={selectedSpace?.id ?? null}
+            hoveredSpaceId={hoveredSpaceId}
+            onSelect={setSelectedSpace}
+            userCenter={userCenter}
+          />
+        </div>
         <SpaceSheet
           spaces={filteredSpaces}
           likedIds={likedIds}
@@ -111,6 +116,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
           onSortChange={setSort}
           onSelect={setSelectedSpace}
           onToggleLike={toggleLike}
+          onHover={setHoveredSpaceId}
           locationLabel={locationLabel}
           isAdmin={isAdmin}
           currentUserId={currentUserId}
