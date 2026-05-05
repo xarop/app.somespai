@@ -283,7 +283,8 @@
       "chips": "Chips de filtre",
       "cards": "Targeta d'espai",
       "markers": "Marcadors de mapa"
-    }  },
+    }
+  },
   "help": {
     "back": "Inici",
     "title": "Com funciona somespai",
@@ -301,5 +302,6 @@
     "desktopTitle": "En ordinador",
     "desktopDesc": "A la dreta apareix la llista d'espais. A l'esquerra, el mapa s'actualitza en temps real mentre navegues.",
     "ctaExplore": "Explora espais",
-    "ctaPublish": "Publica un espai"  }
+    "ctaPublish": "Publica un espai"
+  }
 }
