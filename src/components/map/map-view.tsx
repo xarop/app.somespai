@@ -23,14 +23,15 @@ function priceLabel(cents: number) {
   return `${Math.round(cents / 100)}€`;
 }
 
-interface MapViewProps {
+export interface MapViewProps {
   spaces: Space[];
   activeSpaceId?: string | null;
+  hoveredSpaceId?: string | null;
   onSelect?: (space: Space) => void;
   userCenter?: { lat: number; lng: number } | null;
 }
 
-export function MapView({ spaces, activeSpaceId, onSelect, userCenter }: MapViewProps) {
+export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userCenter }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -125,6 +126,13 @@ export function MapView({ spaces, activeSpaceId, onSelect, userCenter }: MapView
     if (map.loaded()) fly();
     else map.once('load', fly);
   }, [spaces]);
+
+  // Update data-hover attribute without re-creating markers
+  useEffect(() => {
+    for (const [id, marker] of markersRef.current) {
+      marker.getElement().setAttribute('data-hover', String(id === hoveredSpaceId && hoveredSpaceId !== null));
+    }
+  }, [hoveredSpaceId]);
 
   return <div ref={containerRef} style={{ position: 'absolute', inset: 0 }} />;
 }

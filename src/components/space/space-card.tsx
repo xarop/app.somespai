@@ -16,11 +16,12 @@ interface SpaceCardProps {
   liked: boolean;
   onSelect: (space: Space) => void;
   onToggleLike: (id: string) => void;
+  onHover?: (id: string | null) => void;
   isAdmin?: boolean;
   currentUserId?: string;
 }
 
-export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin, currentUserId }: SpaceCardProps) {
+export function SpaceCard({ space, liked, onSelect, onToggleLike, onHover, isAdmin, currentUserId }: SpaceCardProps) {
   const t = useTranslations();
   const locale = useLocale();
 
@@ -38,6 +39,8 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, isAdmin, curre
       tabIndex={0}
       aria-label={space.title}
       onClick={() => onSelect(space)}
+      onMouseEnter={() => onHover?.(space.id)}
+      onMouseLeave={() => onHover?.(null)}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
