@@ -37,6 +37,15 @@ export async function middleware(request: NextRequest) {
     return redirect;
   }
 
+  // Protect /admin — redirect unauthenticated users to home
+  if (!user && /\/admin/.test(request.nextUrl.pathname)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/';
+    const redirect = NextResponse.redirect(url);
+    supabaseResponse.cookies.getAll().forEach(c => redirect.cookies.set(c.name, c.value));
+    return redirect;
+  }
+
   // Run i18n middleware and copy Supabase auth cookies to its response
   const intlResponse = intlMiddleware(request);
   supabaseResponse.cookies.getAll().forEach(c =>
