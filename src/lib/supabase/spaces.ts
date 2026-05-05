@@ -10,15 +10,15 @@ function rowToSpace(row: Record<string, any>): Space {
     title: row.title,
     description: row.description ?? null,
     type: row.type,
-    priceCents: row.price_cents,
+    priceCents: row.price_cents ?? 0,
     currency: row.currency ?? 'EUR',
     sizeM2: row.size_m2 ?? null,
     address: row.address ?? null,
     neighborhood: row.neighborhood ?? 'Vila de Gràcia',
     city: row.city ?? 'Barcelona',
     region: row.region ?? 'Catalunya',
-    lat: row.lat,
-    lng: row.lng,
+    lat: row.lat ?? 0,
+    lng: row.lng ?? 0,
     amenities: row.amenities ?? [],
     photos: row.photos ?? [],
     isFeatured: row.is_featured ?? false,
@@ -47,18 +47,26 @@ export async function getSpaces(): Promise<Space[]> {
   return (data ?? []).map(rowToSpace);
 }
 
-/** Fetch a single active space by slug. Returns null if not found. */
+/** Fetch a single active space by slug. Returns null if not found or on error. */
 export async function getSpaceBySlug(slug: string): Promise<Space | null> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
-    .from('spaces')
-    .select('*')
-    .eq('slug', slug)
-    .eq('status', 'active')
-    .maybeSingle();
+  try {
+    const supabase = await createClient();
+    const { data, error } = await supabase
+      .from('spaces')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'active')
+      .maybeSingle();
 
-  if (error) throw new Error(error.message);
-  return data ? rowToSpace(data) : null;
+    if (error) {
+      console.error('[getSpaceBySlug] Supabase error:', error.message, { slug });
+      return null;
+    }
+    return data ? rowToSpace(data) : null;
+  } catch (err) {
+    console.error('[getSpaceBySlug] Unexpected error:', err, { slug });
+    return null;
+  }
 }
 
 /** Fetch all non-removed spaces owned by a user. */
