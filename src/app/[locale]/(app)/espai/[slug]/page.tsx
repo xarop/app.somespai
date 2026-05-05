@@ -1,23 +1,11 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
-import { getSpaceBySlug, getAllSlugs } from '@/lib/supabase/spaces';
+import { getSpaceBySlug } from '@/lib/supabase/spaces';
 import { createClient } from '@/lib/supabase/server';
 import { SpaceDetailClient } from './space-detail-client';
 
-// Supported locales for static export
-const SUPPORTED_LOCALES = ['ca', 'es', 'en'];
-
-export async function generateStaticParams() {
-  try {
-    const slugs = await getAllSlugs();
-    return SUPPORTED_LOCALES.flatMap((locale) =>
-      slugs.map((slug) => ({ locale, slug })),
-    );
-  } catch {
-    // Supabase unavailable at build time (e.g. static export without DB).
-    return [];
-  }
-}
+// Always render dynamically — cookies() is required for auth state
+export const dynamic = 'force-dynamic';
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
