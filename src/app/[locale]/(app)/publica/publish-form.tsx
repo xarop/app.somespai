@@ -150,12 +150,11 @@ export function PublishForm() {
         <div className="field-row">
           <label className="field field--grow">
             <span className="field__label">{t('fieldNeighborhood')}</span>
-            <input name="neighborhood" type="text" className="field__input"
-              defaultValue="Vila de Gràcia" />
+            <input name="neighborhood" type="text" className="field__input" />
           </label>
           <label className="field field--grow">
             <span className="field__label">{t('fieldCity')}</span>
-            <input name="city" type="text" className="field__input" defaultValue="Barcelona" />
+            <input name="city" type="text" className="field__input" />
           </label>
         </div>
       </fieldset>

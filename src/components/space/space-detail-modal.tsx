@@ -117,9 +117,11 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
   if (!space) return null;
 
   const localeMap: Record<string, string> = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
-  const formattedPrice = new Intl.NumberFormat(localeMap[locale] ?? 'ca-ES', {
-    style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
-  }).format(space.priceCents / 100);
+  const formattedPrice = space.priceCents > 0
+    ? new Intl.NumberFormat(localeMap[locale] ?? 'ca-ES', {
+        style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+      }).format(space.priceCents / 100)
+    : '?';
 
   const isVerified = (space as Space & { ownerVerified?: boolean }).ownerVerified;
 

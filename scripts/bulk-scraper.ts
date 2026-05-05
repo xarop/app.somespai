@@ -64,7 +64,7 @@ async function run() {
     console.log(`➡️ Processant: ${place.name}`);
 
     // Obtenir detalls per agafar la web, telèfon, etc.
-    const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,website,formatted_phone_number,geometry,photos&key=${GOOGLE_API_KEY}`;
+    const detailsUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,formatted_address,address_components,website,formatted_phone_number,geometry,photos&key=${GOOGLE_API_KEY}`;
     const detailsRes = await fetch(detailsUrl);
     const detailsData = await detailsRes.json();
     const details = detailsData.result;
@@ -85,18 +85,28 @@ async function run() {
     const web = details.website || null;
     const phone = details.formatted_phone_number || null;
 
+    // Conseguit Ciutat i Barri dels components d'adreça si existeixen
+    let city = null;
+    let neighborhood = null;
+    for (const comp of (details.address_components || [])) {
+      if (comp.types.includes('locality')) {
+        city = comp.long_name;
+      }
+      if (comp.types.includes('sublocality') || comp.types.includes('neighborhood')) {
+        neighborhood = comp.long_name;
+      }
+    }
+
     // Generació de contingut adaptat segons el tipus
     let description = `Aquest és un espai comercial ubicat a ${address}. Originalment anomenat "${title}".`;
-    let priceCents = 15000; // 150€ per defecte
+    let priceCents = 0; // 0 significa "No definit" o "?"
     let sizeM2 = 10;
     
     if (spaceType === 'workspace') {
       description = `Espai de treball / Coworking ubicat a ${address}. Disposa d'excel·lents connexions i tot el necessari per al teu dia a dia. Ideal per a autònoms i petites empreses.\n\nWebsite: ${web || 'No disponible'}`;
-      priceCents = 18000;
       sizeM2 = 5;
     } else if (spaceType === 'storage') {
       description = `Traster o espai d'emmagatzematge situat a ${address}. Accés fàcil i segur per guardar-hi tot el que necessitis.`;
-      priceCents = 8000;
       sizeM2 = 8;
     }
 
@@ -136,6 +146,8 @@ async function run() {
       price_cents: priceCents,
       size_m2: sizeM2,
       address,
+      city,
+      neighborhood,
       location: `SRID=4326;POINT(${lng} ${lat})`,
       photos,
       web,
