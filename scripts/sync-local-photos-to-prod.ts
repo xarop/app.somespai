@@ -5,10 +5,10 @@ import fs from "fs";
 const localUrl = "http://127.0.0.1:54321";
 
 // Cridarem manualment a l'API del .env per treure els valors sense carregar next
-function getEnv(file) {
+function getEnv(file: string) {
   try {
     const txt = fs.readFileSync(file, "utf8");
-    const out = {};
+    const out: Record<string, string> = {};
     for (const line of txt.split('\n')) {
       const match = line.match(/^([^=]+)=(.*)$/);
       if (match) {
@@ -82,7 +82,7 @@ async function run() {
           const { data: { publicUrl } } = prodClient.storage.from('space-photos').getPublicUrl(bucketPath);
           newPhotos.push(publicUrl);
           ok++;
-        } catch(e) {
+        } catch(e: any) {
           console.error(`  -> Error descarregant/pujant:`, e.message);
           // Mantenim antiga petada temporalment o simplement l'apartem? La canviem per només el URL de prod tot i estar caiguda, per seguir l'estructura
           const fakeProdUrl = PROD_URL + "/storage/v1/object/public/space-photos/" + bucketPath;

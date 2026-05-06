@@ -330,17 +330,17 @@ function EditModal({ space, onClose, onSuccess }: EditModalProps) {
               <label className="field field--grow">
                 <span className="field__label">{tPublish('fieldNeighborhood')}</span>
                 <input name="neighborhood" type="text" className="field__input"
-                  defaultValue={space.neighborhood} />
+                  defaultValue={space.neighborhood ?? ''} />
               </label>
               <label className="field field--grow">
                 <span className="field__label">{tPublish('fieldCity')}</span>
                 <input name="city" type="text" className="field__input"
-                  defaultValue={space.city} />
+                  defaultValue={space.city ?? ''} />
               </label>
               <label className="field field--grow">
                 <span className="field__label">{t('fieldRegion')}</span>
                 <input name="region" type="text" className="field__input"
-                  defaultValue={space.region} />
+                  defaultValue={space.region ?? ''} />
               </label>
             </div>
           </fieldset>

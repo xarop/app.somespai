@@ -34,14 +34,14 @@ export async function createClient() {
   if (process.env.NODE_ENV === 'development') {
     const originalGetUser = supabase.auth.getUser.bind(supabase.auth);
     supabase.auth.getUser = async (jwt?) => {
-      const { data, error } = await originalGetUser(jwt);
-      if (data?.user) return { data, error };
+      const result = await originalGetUser(jwt);
+      if (result.data?.user) return result;
 
       return {
         data: {
           user: {
-            id: '00000000-0000-0000-0000-000000000001', // Match seed.sql user
-            email: process.env.ADMIN_EMAIL || 'hello@somespai.cat', // Ensures admin bypass passes
+            id: '00000000-0000-0000-0000-000000000001',
+            email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'seed@somespai.cat',
             app_metadata: {},
             user_metadata: {},
             aud: 'authenticated',
@@ -50,7 +50,7 @@ export async function createClient() {
           } as any,
         },
         error: null,
-      };
+      } as any;
     };
   }
 
