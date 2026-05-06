@@ -233,7 +233,7 @@
     "label": "Language"
   },
   "admin": {
-    "title": "Space administration",
+    "title": "Administration",
     "subtitle": "{count, plural, =0 {No spaces} one {# space} other {# spaces}} in the database",
     "statsTotal": "Total",
     "statsActive": "Published",
