@@ -6,10 +6,13 @@
     "searchPlaceholder": "Search spaces near you…",
     "searchLocating": "Locating…",
     "searchNear": "Search spaces in {location}…",
+    "searchContext": "Search {typeLabel} in {location}…",
     "signIn": "Sign in",
     "designSystem": "Design system",
     "publish": "Publish a space",
     "close": "Close",
+    "allSpaces": "All spaces",
+    "cities": "Cities",
     "privacy": "Privacy",
     "terms": "Terms of use",
     "help": "Help"
@@ -29,7 +32,8 @@
   },
   "sheet": {
     "count": "{n, plural, =0 {No spaces} one {# space in {location}} other {# spaces in {location}}}",
-    "countAll": "{n, plural, =0 {No spaces found} one {# space found} other {# spaces found}}",
+    "countType": "{n, plural, =0 {No spaces} one {# {typeLabel} in {location}} other {# {typeLabel} in {location}}}",
+    "countAll":"{n, plural, =0 {No spaces found} one {# space found} other {# spaces found}}",
     "empty": "No spaces match this filter. Try another.",
     "sortDistance": "Nearest",
     "sortPrice": "Price",
@@ -304,5 +308,48 @@
     "desktopDesc": "The space list appears on the right. On the left, the map updates in real time as you browse.",
     "ctaExplore": "Explore spaces",
     "ctaPublish": "Publish a space"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page not found",
+    "desc": "This page does not exist or has been moved.",
+    "back": "Back to home"
+  },
+  "sitemap": {
+    "title": "Site map",
+    "desc": "All pages on Somespai.",
+    "sectionMain": "Main pages",
+    "sectionCities": "Spaces by city",
+    "sectionSpaces": "All spaces",
+    "home": "Home",
+    "allSpaces": "All spaces",
+    "help": "How it works",
+    "publish": "Publish a space"
+  },
+  "seo": {
+    "cityTitle": "Spaces in {city}",
+    "cityDesc": "{count} available spaces in {city}: studios, storage, rooms and outdoors.",
+    "typeTitle": "{typeLabel} in {city}",
+    "typeDesc": "{count} {typeLabel} available in {city}.",
+    "allSpacesTitle": "All spaces on Somespai",
+    "allSpacesDesc": "Complete listing of available spaces: studios, storage, rooms and outdoors.",
+    "filterType": "Type",
+    "filterCity": "City",
+    "filterAmenities": "Amenities",
+    "filterRating": "Minimum rating",
+    "filterPrice": "Max price (€/month)",
+    "clearFilters": "Clear filters",
+    "noResults": "No spaces match these filters.",
+    "results": "{n, plural, =0 {No spaces} one {# space} other {# spaces}}",
+    "allTypes": "All types",
+    "allCities": "All cities",
+    "backToCity": "All spaces in {city}",
+    "viewSpace": "View space",
+    "typeSlugs": {
+      "estudis": "Studios",
+      "sales": "Rooms",
+      "trasters": "Storage",
+      "jardins": "Outdoors"
+    }
   }
 }

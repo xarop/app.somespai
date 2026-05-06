@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/lib/i18n/routing';
 import { Icon } from '@/components/ui/icon';
+import { PageNav } from '@/components/ui/page-nav';
 import { SpaceCard } from '@/components/space/space-card';
 import { MOCK_SPACES } from '@/lib/data/mock-spaces';
 
@@ -37,6 +38,8 @@ export default function DesignSystemPage() {
   const sampleSpace = MOCK_SPACES[2]; // jardí glicines
 
   return (
+    <>
+    <PageNav />
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       <div className="ds">
         <Link href="/" className="ds__back">
@@ -165,6 +168,7 @@ export default function DesignSystemPage() {
         </section>
       </div>
     </div>
+    </>
   );
 }
 

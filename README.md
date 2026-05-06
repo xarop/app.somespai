@@ -84,6 +84,10 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0001_init.sql` | Esquema inicial: `profiles`, `spaces`, `reviews`, `favorites`, RLS, RPC `nearby_spaces` |
 | `0002_add_space_extra_fields.sql` | Afegeix `price_unit`, `contact_url`, `rating`, `reviews_count`, columnes generades `lat`/`lng` |
 | `0003_storage_photos.sql` | Bucket `space-photos` (públic, 5 MB, imatges) + RLS: lectura pública, pujada/eliminació per propietari |
+| `0004_add_contact_fields.sql` | Afegeix `phone`, `email_contact`, `whatsapp`, `web`, `contact_default` a `spaces` |
+| `0005_add_space_fields.sql` | Afegeix `address`, `neighborhood`, `region`, `owner_id` i RLS per propietari |
+| `0006_admin_storage_policy.sql` | Política RLS que permet a l'admin pujar/eliminar qualsevol foto |
+| `0007_profiles_self_insert.sql` | Política RLS que permet als usuaris autenticats crear el seu propi perfil (necessari per ressenyes) |
 
 ---
 
@@ -166,7 +170,7 @@ editar/[slug]/page.tsx (server, owner only) → getSpaceBySlugForOwner() → Edi
 perfil/page.tsx (server, auth) → getSpacesByOwner() → llista d'espais
 ```
 
-Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacions d'admin utilitzen el service-role client a `src/lib/supabase/admin.ts`.
+Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacions d'admin utilitzen el service-role client a `src/lib/supabase/admin.ts`. Les pàgines SEO utilitzen `src/lib/supabase/spaces-seo.ts` (service-role sense cookies, apte per `generateStaticParams`).
 
 ---
 
@@ -260,6 +264,49 @@ Els usuaris autenticats poden editar els seus propis espais.
 Llista tots els espais publicats (i pausats) per l'usuari autenticat, amb accés directe a l'edició.
 
 **Accés:** menú superior → "Els meus espais" (quan s'és autenticat)
+
+---
+
+## Phase 4 — fet
+
+### Header simplificat per pàgines de contingut (`PageNav`)
+
+El `TopNav` (amb cercador) s'utilitza només a la home i la fitxa d'espai. Totes les pàgines de contingut (ajuda, design-system, perfil, publica, editar, admin) utilitzen el nou component `PageNav` que inclou logo + botó "Publica un espai" + hamburger menú, però **sense el cercador**.
+
+- `src/components/ui/top-nav.tsx` — nav complet (home + fitxa d'espai)
+- `src/components/ui/page-nav.tsx` — nav simplificat (totes les altres pàgines)
+
+### Ressenyes per admin
+
+Al modal d'edició del dashboard d'admin s'han afegit:
+- Llistat de totes les ressenyes d'un espai
+- Edició inline de rating i text
+- Eliminació amb confirmació
+- Recàlcul automàtic del rating de l'espai
+
+### Pàgines SEO de ciutats
+
+Generades estàticament per a totes les ciutats que tinguin espais actius:
+
+| Ruta | Contingut |
+|------|-----------|
+| `/[city]/` | Tots els espais d'una ciutat (e.g., `/barcelona/`) |
+| `/[city]/estudis/` | Espais de treball a la ciutat |
+| `/[city]/sales/` | Sales polivalents a la ciutat |
+| `/[city]/trasters/` | Trasters a la ciutat |
+| `/[city]/jardins/` | Exteriors a la ciutat |
+
+Les pàgines de ciutat inclouen breadcrumb, resum, filtres per tipus i grid de targetes amb links directes a cada espai.
+
+### Llistat complet d'espais (`/espais/`)
+
+Pàgina sense mapa amb tots els espais actius. Inclou:
+- Filtres per tipus, ciutat, amenitats, puntuació mínima i preu màxim
+- Actualització en temps real client-side
+- Cada fila amb link directe a `/espai/[slug]`
+- Pensada per a la indexació SEO de totes les URLs individuals
+
+**Ruta:** `https://app.somespai.net/espais`
 
 ---
 

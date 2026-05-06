@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getAllSpacesAdmin } from '@/lib/supabase/admin';
 import { AdminDashboard } from './admin-dashboard';
+import { PageNav } from '@/components/ui/page-nav';
 
 interface AdminPageProps {
   searchParams: Promise<{ edit?: string }>;
@@ -23,6 +24,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const spaces = await getAllSpacesAdmin();
 
   return (
+    <>
+    <PageNav />
     <div className="page-form">
       <div className="page-form__inner page-form__inner--wide">
         <header className="page-form__header">
@@ -33,5 +36,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <AdminDashboard spaces={spaces} initialEditId={edit} />
       </div>
     </div>
+    </>
   );
 }

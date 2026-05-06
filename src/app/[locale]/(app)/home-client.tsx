@@ -29,11 +29,14 @@ interface HomeClientProps {
   initialSpaces: Space[];
   isAdmin: boolean;
   currentUserId?: string;
+  initialFilter?: FilterId;
+  cityContext?: string;
+  typeContext?: string;
 }
 
-export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClientProps) {
+export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilter, cityContext, typeContext }: HomeClientProps) {
   const t = useTranslations();
-  const [filter, setFilter] = useState<FilterId>('all');
+  const [filter, setFilter] = useState<FilterId>(initialFilter ?? 'all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortId>('distance');
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
@@ -76,11 +79,21 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
     return list;
   }, [initialSpaces, filter, query, sort, userCenter]);
 
+  const contextTypeLabel = typeContext ? t(`filter.${typeContext}`) : undefined;
+
+  const forcedPlaceholder = cityContext
+    ? (typeContext
+        ? t('nav.searchContext', { typeLabel: contextTypeLabel, location: cityContext })
+        : t('nav.searchNear', { location: cityContext }))
+    : undefined;
+
   const locationLabel = useMemo<string | null>(() => {
-    if (!query.trim()) return null;
-    const q = query.trim();
-    return q.charAt(0).toUpperCase() + q.slice(1);
-  }, [query]);
+    if (query.trim()) {
+      const q = query.trim();
+      return q.charAt(0).toUpperCase() + q.slice(1);
+    }
+    return cityContext ?? null;
+  }, [query, cityContext]);
 
   const toggleLike = useCallback(async (id: string) => {
     // Optimistic update
@@ -96,7 +109,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
 
   return (
     <div className="app">
-      <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })}>
+      <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })} forcedPlaceholder={forcedPlaceholder}>
         <FilterBar active={filter} onChange={setFilter} />
       </TopNav>
       <div className="mapwrap" data-view={view}>
@@ -118,6 +131,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId }: HomeClient
           onToggleLike={toggleLike}
           onHover={setHoveredSpaceId}
           locationLabel={locationLabel}
+          typeLabel={contextTypeLabel}
           isAdmin={isAdmin}
           currentUserId={currentUserId}
         />

@@ -17,11 +17,12 @@ interface SpaceSheetProps {
   onToggleLike: (id: string) => void;
   onHover?: (id: string | null) => void;
   locationLabel: string | null;
+  typeLabel?: string;
   isAdmin: boolean;
   currentUserId?: string;
 }
 
-export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, onHover, locationLabel, isAdmin, currentUserId }: SpaceSheetProps) {
+export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onToggleLike, onHover, locationLabel, typeLabel, isAdmin, currentUserId }: SpaceSheetProps) {
   const t = useTranslations();
 
   const sortLabel: Record<SortId, string> = {
@@ -39,14 +40,18 @@ export function SpaceSheet({ spaces, likedIds, sort, onSortChange, onSelect, onT
     );
   }
 
+  function countLabel() {
+    if (locationLabel && typeLabel) return t('sheet.countType', { n: spaces.length, typeLabel, location: locationLabel });
+    if (locationLabel) return t('sheet.count', { n: spaces.length, location: locationLabel });
+    return t('sheet.countAll', { n: spaces.length });
+  }
+
   return (
     <section className="sheet glass" aria-label="Spaces">
       <span className="sheet__handle" aria-hidden="true" />
       <header className="sheet__header">
         <h2 className="sheet__count">
-          {locationLabel
-            ? t('sheet.count', { n: spaces.length, location: locationLabel })
-            : t('sheet.countAll', { n: spaces.length })}
+          {countLabel()}
         </h2>
         <div className="sheet__sort-bar" role="group">
           {SORT_OPTIONS.map((id) => (

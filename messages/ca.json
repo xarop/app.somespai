@@ -6,13 +6,16 @@
     "searchPlaceholder": "Cerca espais a prop teu…",
     "searchLocating": "Localitzant…",
     "searchNear": "Cerca espais a {location}…",
+    "searchContext": "Cerca {typeLabel} a {location}…",
     "signIn": "Entrar",
     "designSystem": "Sistema de disseny",
     "publish": "Publica un espai",
     "close": "Tanca",
     "privacy": "Privacitat",
     "terms": "Termes d'\u00fas",
-    "help": "Ajuda"
+    "help": "Ajuda",
+    "allSpaces": "Tots els espais",
+    "cities": "Ciutats"
   },
   "view": {
     "back": "Tornar al mapa",
@@ -30,6 +33,7 @@
   "sheet": {
     "count": "{n, plural, =0 {Cap espai} one {# espai a {location}} other {# espais a {location}}}",
     "countAll": "{n, plural, =0 {Cap espai trobat} one {# espai trobat} other {# espais trobats}}",
+    "countType": "{n, plural, =0 {Cap espai} one {# {typeLabel} a {location}} other {# {typeLabel} a {location}}}",
     "empty": "Cap espai amb aquest filtre. Prova-ho amb un altre.",
     "sortDistance": "Proximitat",
     "sortPrice": "Preu",
@@ -304,5 +308,48 @@
     "desktopDesc": "A la dreta apareix la llista d'espais. A l'esquerra, el mapa s'actualitza en temps real mentre navegues.",
     "ctaExplore": "Explora espais",
     "ctaPublish": "Publica un espai"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Pàgina no trobada",
+    "desc": "Aquesta pàgina no existeix o ha estat moguda.",
+    "back": "Tornar a l'inici"
+  },
+  "sitemap": {
+    "title": "Mapa del lloc",
+    "desc": "Totes les pàgines de Somespai.",
+    "sectionMain": "Pàgines principals",
+    "sectionCities": "Espais per ciutat",
+    "sectionSpaces": "Tots els espais",
+    "home": "Inici",
+    "allSpaces": "Tots els espais",
+    "help": "Com funciona",
+    "publish": "Publica un espai"
+  },
+  "seo": {
+    "cityTitle": "Espais a {city}",
+    "cityDesc": "{count} espais disponibles a {city}: estudis, trasters, sales i exteriors.",
+    "typeTitle": "{typeLabel} a {city}",
+    "typeDesc": "{count} {typeLabel} disponibles a {city}.",
+    "allSpacesTitle": "Tots els espais a Somespai",
+    "allSpacesDesc": "Llistat complet d'espais disponibles: estudis, trasters, sales i exteriors.",
+    "filterType": "Tipus",
+    "filterCity": "Ciutat",
+    "filterAmenities": "Equipaments",
+    "filterRating": "Puntuació mínima",
+    "filterPrice": "Preu màxim (€/mes)",
+    "clearFilters": "Netejar filtres",
+    "noResults": "Cap espai amb aquests filtres.",
+    "results": "{n, plural, =0 {Cap espai} one {# espai} other {# espais}}",
+    "allTypes": "Tots els tipus",
+    "allCities": "Totes les ciutats",
+    "backToCity": "Tots els espais a {city}",
+    "viewSpace": "Veure espai",
+    "typeSlugs": {
+      "estudis": "Estudis",
+      "sales": "Sales",
+      "trasters": "Trasters",
+      "jardins": "Exteriors"
+    }
   }
 }

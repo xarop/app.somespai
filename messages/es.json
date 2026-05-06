@@ -6,10 +6,13 @@
     "searchPlaceholder": "Busca espacios cerca de ti…",
     "searchLocating": "Localizando…",
     "searchNear": "Busca espacios en {location}…",
+    "searchContext": "Busca {typeLabel} en {location}…",
     "signIn": "Entrar",
     "designSystem": "Sistema de diseño",
     "publish": "Publica un espacio",
     "close": "Cerrar",
+    "allSpaces": "Todos los espacios",
+    "cities": "Ciudades",
     "privacy": "Privacidad",
     "terms": "T\u00e9rminos de uso",
     "help": "Ayuda"
@@ -29,7 +32,8 @@
   },
   "sheet": {
     "count": "{n, plural, =0 {Sin espacios} one {# espacio en {location}} other {# espacios en {location}}}",
-    "countAll": "{n, plural, =0 {Sin resultados} one {# espacio encontrado} other {# espacios encontrados}}",
+    "countType": "{n, plural, =0 {Ningún espacio} one {# {typeLabel} en {location}} other {# {typeLabel} en {location}}}",
+    "countAll":"{n, plural, =0 {Sin resultados} one {# espacio encontrado} other {# espacios encontrados}}",
     "empty": "Sin resultados con este filtro. Prueba con otro.",
     "sortDistance": "Proximidad",
     "sortPrice": "Precio",
@@ -304,5 +308,48 @@
     "desktopDesc": "A la derecha aparece la lista de espacios. A la izquierda, el mapa se actualiza en tiempo real mientras navegas.",
     "ctaExplore": "Explorar espacios",
     "ctaPublish": "Publicar un espacio"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Página no encontrada",
+    "desc": "Esta página no existe o ha sido movida.",
+    "back": "Volver al inicio"
+  },
+  "sitemap": {
+    "title": "Mapa del sitio",
+    "desc": "Todas las páginas de Somespai.",
+    "sectionMain": "Páginas principales",
+    "sectionCities": "Espacios por ciudad",
+    "sectionSpaces": "Todos los espacios",
+    "home": "Inicio",
+    "allSpaces": "Todos los espacios",
+    "help": "Cómo funciona",
+    "publish": "Publicar un espacio"
+  },
+  "seo": {
+    "cityTitle": "Espacios en {city}",
+    "cityDesc": "{count} espacios disponibles en {city}: estudios, trasteros, salas y exteriores.",
+    "typeTitle": "{typeLabel} en {city}",
+    "typeDesc": "{count} {typeLabel} disponibles en {city}.",
+    "allSpacesTitle": "Todos los espacios en Somespai",
+    "allSpacesDesc": "Listado completo de espacios disponibles: estudios, trasteros, salas y exteriores.",
+    "filterType": "Tipo",
+    "filterCity": "Ciudad",
+    "filterAmenities": "Equipamiento",
+    "filterRating": "Puntuación mínima",
+    "filterPrice": "Precio máximo (€/mes)",
+    "clearFilters": "Borrar filtros",
+    "noResults": "Ningún espacio con estos filtros.",
+    "results": "{n, plural, =0 {Ningún espacio} one {# espacio} other {# espacios}}",
+    "allTypes": "Todos los tipos",
+    "allCities": "Todas las ciudades",
+    "backToCity": "Todos los espacios en {city}",
+    "viewSpace": "Ver espacio",
+    "typeSlugs": {
+      "estudis": "Estudios",
+      "sales": "Salas",
+      "trasters": "Trasteros",
+      "jardins": "Exteriores"
+    }
   }
 }

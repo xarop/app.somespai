@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { PublishForm } from './publish-form';
+import { PageNav } from '@/components/ui/page-nav';
 
 export default async function PublicarPage() {
   const supabase = await createClient();
@@ -11,6 +12,8 @@ export default async function PublicarPage() {
   const t = await getTranslations('publish');
 
   return (
+    <>
+    <PageNav />
     <div className="page-form">
       <div className="page-form__inner">
         <header className="page-form__header">
@@ -21,5 +24,6 @@ export default async function PublicarPage() {
         <PublishForm />
       </div>
     </div>
+    </>
   );
 }

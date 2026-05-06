@@ -6,6 +6,7 @@ import { useRouter, usePathname } from '@/lib/i18n/routing';
 import { Icon } from '@/components/ui/icon';
 import { AuthModal } from '@/components/ui/auth-modal';
 import { createClient } from '@/lib/supabase/client';
+import { useNavCities } from '@/hooks/use-nav-cities';
 import type { User } from '@supabase/supabase-js';
 
 const LOCALES = [
@@ -18,6 +19,7 @@ interface TopNavProps {
   query: string;
   onQueryChange: (value: string) => void;
   onLocationFound?: (lat: number, lng: number) => void;
+  forcedPlaceholder?: string;
   children?: React.ReactNode;
 }
 
@@ -42,28 +44,38 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | null> 
   }
 }
 
-export function TopNav({ query, onQueryChange, onLocationFound, children }: TopNavProps) {
+export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholder, children }: TopNavProps) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
 
-  const [placeholder, setPlaceholder] = useState<string>('');
+  const cities = useNavCities();
+  const [placeholder, setPlaceholder] = useState<string>(forcedPlaceholder ?? '');
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Geolocation placeholder
+  // Geolocation placeholder — skipped when forcedPlaceholder is set
   useEffect(() => {
+    if (forcedPlaceholder) {
+      // Still get location for map centering / distance sort, but don't touch placeholder
+      navigator.geolocation?.getCurrentPosition(
+        ({ coords }) => onLocationFound?.(coords.latitude, coords.longitude),
+        () => {},
+        { timeout: 6000, maximumAge: 60_000 },
+      );
+      return;
+    }
     setPlaceholder(t('nav.searchLocating'));
     if (!navigator.geolocation) {
       setPlaceholder(t('nav.searchPlaceholder'));
       return;
     }
     navigator.geolocation.getCurrentPosition(
-      async ({ coords }) => {
+      async ({ coords }: GeolocationPosition) => {
         const { latitude: lat, longitude: lng } = coords;
         onLocationFound?.(lat, lng);
         const name = await reverseGeocode(lat, lng);
@@ -217,6 +229,25 @@ export function TopNav({ query, onQueryChange, onLocationFound, children }: TopN
               <Icon name="user" size={16} />
               {t('nav.signIn')}
             </button>
+          )}
+
+          <div className="dropmenu__divider" />
+
+          <a href={`/${locale}/espais`} role="menuitem" onClick={() => setMenuOpen(false)}>
+            <Icon name="list" size={16} />
+            {t('nav.allSpaces')}
+          </a>
+
+          {cities.length > 0 && (
+            <>
+              <div className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</div>
+              {cities.map((city) => (
+                <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                  <Icon name="pin" size={16} />
+                  {t('seo.cityTitle', { city })}
+                </a>
+              ))}
+            </>
           )}
 
           <div className="dropmenu__divider" />
