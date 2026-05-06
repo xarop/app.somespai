@@ -10,6 +10,8 @@ import type { SpaceType } from '@/lib/schemas/space';
 const BASE = 'https://app.somespai.net';
 const LOCALES = ['ca', 'es', 'en'] as const;
 
+export const revalidate = 3600; // Refresh automatically every hour
+
 function u(path: string, locale: string): string {
   const prefix = locale === 'ca' ? '' : `/${locale}`;
   return `${BASE}${prefix}${path}`;
