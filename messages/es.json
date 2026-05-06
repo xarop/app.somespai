@@ -11,6 +11,7 @@
     "designSystem": "Sistema de diseño",
     "publish": "Publica un espacio",
     "close": "Cerrar",
+    "map": "Mapa",
     "allSpaces": "Todos los espacios",
     "cities": "Ciudades",
     "privacy": "Privacidad",
@@ -326,7 +327,14 @@
     "help": "Cómo funciona",
     "publish": "Publicar un espacio"
   },
+  "legal": {
+    "privacyTitle": "Política de privacidad",
+    "privacyPlaceholder": "Esta es la página de la política de privacidad. Este texto es un marcador de posición y será sustituido próximamente por el documento legal oficial sobre el tratamiento de vuestros datos en Somespai.",
+    "termsTitle": "Términos de uso",
+    "termsPlaceholder": "Estos son los términos y condiciones de uso de Somespai. El documento legal completo se añadirá próximamente en este apartado."
+  },
   "seo": {
+    "filtersTitle": "Filtros",
     "cityTitle": "Espacios en {city}",
     "cityDesc": "{count} espacios disponibles en {city}: estudios, trasteros, salas y exteriores.",
     "typeTitle": "{typeLabel} en {city}",

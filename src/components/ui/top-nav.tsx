@@ -233,6 +233,11 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
 
           <div className="dropmenu__divider" />
 
+          <a href={`/${locale}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+            <Icon name="map" size={16} />
+            {t('nav.map')}
+          </a>
+
           <a href={`/${locale}/espais`} role="menuitem" onClick={() => setMenuOpen(false)}>
             <Icon name="list" size={16} />
             {t('nav.allSpaces')}

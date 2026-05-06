@@ -22,7 +22,8 @@ export async function generateStaticParams({ params }: { params: { locale: strin
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, city, type } = await params;
+  const { locale, city: encodedCity, type } = await params;
+  const city = decodeURIComponent(encodedCity);
   const dbType = getTypeFromSlug(type, locale);
   if (!dbType) return {};
   const spaces = await getSpacesByCity(city, dbType);
@@ -34,7 +35,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CityTypePage({ params }: Props) {
-  const { locale, city, type } = await params;
+  const { locale, city: encodedCity, type } = await params;
+  const city = decodeURIComponent(encodedCity);
 
   const dbType = getTypeFromSlug(type, locale);
   if (!dbType) notFound();

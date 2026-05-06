@@ -3194,7 +3194,7 @@
     background: var(--bg-soft);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
-    padding: var(--s-5);
+    padding: var(--s-3) var(--s-4);
     display: flex;
     flex-direction: column;
     gap: var(--s-5);
@@ -3212,7 +3212,7 @@
   .espais-filters__header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 
   .espais-filters__title {
@@ -3245,7 +3245,7 @@
   .espais-filter-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-2);
+    gap: var(--s-1);
   }
 
   .espais-filter-chips--wrap .chip {

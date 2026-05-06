@@ -13,7 +13,8 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city } = await params;
+  const { city: encodedCity } = await params;
+  const city = decodeURIComponent(encodedCity);
   const spaces = await getSpacesByCity(city);
   const cityLabel = spaces[0]?.city ?? city;
   return {
@@ -23,7 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CityPage({ params }: Props) {
-  const { city } = await params;
+  const { city: encodedCity } = await params;
+  const city = decodeURIComponent(encodedCity);
   const spaces = await getSpacesByCity(city);
   if (spaces.length === 0) notFound();
   const cityLabel = spaces[0].city ?? city;

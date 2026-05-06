@@ -14,6 +14,7 @@
     "privacy": "Privacitat",
     "terms": "Termes d'\u00fas",
     "help": "Ajuda",
+    "map": "Mapa",
     "allSpaces": "Tots els espais",
     "cities": "Ciutats"
   },
@@ -326,7 +327,14 @@
     "help": "Com funciona",
     "publish": "Publica un espai"
   },
+  "legal": {
+    "privacyTitle": "Política de privacitat",
+    "privacyPlaceholder": "Aquesta és la pàgina de la política de privacitat. Aquest text és un marcador de posició i serà substituït pròximament pel document legal oficial sobre el tractament de les vostres dades a Somespai.",
+    "termsTitle": "Termes d'ús",
+    "termsPlaceholder": "Aquests són els termes i condicions d'ús de Somespai. El document legal complet s'afegirà pròximament en aquest apartat."
+  },
   "seo": {
+    "filtersTitle": "Filtres",
     "cityTitle": "Espais a {city}",
     "cityDesc": "{count} espais disponibles a {city}: estudis, trasters, sales i exteriors.",
     "typeTitle": "{typeLabel} a {city}",
