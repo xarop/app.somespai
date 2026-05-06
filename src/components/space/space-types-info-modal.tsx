@@ -10,6 +10,7 @@ const TYPES: ReadonlyArray<{ id: SpaceType; iconName: IconName }> = [
   { id: 'garden', iconName: 'garden' },
   { id: 'room', iconName: 'room' },
   { id: 'storage', iconName: 'storage' },
+  { id: 'parking', iconName: 'parking' },
 ];
 
 const TYPE_COLORS: Record<SpaceType, { tint: string; main: string }> = {
@@ -17,6 +18,7 @@ const TYPE_COLORS: Record<SpaceType, { tint: string; main: string }> = {
   garden:    { tint: 'var(--type-garden-tint)',    main: 'var(--type-garden)'    },
   storage:   { tint: 'var(--type-storage-tint)',   main: 'var(--type-storage)'   },
   room:      { tint: 'var(--type-room-tint)',       main: 'var(--type-room)'      },
+  parking:   { tint: 'var(--type-parking-tint)',   main: 'var(--type-parking)'   },
 };
 
 interface SpaceTypesInfoModalProps {

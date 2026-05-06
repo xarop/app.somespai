@@ -29,6 +29,7 @@
     "workspace": "Workspaces",
     "garden": "Outdoor",
     "room": "Rooms",
+    "parking": "Parking",
     "featured": "Featured"
   },
   "sheet": {
@@ -114,6 +115,10 @@
     "water": "Water",
     "parking": "Parking",
     "bike_parking": "Bike parking",
+    "ev_charger": "EV charger",
+    "auto_gate": "Automatic gate",
+    "covered": "Covered",
+    "motorbike_ok": "Motorbikes welcome",
     "campus": "Campus",
     "cellar": "Wine cellar",
     "soundproofed": "Soundproofed"
@@ -136,6 +141,10 @@
     "room": {
       "label": "Rooms",
       "desc": "Multipurpose rooms for meetings, rehearsals, photography, training or small events."
+    },
+    "parking": {
+      "label": "Parking",
+      "desc": "Covered or open-air parking spots for cars, motorcycles or special vehicles."
     },
     "helpLink": "More information on the help page →"
   },
@@ -357,7 +366,8 @@
       "estudis": "Studios",
       "sales": "Rooms",
       "trasters": "Storage",
-      "jardins": "Outdoors"
+      "jardins": "Outdoors",
+      "parking": "Parking"
     }
   }
 }

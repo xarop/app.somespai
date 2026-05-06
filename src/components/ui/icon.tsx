@@ -28,6 +28,12 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <circle cx="9" cy="13" r="0.6" fill="currentColor" />
     </>
   ),
+  parking: (
+    <>
+      <rect x="3" y="3" width="18" height="18" rx="3" />
+      <path d="M10 17v-8h4a3 3 0 010 6h-4" />
+    </>
+  ),
   search: (
     <>
       <circle cx="11" cy="11" r="7" />

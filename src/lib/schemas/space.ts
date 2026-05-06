@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const spaceTypeSchema = z.enum(['storage', 'workspace', 'garden', 'room']);
+export const spaceTypeSchema = z.enum(['storage', 'workspace', 'garden', 'room', 'parking']);
 export type SpaceType = z.infer<typeof spaceTypeSchema>;
 
 export const spaceSchema = z.object({

@@ -29,6 +29,7 @@
     "workspace": "Estudios",
     "garden": "Exterior",
     "room": "Salas",
+    "parking": "Parkings",
     "featured": "Destacados"
   },
   "sheet": {
@@ -114,6 +115,10 @@
     "water": "Agua",
     "parking": "Aparcamiento",
     "bike_parking": "Aparcamiento bicicletas",
+    "ev_charger": "Cargador VE",
+    "auto_gate": "Puerta automática",
+    "covered": "Cubierto",
+    "motorbike_ok": "Motos admitidas",
     "campus": "Campus",
     "cellar": "Bodega",
     "soundproofed": "Insonorizada"
@@ -136,6 +141,10 @@
     "room": {
       "label": "Salas",
       "desc": "Salas polivalentes para reuniones, ensayos, fotografía, formación o pequeños eventos."
+    },
+    "parking": {
+      "label": "Parkings",
+      "desc": "Plazas de aparcamiento cubiertas o al aire libre para coches, motos o vehículos especiales."
     },
     "helpLink": "Más información en la página de ayuda →"
   },
@@ -357,7 +366,8 @@
       "estudis": "Estudios",
       "sales": "Salas",
       "trasters": "Trasteros",
-      "jardins": "Exteriores"
+      "jardins": "Exteriores",
+      "parking": "Parkings"
     }
   }
 }

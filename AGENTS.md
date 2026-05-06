@@ -7,7 +7,7 @@
 
 ## 1. Mission
 
-Somespai is a P2P marketplace for **physical spaces** (storage, workspaces, gardens, rooms) located in **Vila de Gràcia, Barcelona**, designed to scale to all of Catalonia without structural changes.
+Somespai is a P2P marketplace for **physical spaces** (storage, workspaces, gardens, rooms, parking) located in **Vila de Gràcia, Barcelona**, designed to scale to all of Catalonia without structural changes.
 
 **Out of scope (do not add)**: in-app payments, escrow, identity verification flows, chat moderation AI, "social feed", gamification.
 **In scope**: discovery (map + list), listing creation, reviews, favorites, sharing.
@@ -96,7 +96,7 @@ create table profiles (
 );
 
 -- Space types (enum kept simple, extensible)
-create type space_type as enum ('storage', 'workspace', 'garden', 'room');
+create type space_type as enum ('storage', 'workspace', 'garden', 'room', 'parking');
 
 -- Spaces
 create table spaces (

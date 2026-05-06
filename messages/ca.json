@@ -29,6 +29,7 @@
     "workspace": "Estudis",
     "garden": "Exteriors",
     "room": "Sales",
+    "parking": "Pàrquings",
     "featured": "Destacats"
   },
   "sheet": {
@@ -114,6 +115,10 @@
     "water": "Aigua",
     "parking": "Aparcament",
     "bike_parking": "Aparcament bicicletes",
+    "ev_charger": "Carregador VE",
+    "auto_gate": "Porta automàtica",
+    "covered": "Cobert",
+    "motorbike_ok": "Motos admeses",
     "campus": "Campus",
     "cellar": "Cava",
     "soundproofed": "Insonoritzada"
@@ -136,6 +141,10 @@
     "room": {
       "label": "Sales",
       "desc": "Sales polivalents per a reunions, assajos, fotografia, formació o petits events."
+    },
+    "parking": {
+      "label": "Pàrquings",
+      "desc": "Places d'aparcament cobertes o descobertes per a cotxes, motos o vehicles especials."
     },
     "helpLink": "Més informació a la pàgina d'ajuda →"
   },
@@ -357,7 +366,8 @@
       "estudis": "Estudis",
       "sales": "Sales",
       "trasters": "Trasters",
-      "jardins": "Exteriors"
+      "jardins": "Exteriors",
+      "parking": "Pàrquings"
     }
   }
 }

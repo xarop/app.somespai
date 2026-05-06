@@ -558,6 +558,11 @@
     border-color: var(--type-room);
   }
 
+  .chip[data-type="parking"][aria-pressed="true"] {
+    background: var(--type-parking);
+    border-color: var(--type-parking);
+  }
+
   .chip[data-type="featured"][aria-pressed="true"] {
     background: var(--type-featured);
     border-color: var(--type-featured);
@@ -595,6 +600,11 @@
   .chip[data-type="room"] .chip__icon {
     background: var(--type-room-tint);
     color: var(--type-room);
+  }
+
+  .chip[data-type="parking"] .chip__icon {
+    background: var(--type-parking-tint);
+    color: var(--type-parking);
   }
 
   .chip[data-type="featured"] .chip__icon {
@@ -808,6 +818,11 @@
     color: var(--type-room);
   }
 
+  .marker[data-type="parking"] .marker__icon {
+    background: var(--type-parking-tint);
+    color: var(--type-parking);
+  }
+
   .marker[data-featured="true"] .marker__pin::after {
     content: '';
     position: absolute;
@@ -955,6 +970,11 @@
     background: linear-gradient(135deg, var(--type-room-soft) 0%, var(--type-room) 100%);
   }
 
+  .card__media[data-type="parking"],
+  .detail__hero[data-type="parking"] {
+    background: linear-gradient(135deg, var(--type-parking-soft) 0%, var(--type-parking) 100%);
+  }
+
   /* Type badge icon color */
   .card__media[data-type="workspace"] .card__type-badge,
   .detail__hero[data-type="workspace"] .detail__type-badge {
@@ -974,6 +994,11 @@
   .card__media[data-type="room"] .card__type-badge,
   .detail__hero[data-type="room"] .detail__type-badge {
     color: var(--type-room);
+  }
+
+  .card__media[data-type="parking"] .card__type-badge,
+  .detail__hero[data-type="parking"] .detail__type-badge {
+    color: var(--type-parking);
   }
 
   .card__photo {
@@ -2158,6 +2183,11 @@
   .type-badge--room {
     background: var(--type-room-tint);
     color: var(--type-room);
+  }
+
+  .type-badge--parking {
+    background: var(--type-parking-tint);
+    color: var(--type-parking);
   }
 
   .admin-rating {
@@ -3396,6 +3426,11 @@
   .espais-row__type--garden {
     background: var(--type-garden-tint);
     color: var(--type-garden);
+  }
+
+  .espais-row__type--parking {
+    background: var(--type-parking-tint);
+    color: var(--type-parking);
   }
 
   .espais-row__price {
