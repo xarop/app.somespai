@@ -7,6 +7,7 @@ Gràcies per voler col·laborar a Somespai! 🎉 Aquest document t'ajudarà a co
 Necessitaràs tenir instal·lat:
 - [Node.js](https://nodejs.org/) (es recomana v20 o superior)
 - [Bun](https://bun.sh/) (utilitzem Bun de forma estricta com a gestor de paquets i scripts d'execució)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (necessari per simular Supabase i la base de dades localment)
 
 ## 2. Muntar l'entorn local
 
