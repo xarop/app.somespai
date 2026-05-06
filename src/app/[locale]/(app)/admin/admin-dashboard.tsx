@@ -785,7 +785,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
     (_state: Space[], updater: (s: Space[]) => Space[]) => updater(_state),
   );
 
-  const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages'>('spaces');
+  const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages' | 'analytics'>('spaces');
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [msgCounts, setMsgCounts] = useState<{ unread: number; total: number } | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -883,7 +883,41 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
             </span>
           )}
         </button>
+        <button
+          type="button"
+          className={`admin-tab${activeTab === 'analytics' ? ' admin-tab--active' : ''}`}
+          onClick={() => setActiveTab('analytics')}
+        >
+          <Icon name="globe" size={15} />
+          {t('tabAnalytics')}
+        </button>
       </div>
+
+      {activeTab === 'analytics' && (
+        <div style={{ padding: '2rem 0', maxWidth: 600 }}>
+          <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>
+            {t('analyticsDescription')}
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <a 
+              href="https://vercel.com/xarops-projects/app-somespai/analytics" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="button button--secondary"
+            >
+              {t('analyticsVercel')}
+            </a>
+            <a 
+              href="https://analytics.google.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="button button--secondary"
+            >
+              {t('analyticsGoogle')}
+            </a>
+          </div>
+        </div>
+      )}
 
       {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} />}
       {activeTab === 'messages' && <MessagesTab onCountChange={setMsgCounts} />}
