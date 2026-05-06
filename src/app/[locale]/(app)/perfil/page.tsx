@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSpacesByOwner } from '@/lib/supabase/spaces';
+import { PageNav } from '@/components/ui/page-nav';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -19,6 +20,8 @@ export default async function PerfilPage({ params }: PageProps) {
   const t = await getTranslations('user');
 
   return (
+    <>
+    <PageNav />
     <div className="page-form">
       <div className="page-form__inner">
         <header className="page-form__header">
@@ -48,5 +51,6 @@ export default async function PerfilPage({ params }: PageProps) {
         )}
       </div>
     </div>
+    </>
   );
 }

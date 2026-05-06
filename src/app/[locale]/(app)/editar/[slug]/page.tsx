@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSpaceBySlugForOwner } from '@/lib/supabase/spaces';
 import { EditSpaceForm } from './edit-form';
+import { PageNav } from '@/components/ui/page-nav';
 
 interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -22,6 +23,8 @@ export default async function EditSpacePage({ params }: PageProps) {
   const t = await getTranslations('edit');
 
   return (
+    <>
+    <PageNav />
     <div className="page-form">
       <div className="page-form__inner">
         <header className="page-form__header">
@@ -32,5 +35,6 @@ export default async function EditSpacePage({ params }: PageProps) {
         <EditSpaceForm space={space} />
       </div>
     </div>
+    </>
   );
 }

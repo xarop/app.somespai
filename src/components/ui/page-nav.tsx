@@ -15,79 +15,19 @@ const LOCALES = [
   { code: 'en', label: 'English' },
 ] as const;
 
-interface TopNavProps {
-  query: string;
-  onQueryChange: (value: string) => void;
-  onLocationFound?: (lat: number, lng: number) => void;
-  forcedPlaceholder?: string;
-  children?: React.ReactNode;
-}
-
-async function reverseGeocode(lat: number, lng: number): Promise<string | null> {
-  try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=14&addressdetails=1`,
-      { headers: { 'Accept-Language': 'ca,es,en' } },
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    return (
-      data.address?.quarter ??
-      data.address?.suburb ??
-      data.address?.neighbourhood ??
-      data.address?.city_district ??
-      data.address?.city ??
-      null
-    );
-  } catch {
-    return null;
-  }
-}
-
-export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholder, children }: TopNavProps) {
+export function PageNav() {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
 
   const cities = useNavCities();
-  const [placeholder, setPlaceholder] = useState<string>(forcedPlaceholder ?? '');
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Geolocation placeholder — skipped when forcedPlaceholder is set
-  useEffect(() => {
-    if (forcedPlaceholder) {
-      // Still get location for map centering / distance sort, but don't touch placeholder
-      navigator.geolocation?.getCurrentPosition(
-        ({ coords }) => onLocationFound?.(coords.latitude, coords.longitude),
-        () => {},
-        { timeout: 6000, maximumAge: 60_000 },
-      );
-      return;
-    }
-    setPlaceholder(t('nav.searchLocating'));
-    if (!navigator.geolocation) {
-      setPlaceholder(t('nav.searchPlaceholder'));
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      async ({ coords }: GeolocationPosition) => {
-        const { latitude: lat, longitude: lng } = coords;
-        onLocationFound?.(lat, lng);
-        const name = await reverseGeocode(lat, lng);
-        setPlaceholder(name ? t('nav.searchNear', { location: name }) : t('nav.searchPlaceholder'));
-      },
-      () => setPlaceholder(t('nav.searchPlaceholder')),
-      { timeout: 6000, maximumAge: 60_000 },
-    );
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Auth state
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
@@ -97,7 +37,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
     return () => subscription.unsubscribe();
   }, []);
 
-  // Scroll lock
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -124,7 +63,7 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
 
   return (
     <>
-      <header className="topnav glass">
+      <header className="topnav topnav--page glass">
         <a className="topnav__brand" href="/" aria-label={t('brand.name')}>
           <svg className="topnav__brand-mark" width="34" height="34" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="102.813" height="102.813" rx="51.4065" fill="var(--primary)"/>
@@ -133,17 +72,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
           </svg>
           <span>{t('brand.name')}</span>
         </a>
-
-        <label className="topnav__search">
-          <Icon name="search" size={18} />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            placeholder={placeholder}
-            aria-label={placeholder}
-          />
-        </label>
 
         <div className="topnav__actions">
           <a
@@ -171,11 +99,8 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
             )}
           </button>
         </div>
-
-        {children && <div className="topnav__filters">{children}</div>}
       </header>
 
-      {/* Backdrop — outside header to escape backdrop-filter stacking context */}
       {menuOpen && (
         <div
           className="nav-drawer__backdrop"
@@ -184,14 +109,12 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
         />
       )}
 
-      {/* Drawer — outside header for same reason */}
       <div
         ref={drawerRef}
         className="dropmenu glass"
         role="menu"
         data-open={menuOpen ? 'true' : 'false'}
       >
-        {/* Header */}
         <div className="dropmenu__header">
           <div className="dropmenu__brand">
             <svg width="26" height="26" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -211,7 +134,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
           </button>
         </div>
 
-        {/* Body */}
         <div className="dropmenu__body">
           {user ? (
             <>
@@ -263,7 +185,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
           </a>
         </div>
 
-        {/* Footer — languages */}
         <div className="dropmenu__footer">
           <div className="dropmenu__item dropmenu__item--label">{t('lang.label')}</div>
           {LOCALES.map((l) => (
@@ -281,7 +202,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
           ))}
         </div>
 
-        {/* Copyright */}
         <div className="dropmenu__copyright">
           <span>© {year} somespai by <a href="https://xarop.com" target="_blank" rel="noopener noreferrer">xarop.com</a></span>
           <nav>

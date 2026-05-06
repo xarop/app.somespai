@@ -1,5 +1,6 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Icon, type IconName } from '@/components/ui/icon';
+import { PageNav } from '@/components/ui/page-nav';
 import type { SpaceType } from '@/lib/schemas/space';
 
 interface PageProps {
@@ -54,6 +55,8 @@ export default async function AjudaPage({ params }: PageProps) {
   ];
 
   return (
+    <>
+    <PageNav />
     <div className="page-form">
       <div className="page-form__inner page-form__inner--wide">
 
@@ -177,5 +180,6 @@ export default async function AjudaPage({ params }: PageProps) {
 
       </div>
     </div>
+    </>
   );
 }
