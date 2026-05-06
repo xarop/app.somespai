@@ -324,64 +324,57 @@ Pàgina sense mapa amb tots els espais actius. Inclou:
 
 ---
 
-## Sincronització de dades Local ↔ Producció
+## Sincronització de dades Local ↔ Producció (Integral)
 
-L'eina `scripts/sync-db.ts` permet sincronitzar la taula `spaces` entre l'entorn local i producció sense perdre dades en cap dels dos entorns.
+Si necessites sincronitzar **totes les dades totals del projecte** (espais, usuaris autèntics, ressenyes, possibles missatges, preferits, etc.) en comptes de només publicar anuncis solts d'espais, cal emprar els bolcats de bases de dades per no perdre la integritat de les relacions (IDs d'usuaris barrejats).
 
-### Prerequisits
+**1. Per bolcar absolutament totes les dades de Local a Producció:**
 
-Crea `.env.production.local` a l'arrel del projecte amb les credencials de producció:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
-SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
-```
-
-### Comandes
+L'opció més segura per a la primera posada en marxa (portar les dades i els usuaris falsos de `seed` cap a Vercel/Supabase per que tothom hi pugui jugar):
 
 ```bash
-# Compara els dos entorns (no modifica res)
-bun run db:status
+# 1. Bolcar l'esquema d'usuaris (auth) - Atenció a les dades sensibles!
+npx supabase db dump --local --schema auth --data-only -f supabase/auth_dump.sql
 
-# Baixa espais de producció a local (additive, prod guanya si slug coincideix)
-bun run db:pull
-
-# Puja espais nous de local a producció (safe: només afegeix slugs nous)
-bun run db:push
-
-# Puja i sobreescriu espais a producció (conserva IDs de prod)
-bun run db:push:force
+# 2. Bolcar la resta de l'esquema (public) on hi ha les teves taules (espais, usuaris, missatges)
+npx supabase db dump --local --data-only -f supabase/data_dump.sql
 ```
 
-| Comanda | Direcció | Comportament |
-|---------|----------|-------------|
-| `db:status` | lectura | Mostra espais únics a cada entorn i divergències |
-| `db:pull` | prod → local | Upsert complet; prod guanya els conflictes de slug |
-| `db:push` | local → prod | Insereix **només** slugs nous (segur, no sobreescriu) |
-| `db:push:force` | local → prod | Upsert complet; els IDs de prod es conserven |
+Un cop tinguis aquests dos arxius `.sql`:
+1. Vés al panell **SQL Editor** del teu projecte a la web de Supabase.
+2. Obre l'arxiu `auth_dump.sql` i executa el codi sencer. Ara hauran pujat els inicis de sessió.
+3. Fes el mateix amb `data_dump.sql`. Ara hauran pujat els espais, els fòrums, ressenyes, usuaris públics connectats correctament, etc.
 
-**Notes:**
-- Les fotos amb URL de localhost es remapen automàticament a l'URL de producció.
-- Les ressenyes i els usuaris auth **no** es sincronitzen (IDs creuats / seguretat).
-- Afegeix `--with-profiles` per sincronitzar també la taula `profiles`.
+**2. Clonar Producció cap a Local (Totes les dades):**
 
----
+Per baixar la base de dades real del núvol cap a local (incloent usuaris, sessions, espais i ressenyes reals) netejant les dades de proba (`seed.sql`):
 
-## Migració de dades Local a Producció (mètode manual)
+```bash
+# 1. Extreure les dades de producció al teu ordinador (has de tenir linkat el projecte)
+npx supabase db dump --linked --schema auth --data-only -f supabase/prod_auth_dump.sql
+npx supabase db dump --linked --data-only -f supabase/prod_data_dump.sql
 
-Si prefereixes fer un dump complet en lloc d'usar `sync-db.ts`:
+# 2. Resetejar i buidar la base de dades local (apartant el seed.sql de proba temporalment)
+mv supabase/seed.sql supabase/seed.sql.bak
+npx supabase db reset --local
 
-1. **Genera o actualitza el dump local** de només les dades:
-   ```bash
-   npx supabase db dump --local --data-only -f supabase/data_dump.sql
-   ```
-2. **Puja-ho a Producció**:
-   - Aneu al dashboard del projecte a Supabase: `https://supabase.com/dashboard/project/<PROJECT_REF>/sql/new`
-   - Obriu l'arxiu `supabase/data_dump.sql` en el vostre editor de codi.
-   - Copieu tot el contingut i enganxeu-ho a la caixa de l'editor SQL del navegador web.
-   - Premeu el botó verd **Run** avall a la dreta.
+# 3. Importar les dades connectant-se directament al contenidor de Docker
+docker exec -i supabase_db_app.somespai psql -U postgres < supabase/prod_auth_dump.sql
+docker exec -i supabase_db_app.somespai psql -U postgres < supabase/prod_data_dump.sql
 
----
+# 4. Esborrar arxius temporals i restaurar el funcionament habitual
+rm supabase/prod_auth_dump.sql supabase/prod_data_dump.sql
+mv supabase/seed.sql.bak supabase/seed.sql
+```
+
+**3. Sincronització Parcial (Només el llistat d'Espais)**
+
+Si ja tens el portal funcionant a producció amb usuaris reals usant-ho, no hauries de sobreescriure mai les bases de dades cap amunt. Pots utilitzar l'script per transmetre els nous espais treballats localment sense alterar ni la gent ni els missatges reals ja escrits:
+
+```bash
+bun run db:push     # Puja espais nous de local a producció
+bun run db:pull     # Baixa els anuncis creats pels usuaris reals al teu PC 
+```
 
 ## License
 

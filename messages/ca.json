@@ -398,7 +398,7 @@
     "typeTitle": "{typeLabel} a {city}",
     "typeDesc": "{count} {typeLabel} disponibles a {city}.",
     "allSpacesTitle": "Tots els espais a Somespai",
-    "allSpacesDesc": "Llistat complet d'espais disponibles: estudis, trasters, sales i exteriors.",
+    "allSpacesDesc": "Llistat complet d'espais disponibles: estudis, trasters, sales, exteriors i pàrquings.",
     "filterType": "Tipus",
     "filterCity": "Ciutat",
     "filterAmenities": "Equipaments",

@@ -398,7 +398,7 @@
     "typeTitle": "{typeLabel} en {city}",
     "typeDesc": "{count} {typeLabel} disponibles en {city}.",
     "allSpacesTitle": "Todos los espacios en Somespai",
-    "allSpacesDesc": "Listado completo de espacios disponibles: estudios, trasteros, salas y exteriores.",
+    "allSpacesDesc": "Listado completo de espacios disponibles: estudios, trasteros, salas, exteriores y parkings.",
     "filterType": "Tipo",
     "filterCity": "Ciudad",
     "filterAmenities": "Equipamiento",
