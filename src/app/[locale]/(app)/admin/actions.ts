@@ -72,9 +72,15 @@ export async function deleteReviewAction(id: string, spaceId: string): Promise<v
   await deleteReviewAdmin(id, spaceId);
 }
 
-export async function getUsersAction(): Promise<AdminUser[]> {
-  await requireAdmin();
-  return getUsersAdmin();
+export async function getUsersAction(): Promise<{ data: AdminUser[]; error: string | null }> {
+  try {
+    await requireAdmin();
+    const data = await getUsersAdmin();
+    return { data, error: null };
+  } catch (e) {
+    console.error('getUsersAction:', e);
+    return { data: [], error: e instanceof Error ? e.message : 'Error carregant usuaris' };
+  }
 }
 
 export async function deleteUserAction(userId: string): Promise<void> {
@@ -82,9 +88,15 @@ export async function deleteUserAction(userId: string): Promise<void> {
   await deleteUserAdmin(userId);
 }
 
-export async function getContactMessagesAction(): Promise<ContactMessage[]> {
-  await requireAdmin();
-  return getContactMessagesAdmin();
+export async function getContactMessagesAction(): Promise<{ data: ContactMessage[]; error: string | null }> {
+  try {
+    await requireAdmin();
+    const data = await getContactMessagesAdmin();
+    return { data, error: null };
+  } catch (e) {
+    console.error('getContactMessagesAction:', e);
+    return { data: [], error: e instanceof Error ? e.message : 'Error carregant missatges' };
+  }
 }
 
 export async function setContactMessageReadAction(id: string, read: boolean): Promise<void> {
