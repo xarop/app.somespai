@@ -9,6 +9,7 @@ const TYPE_ICON: Record<Space['type'], IconName> = {
   workspace: 'workspace',
   garden: 'garden',
   room: 'room',
+  parking: 'parking',
 };
 
 interface SpaceCardProps {

@@ -11,11 +11,13 @@ const TYPES: Array<{ id: SpaceType }> = [
   { id: 'room' },
   { id: 'storage' },
   { id: 'garden' },
+  { id: 'parking' },
 ];
 
 const ALL_AMENITIES = [
   'wifi', 'ac', 'heating', 'parking', 'access_24h', 'kitchen',
   'meeting_room', 'projector', 'whiteboard', 'terrace', 'bbq', 'pool',
+  'ev_charger', 'auto_gate', 'covered', 'motorbike_ok',
 ];
 
 interface Props {

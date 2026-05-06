@@ -5,14 +5,15 @@ import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { createSpaceAction } from './actions';
 
-const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room'] as const;
+const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
 
 const AMENITY_GROUPS: Record<string, string[]> = {
   'Connectivitat': ['wifi', 'fiber', 'hot_desk', 'fixed_desk', 'monitor', 'locker'],
   'Reunions': ['meeting_room', 'event_space', 'whiteboard', 'podcast_studio'],
   'Confort': ['ac', 'heating', 'dimmable_light', 'hardwood_floor'],
   'Serveis': ['coffee', 'kitchen', 'printer', 'printer_3d'],
-  'Accés': ['access_24h', 'cameras', 'van_access', 'parking', 'bike_parking'],
+  'Pàrquing': ['covered', 'ev_charger', 'auto_gate', 'motorbike_ok', 'van_access'],
+  'Accés': ['access_24h', 'cameras', 'parking', 'bike_parking'],
   'Exterior': ['terrace', 'bbq', 'pool', 'shade', 'sea_view', 'mountain_view'],
   'Equipament': ['projector', 'audio', 'tools', 'tables', 'chairs', 'electricity', 'water'],
   'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],

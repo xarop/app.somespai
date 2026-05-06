@@ -13,6 +13,7 @@ const TYPE_SVG: Record<Space['type'], string> = {
   workspace: `<rect x="3" y="5" width="18" height="11" rx="2"/><path d="M7 20h10M12 16v4"/>`,
   garden: `<path d="M12 22V13"/><path d="M5 9c0-3 3-5 7-5s7 2 7 5c0 4-3 6-7 6S5 13 5 9z"/><path d="M9 9c0-1.5 1.4-2.5 3-2.5s3 1 3 2.5"/>`,
   room: `<path d="M3 21V5l9-2v18"/><path d="M2 21h20M14 21V8l7-2v15"/><circle cx="9" cy="13" r="0.6" fill="currentColor"/>`,
+  parking: `<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M10 17v-8h4a3 3 0 010 6h-4"/>`,
 };
 
 function iconSvg(type: Space['type']): string {

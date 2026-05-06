@@ -23,6 +23,7 @@ const FILTERS: ReadonlyArray<{
   { id: 'garden', iconName: 'garden', labelKey: 'filter.garden' },
   { id: 'room', iconName: 'room', labelKey: 'filter.room' },
   { id: 'storage', iconName: 'storage', labelKey: 'filter.storage' },
+  { id: 'parking', iconName: 'parking', labelKey: 'filter.parking' },
   { id: 'featured', iconName: 'star', labelKey: 'filter.featured' },
 ];
 

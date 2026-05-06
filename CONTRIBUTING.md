@@ -1,0 +1,87 @@
+# Guia de Contribució a Somespai
+
+Gràcies per voler col·laborar a Somespai! 🎉 Aquest document t'ajudarà a configurar l'entorn de desenvolupament al teu ordinador i a entendre el flux de treball de (Git i GitHub) per a aquest projecte.
+
+## 1. Requisits previs
+
+Necessitaràs tenir instal·lat:
+- [Node.js](https://nodejs.org/) (es recomana v20 o superior)
+- [Bun](https://bun.sh/) (utilitzem Bun de forma estricta com a gestor de paquets i scripts d'execució)
+
+## 2. Muntar l'entorn local
+
+Segueix aquests passos per tenir l'aplicació funcionant a la teva màquina:
+
+1. **Clona el repositori:**
+   ```bash
+   git clone https://github.com/EL_TEU_USUARI/app.somespai.git
+   cd app.somespai
+   ```
+
+2. **Instal·la les dependències:**
+   ```bash
+   bun install
+   ```
+
+3. **Configura les variables d'entorn:**
+   Crea un fitxer `.env.local` a l'arrel del projecte duplicant i omplint l'estructura. Pots demanar a l'administrador les claus de desenvolupament per connectar-te a la base de dades comuna de *dev*:
+   
+   ```env
+   # Exemple de .env.local
+   NEXT_PUBLIC_SUPABASE_URL=...
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+   SUPABASE_SERVICE_ROLE_KEY=...
+   NEXT_PUBLIC_MAP_TILES_URL=...
+   
+   # Opcional (fa bypass per entrar com a usuari autenticat en local)
+   NEXT_PUBLIC_ADMIN_EMAIL=seed@somespai.cat
+   ```
+
+4. **Inicia el servidor de desenvolupament:**
+   ```bash
+   bun run dev
+   ```
+   Ara el projecte estarà corrent a [http://localhost:3000](http://localhost:3000).
+
+## 3. Flux de treball (GitHub)
+
+La branca `main` està protegida per evitar trencaments a producció. **No fem push directe a `main`**. El correcte és fer servir el sistema de *Pull Requests*.
+
+Si pertanys a l'equip (tens permisos de col·laborador), el procés és el següent:
+
+1. **Actualitza la branca principal a l'última versió:**
+   ```bash
+   git checkout main
+   git pull origin main
+   ```
+
+2. **Crea una nova branca per treballar:**
+   Posa-li un nom clar sobre allò que vas a desenvolupar:
+   ```bash
+   git checkout -b el-teu-nom/nova-funcionalitat
+   ```
+
+3. **Aplica els teus canvis:**
+   Fes els teus canvis al codi. Si us plau, utilitza format de **Conventional Commits** (`feat:`, `fix:`, `chore:`, `refactor:` etc.):
+   ```bash
+   git add .
+   git commit -m "feat(map): afegir funcionalitat de zoom"
+   ```
+
+4. **Puja els canvis i obre una Pull Request (PR):**
+   ```bash
+   git push origin el-teu-nom/nova-funcionalitat
+   ```
+   Ves a GitHub, obre la PR, i espera a què Vercel validi la *build* i algú més de l'equip n'aprovi el contingut. Així s'assegura l'estabilitat i es fusionarà cap a `main`.
+
+---
+
+## 4. Guies de Codi i Regles
+
+**És obligatori** que abans d'escriure codi nou revisis la documentació oficial que governa aquest repositori. Pots trobar-la a l'arrel del projecte:
+
+- **`AGENTS.md`** - Llegir-lo és obligatori. Conté les restriccions d'arquitectura, definició de la base de dades, regles de components RSC, i coses que "No" introduirem (ex: no s'usa Tailwind).
+- **`DESIGN.md`** - Per entendre el sistema de disseny, els *Design tokens* en CSS, classes i accessibilitat.
+- **`README.md`** - Resum i concepte del projecte general.
+
+Feliç programació! 🚀
