@@ -499,14 +499,10 @@ function UsersTab() {
   async function handleRefresh() {
     setLoading(true);
     setError(null);
-    try {
-      const fresh = await getUsersAction();
-      setUsers(fresh);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error carregant usuaris');
-    } finally {
-      setLoading(false);
-    }
+    const { data, error: err } = await getUsersAction();
+    if (err) setError(err);
+    else setUsers(data);
+    setLoading(false);
   }
 
   async function handleDelete(id: string) {
@@ -631,14 +627,10 @@ function MessagesTab() {
   async function handleRefresh() {
     setLoading(true);
     setError(null);
-    try {
-      const data = await getContactMessagesAction();
-      setMessages(data);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error carregant missatges');
-    } finally {
-      setLoading(false);
-    }
+    const { data, error: err } = await getContactMessagesAction();
+    if (err) setError(err);
+    else setMessages(data);
+    setLoading(false);
   }
 
   async function handleToggleRead(msg: ContactMessage) {

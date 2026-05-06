@@ -224,13 +224,14 @@ export type AdminUser = {
 
 export async function getUsersAdmin(): Promise<AdminUser[]> {
   const supabase = createAdminClient();
-  const { data: { users }, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
-  if (error) throw new Error(error.message);
 
-  const [profilesRes, spacesRes] = await Promise.all([
+  const [rpcRes, profilesRes, spacesRes] = await Promise.all([
+    supabase.rpc('admin_list_users'),
     supabase.from('profiles').select('id, display_name'),
     supabase.from('spaces').select('owner_id').not('owner_id', 'is', null),
   ]);
+
+  if (rpcRes.error) throw new Error(rpcRes.error.message);
 
   const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, p.display_name as string | null]));
   const spacesCount = new Map<string, number>();
@@ -238,7 +239,7 @@ export async function getUsersAdmin(): Promise<AdminUser[]> {
     if (s.owner_id) spacesCount.set(s.owner_id, (spacesCount.get(s.owner_id) ?? 0) + 1);
   }
 
-  return users.map(u => ({
+  return (rpcRes.data ?? []).map((u: { id: string; email: string; created_at: string; last_sign_in_at: string | null }) => ({
     id: u.id,
     email: u.email ?? '',
     createdAt: u.created_at,
