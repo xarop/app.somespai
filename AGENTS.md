@@ -7,7 +7,9 @@
 
 ## 1. Mission
 
-Somespai is a P2P marketplace for **physical spaces** (storage, workspaces, gardens, rooms, parking) located in **Vila de Gràcia, Barcelona**, designed to scale to all of Catalonia without structural changes.
+Somespai is a P2P marketplace for **physical spaces** (storage, workspaces, gardens, rooms, parking) in **Barcelona and Catalonia**.
+
+**Admin dashboard** (`/[locale]/admin`): two-tab interface — spaces management and user management — accessible only to `ADMIN_EMAIL`.
 
 **Out of scope (do not add)**: in-app payments, escrow, identity verification flows, chat moderation AI, "social feed", gamification.
 **In scope**: discovery (map + list), listing creation, reviews, favorites, sharing.
@@ -47,7 +49,13 @@ The economic agreement happens **off-platform**. Somespai introduces hosts and g
 │   │   │   ├── espai/[slug]/page.tsx # space detail (shareable URL)
 │   │   │   ├── publica/page.tsx      # create listing
 │   │   │   ├── perfil/page.tsx
-│   │   │   └── design-system/page.tsx
+│   │   │   ├── design-system/page.tsx
+│   │   │   ├── admin/page.tsx        # admin dashboard (spaces + users tabs)
+│   │   │   ├── admin/admin-dashboard.tsx  # client: tab switcher, spaces table, users table
+│   │   │   ├── admin/actions.ts      # server actions (admin-only)
+│   │   │   ├── espais/page.tsx       # full listing (no map, filterable)
+│   │   │   ├── [city]/page.tsx       # city SEO page
+│   │   │   └── [city]/[type]/page.tsx  # city+type SEO page
 │   │   └── layout.tsx
 │   ├── api/
 │   │   ├── spaces/                   # REST handlers (PostGIS queries)
@@ -233,7 +241,26 @@ UI for these arrives in v2. The model is ready now so we don't migrate later.
 
 ## 10. Admin / Import
 
-- `/api/admin/import` accepts a JSON array of `{ title, lat, lng, type, ... }`.
+### Dashboard (`/[locale]/admin`)
+
+Access guard: `user.email === process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL`.
+
+Two tabs:
+
+| Tab | Source | Actions |
+|-----|--------|---------|
+| **Espais** | `getAllSpacesAdmin()` — service-role, all statuses | publish/pause, feature, edit (full modal with reviews), delete |
+| **Usuaris** | `getUsersAdmin()` — `supabase.auth.admin.listUsers()` + profiles join | view email/name/joined/last-login/spaces count, delete user |
+
+The users tab loads lazily (client-side, on first click) via `getUsersAction()` server action to avoid crashing the page if the auth admin API is unavailable.
+
+Edit modal fields: title, type, description, status, featured, price/unit/size, address+geocoding, neighborhood/city/region, amenities, photos (keep/remove/upload), contact fields.
+
+Reviews sub-section (inside edit modal, outside `<form>`): list, inline edit rating+body, delete with confirm, auto-recalc space rating.
+
+### Bulk import API
+
+- `POST /api/admin/import` accepts a JSON array of `{ title, lat, lng, type, ... }`.
 - Used to seed from Google Maps exports, OpenStreetMap, partner directories.
 - Protected by service-role key, never exposed to the client.
 

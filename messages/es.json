@@ -286,7 +286,21 @@
     "empty": "Ningún espacio con este filtro.",
     "sectionStatus": "Estado y visibilidad",
     "fieldRegion": "Región",
-    "searchPlaceholder": "Buscar por título, dirección…"
+    "searchPlaceholder": "Buscar por título, dirección…",
+    "searchUsersPlaceholder": "Buscar por email o nombre…",
+    "tabSpaces": "Espacios",
+    "tabUsers": "Usuarios",
+    "statsUsers": "Usuarios registrados",
+    "statsUsersWithSpaces": "Con espacios publicados",
+    "colEmail": "Email",
+    "colDisplayName": "Nombre",
+    "colJoined": "Registrado",
+    "colLastLogin": "Último acceso",
+    "colSpacesCount": "Espacios",
+    "deleteUser": "Eliminar",
+    "deleteUserConfirm": "¿Seguro que quieres eliminar este usuario? Sus espacios quedarán sin propietario.",
+    "emptyUsers": "Ningún usuario encontrado.",
+    "refresh": "Actualizar"
   },
   "ds": {
     "title": "Sistema de diseño",

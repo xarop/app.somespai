@@ -1919,6 +1919,53 @@
     gap: var(--s-4);
   }
 
+  .admin-tabs {
+    display: flex;
+    gap: var(--s-1);
+    border-bottom: 2px solid var(--border);
+    margin-bottom: var(--s-2);
+  }
+
+  .admin-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-3) var(--s-4);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--ink-mute);
+    cursor: pointer;
+    transition: color var(--t-fast), border-color var(--t-fast);
+  }
+
+  .admin-tab:hover {
+    color: var(--ink);
+  }
+
+  .admin-tab--active {
+    color: var(--ink);
+    border-bottom-color: var(--primary);
+    font-weight: 600;
+  }
+
+  .admin-tab__count {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+    background: var(--bg-deep);
+    color: var(--ink-mute);
+  }
+
+  .admin-tab--active .admin-tab__count {
+    background: var(--primary-tint);
+    color: var(--primary);
+  }
+
   .admin-stats {
     display: flex;
     flex-wrap: wrap;

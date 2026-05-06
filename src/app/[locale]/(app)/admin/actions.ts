@@ -11,7 +11,10 @@ import {
   getReviewsAdmin,
   updateReviewAdmin,
   deleteReviewAdmin,
+  getUsersAdmin,
+  deleteUserAdmin,
   type AdminSpaceUpdate,
+  type AdminUser,
 } from '@/lib/supabase/admin';
 import type { Review } from '@/lib/supabase/reviews';
 
@@ -63,6 +66,16 @@ export async function updateReviewAction(
 export async function deleteReviewAction(id: string, spaceId: string): Promise<void> {
   await requireAdmin();
   await deleteReviewAdmin(id, spaceId);
+}
+
+export async function getUsersAction(): Promise<AdminUser[]> {
+  await requireAdmin();
+  return getUsersAdmin();
+}
+
+export async function deleteUserAction(userId: string): Promise<void> {
+  await requireAdmin();
+  await deleteUserAdmin(userId);
 }
 
 export async function updateSpaceFullAction(

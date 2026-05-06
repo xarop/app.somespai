@@ -1,6 +1,6 @@
 # app.somespai
 
-> Marketplace P2P d'espais a Vila de Gràcia. Trasters, estudis, jardins i sales.
+> Marketplace P2P d'espais a Barcelona i Catalunya. Trasters, estudis, jardins, sales i pàrquings.
 
 **Demo:** https://app.somespai.net/
 
@@ -166,6 +166,7 @@ Les pàgines principals són **Server Components** que fan fetch a Supabase i pa
 page.tsx (server) → getSpaces() → HomeClient (client)
 espai/[slug]/page.tsx (server) → getSpaceBySlug() → SpaceDetailClient (client)
 admin/page.tsx (server, admin only) → getAllSpacesAdmin() → AdminDashboard (client)
+  · pestanya usuaris → getUsersAction() (lazy, client-side) → UsersTab
 editar/[slug]/page.tsx (server, owner only) → getSpaceBySlugForOwner() → EditSpaceForm (client)
 perfil/page.tsx (server, auth) → getSpacesByOwner() → llista d'espais
 ```
@@ -182,6 +183,7 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase dashboard → Settings → API |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Settings → API (secret) |
 | `ADMIN_EMAIL` | Correu de l'administrador (accés al dashboard `/admin`) |
+| `NEXT_PUBLIC_ADMIN_EMAIL` | Igual que `ADMIN_EMAIL` però accessible al client (fallback per a dev local) |
 
 ---
 
@@ -237,14 +239,23 @@ bun run scripts/bulk-scraper.ts "coworking a Gràcia" workspace
 
 Accés exclusiu a l'usuari amb `ADMIN_EMAIL`. Protegit per middleware i guard de servidor.
 
-**Funcionalitats:**
+Dues pestanyes:
+
+**Pestanya Espais:**
 - Taula de tots els espais (totes les estats: actius, pausats, eliminats)
 - Estadístiques: total, publicats, pausats, eliminats, destacats
 - Filtres: estat · tipus d'espai · destacats · cerca lliure de text
 - Accions ràpides per fila: publicar/pausar, destacar/treure destacat, eliminar
 - Modal d'edició completa: tots els camps del DB (títol, tipus, descripció, preu, ubicació amb geocodificació, amenitats, fotos, contacte, estat, destacat)
-- Gestió de fotos: eliminar existents + pujar noves (fins a 10 MB per foto)
+- Gestió de fotos: eliminar existents + pujar noves
+- Gestió de ressenyes: editar rating/text, eliminar, recàlcul automàtic de puntuació
 - Icona d'edició directa (✏) als cards i a la fitxa de l'espai quan l'usuari és admin
+
+**Pestanya Usuaris:**
+- Taula de tots els usuaris registrats (email, nom, data d'alta, últim accés, nº d'espais)
+- Cerca per email o nom
+- Eliminació d'usuari amb confirmació
+- Càrrega lazy en primer clic (no bloqueja si l'API auth falla)
 
 **Accés:** `https://app.somespai.net/ca/admin`
 
@@ -288,15 +299,18 @@ Al modal d'edició del dashboard d'admin s'han afegit:
 
 Generades estàticament per a totes les ciutats que tinguin espais actius:
 
+Generades estàticament per a totes les ciutats amb espais actius i per a cada combinació de ciutat + tipus:
+
 | Ruta | Contingut |
 |------|-----------|
 | `/[city]/` | Tots els espais d'una ciutat (e.g., `/barcelona/`) |
-| `/[city]/estudis/` | Espais de treball a la ciutat |
+| `/[city]/estudis/` | Estudis a la ciutat |
 | `/[city]/sales/` | Sales polivalents a la ciutat |
 | `/[city]/trasters/` | Trasters a la ciutat |
 | `/[city]/jardins/` | Exteriors a la ciutat |
+| `/[city]/parking/` | Pàrquings a la ciutat |
 
-Les pàgines de ciutat inclouen breadcrumb, resum, filtres per tipus i grid de targetes amb links directes a cada espai.
+Les URLs de tipus estan localitzades: `/barcelona/parking` (CA/EN) · `/es/barcelona/parking` (ES). El component de cada pàgina és el mateix `HomeClient` que la home (mapa + llista), amb filtre i context preestablerts.
 
 ### Llistat complet d'espais (`/espais/`)
 
@@ -310,22 +324,62 @@ Pàgina sense mapa amb tots els espais actius. Inclou:
 
 ---
 
-## Migració de dades Local a Producció
+## Sincronització de dades Local ↔ Producció
 
-Si has executat diverses tasques d'importació en local (amb l'script `scripts/bulk-scraper.ts`) i vols pujar tots aquests espais a la teva instància de Supabase a producció, segueix aquests passos:
+L'eina `scripts/sync-db.ts` permet sincronitzar la taula `spaces` entre l'entorn local i producció sense perdre dades en cap dels dos entorns.
+
+### Prerequisits
+
+Crea `.env.production.local` a l'arrel del projecte amb les credencials de producció:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://<ref>.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+```
+
+### Comandes
+
+```bash
+# Compara els dos entorns (no modifica res)
+bun run db:status
+
+# Baixa espais de producció a local (additive, prod guanya si slug coincideix)
+bun run db:pull
+
+# Puja espais nous de local a producció (safe: només afegeix slugs nous)
+bun run db:push
+
+# Puja i sobreescriu espais a producció (conserva IDs de prod)
+bun run db:push:force
+```
+
+| Comanda | Direcció | Comportament |
+|---------|----------|-------------|
+| `db:status` | lectura | Mostra espais únics a cada entorn i divergències |
+| `db:pull` | prod → local | Upsert complet; prod guanya els conflictes de slug |
+| `db:push` | local → prod | Insereix **només** slugs nous (segur, no sobreescriu) |
+| `db:push:force` | local → prod | Upsert complet; els IDs de prod es conserven |
+
+**Notes:**
+- Les fotos amb URL de localhost es remapen automàticament a l'URL de producció.
+- Les ressenyes i els usuaris auth **no** es sincronitzen (IDs creuats / seguretat).
+- Afegeix `--with-profiles` per sincronitzar també la taula `profiles`.
+
+---
+
+## Migració de dades Local a Producció (mètode manual)
+
+Si prefereixes fer un dump complet en lloc d'usar `sync-db.ts`:
 
 1. **Genera o actualitza el dump local** de només les dades:
    ```bash
    npx supabase db dump --local --data-only -f supabase/data_dump.sql
    ```
 2. **Puja-ho a Producció**:
-   Atès que utilitzar instruccions via terminal pot fallar segons el caràcters de les contrasenyes o configuracions, la manera més recomanada i segura és l'editor SQL integrat:
    - Aneu al dashboard del projecte a Supabase: `https://supabase.com/dashboard/project/<PROJECT_REF>/sql/new`
-   - Obriu l'arxiu llegit temporalment `supabase/data_dump.sql` en el vostre editor de codi.
-   - Copieu tot el contingut de l'arxiu i enganxeu-ho a la caixa de l'editor SQL del navegador web.
-   - Premeu el botó verd **Run** avall a la dreta. 
-
-Totes les dades (espais configurats prèviament o generats amb l'scraper a local) passaran instintivament a l'entorn remot mantinguent relacions, URLs de les imatges, etc.
+   - Obriu l'arxiu `supabase/data_dump.sql` en el vostre editor de codi.
+   - Copieu tot el contingut i enganxeu-ho a la caixa de l'editor SQL del navegador web.
+   - Premeu el botó verd **Run** avall a la dreta.
 
 ---
 

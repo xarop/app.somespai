@@ -41,7 +41,7 @@ export async function createClient() {
         data: {
           user: {
             id: '00000000-0000-0000-0000-000000000001',
-            email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'seed@somespai.cat',
+            email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@somespai.cat',
             app_metadata: {},
             user_metadata: {},
             aud: 'authenticated',

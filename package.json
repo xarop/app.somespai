@@ -10,7 +10,11 @@
     "type-check": "tsc --noEmit",
     "export": "next build",
     "postexport": "node ./scripts/ghpages-redirect.js",
-    "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out"
+    "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out",
+    "db:status": "bun run scripts/sync-db.ts status",
+    "db:pull": "bun run scripts/sync-db.ts pull",
+    "db:push": "bun run scripts/sync-db.ts push",
+    "db:push:force": "bun run scripts/sync-db.ts push --force"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
