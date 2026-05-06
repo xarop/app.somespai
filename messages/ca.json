@@ -233,7 +233,7 @@
     "label": "Idioma"
   },
   "admin": {
-    "title": "Administració d'espais",
+    "title": "Administració",
     "subtitle": "{count, plural, =0 {Cap espai} one {# espai} other {# espais}} a la base de dades",
     "statsTotal": "Total",
     "statsActive": "Publicats",

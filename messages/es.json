@@ -233,7 +233,7 @@
     "label": "Idioma"
   },
   "admin": {
-    "title": "Administración de espacios",
+    "title": "Administración",
     "subtitle": "{count, plural, =0 {Ningún espacio} one {# espacio} other {# espacios}} en la base de datos",
     "statsTotal": "Total",
     "statsActive": "Publicados",
