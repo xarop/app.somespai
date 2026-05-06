@@ -16,7 +16,8 @@
     "help": "Ajuda",
     "map": "Mapa",
     "allSpaces": "Tots els espais",
-    "cities": "Ciutats"
+    "cities": "Ciutats",
+    "contact": "Contacte"
   },
   "view": {
     "back": "Tornar al mapa",
@@ -300,7 +301,39 @@
     "deleteUser": "Eliminar",
     "deleteUserConfirm": "Segur que vols eliminar aquest usuari? Els seus espais quedaran sense propietari.",
     "emptyUsers": "Cap usuari trobat.",
-    "refresh": "Actualitzar"
+    "refresh": "Actualitzar",
+    "tabMessages": "Missatges",
+    "noMessages": "Cap missatge rebut.",
+    "msgFrom": "De",
+    "msgType": "Motiu",
+    "msgDate": "Data",
+    "msgMessage": "Missatge",
+    "markRead": "Marcar com llegit",
+    "markUnread": "Marcar com no llegit",
+    "deleteMessage": "Eliminar",
+    "deleteMessageConfirm": "Segur que vols eliminar aquest missatge?",
+    "typeBug": "Error / Incidència",
+    "typeSuggestion": "Suggeriment",
+    "typeQuestion": "Pregunta",
+    "typeOther": "Altre"
+  },
+  "contact": {
+    "title": "Contacte",
+    "subtitle": "Reporta un error, fes un suggeriment o fes-nos una pregunta. Et respondrem el més aviat possible.",
+    "fieldName": "Nom",
+    "fieldEmail": "Email",
+    "fieldType": "Motiu",
+    "typeBug": "Error o incidència",
+    "typeSuggestion": "Suggeriment",
+    "typeQuestion": "Pregunta",
+    "typeOther": "Altre",
+    "fieldMessage": "Missatge",
+    "fieldMessagePlaceholder": "Escriu aquí el teu missatge…",
+    "submit": "Enviar missatge",
+    "submitting": "Enviant…",
+    "successTitle": "Missatge enviat!",
+    "successBody": "Gràcies per contactar-nos. Respondrem el més aviat possible.",
+    "errorSubmit": "Error en enviar el missatge. Torna-ho a intentar."
   },
   "ds": {
     "title": "Sistema de disseny",
@@ -331,7 +364,9 @@
     "desktopTitle": "En ordinador",
     "desktopDesc": "A la dreta apareix la llista d'espais. A l'esquerra, el mapa s'actualitza en temps real mentre navegues.",
     "ctaExplore": "Explora espais",
-    "ctaPublish": "Publica un espai"
+    "ctaPublish": "Publica un espai",
+    "contactPrompt": "Tens algun dubte o suggeriment?",
+    "contactLink": "Contacta'ns"
   },
   "notFound": {
     "code": "404",

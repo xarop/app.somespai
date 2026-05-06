@@ -254,6 +254,48 @@ export async function deleteUserAdmin(userId: string): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
+/* ── Contact messages ────────────────────────────────────────────────────── */
+
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  type: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+};
+
+export async function getContactMessagesAdmin(): Promise<ContactMessage[]> {
+  const supabase = createAdminClient();
+  const { data, error } = await supabase
+    .from('contact_messages')
+    .select('*')
+    .order('created_at', { ascending: false });
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(r => ({
+    id: r.id,
+    name: r.name,
+    email: r.email,
+    type: r.type,
+    message: r.message,
+    read: r.read,
+    createdAt: r.created_at,
+  }));
+}
+
+export async function setContactMessageReadAdmin(id: string, read: boolean): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('contact_messages').update({ read }).eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
+export async function deleteContactMessageAdmin(id: string): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('contact_messages').delete().eq('id', id);
+  if (error) throw new Error(error.message);
+}
+
 export async function uploadAdminPhoto(spaceId: string, file: File): Promise<string | null> {
   const supabase = createAdminClient();
   const ext = file.name.split('.').pop() ?? 'jpg';

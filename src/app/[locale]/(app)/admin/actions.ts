@@ -13,8 +13,12 @@ import {
   deleteReviewAdmin,
   getUsersAdmin,
   deleteUserAdmin,
+  getContactMessagesAdmin,
+  setContactMessageReadAdmin,
+  deleteContactMessageAdmin,
   type AdminSpaceUpdate,
   type AdminUser,
+  type ContactMessage,
 } from '@/lib/supabase/admin';
 import type { Review } from '@/lib/supabase/reviews';
 
@@ -76,6 +80,21 @@ export async function getUsersAction(): Promise<AdminUser[]> {
 export async function deleteUserAction(userId: string): Promise<void> {
   await requireAdmin();
   await deleteUserAdmin(userId);
+}
+
+export async function getContactMessagesAction(): Promise<ContactMessage[]> {
+  await requireAdmin();
+  return getContactMessagesAdmin();
+}
+
+export async function setContactMessageReadAction(id: string, read: boolean): Promise<void> {
+  await requireAdmin();
+  await setContactMessageReadAdmin(id, read);
+}
+
+export async function deleteContactMessageAction(id: string): Promise<void> {
+  await requireAdmin();
+  await deleteContactMessageAdmin(id);
 }
 
 export async function updateSpaceFullAction(

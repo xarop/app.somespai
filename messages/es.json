@@ -14,6 +14,7 @@
     "map": "Mapa",
     "allSpaces": "Todos los espacios",
     "cities": "Ciudades",
+    "contact": "Contacto",
     "privacy": "Privacidad",
     "terms": "T\u00e9rminos de uso",
     "help": "Ayuda"
@@ -300,7 +301,39 @@
     "deleteUser": "Eliminar",
     "deleteUserConfirm": "¿Seguro que quieres eliminar este usuario? Sus espacios quedarán sin propietario.",
     "emptyUsers": "Ningún usuario encontrado.",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "tabMessages": "Mensajes",
+    "noMessages": "Ningún mensaje recibido.",
+    "msgFrom": "De",
+    "msgType": "Motivo",
+    "msgDate": "Fecha",
+    "msgMessage": "Mensaje",
+    "markRead": "Marcar como leído",
+    "markUnread": "Marcar como no leído",
+    "deleteMessage": "Eliminar",
+    "deleteMessageConfirm": "¿Seguro que quieres eliminar este mensaje?",
+    "typeBug": "Error / Incidencia",
+    "typeSuggestion": "Sugerencia",
+    "typeQuestion": "Pregunta",
+    "typeOther": "Otro"
+  },
+  "contact": {
+    "title": "Contacto",
+    "subtitle": "Reporta un error, haz una sugerencia o haznos una pregunta. Te responderemos lo antes posible.",
+    "fieldName": "Nombre",
+    "fieldEmail": "Email",
+    "fieldType": "Motivo",
+    "typeBug": "Error o incidencia",
+    "typeSuggestion": "Sugerencia",
+    "typeQuestion": "Pregunta",
+    "typeOther": "Otro",
+    "fieldMessage": "Mensaje",
+    "fieldMessagePlaceholder": "Escribe aquí tu mensaje…",
+    "submit": "Enviar mensaje",
+    "submitting": "Enviando…",
+    "successTitle": "¡Mensaje enviado!",
+    "successBody": "Gracias por contactar con nosotros. Te responderemos lo antes posible.",
+    "errorSubmit": "Error al enviar el mensaje. Vuelve a intentarlo."
   },
   "ds": {
     "title": "Sistema de diseño",
@@ -331,7 +364,9 @@
     "desktopTitle": "En ordenador",
     "desktopDesc": "A la derecha aparece la lista de espacios. A la izquierda, el mapa se actualiza en tiempo real mientras navegas.",
     "ctaExplore": "Explorar espacios",
-    "ctaPublish": "Publicar un espacio"
+    "ctaPublish": "Publicar un espacio",
+    "contactPrompt": "¿Tienes alguna duda o sugerencia?",
+    "contactLink": "Contáctanos"
   },
   "notFound": {
     "code": "404",
