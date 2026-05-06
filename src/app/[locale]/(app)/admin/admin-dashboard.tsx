@@ -197,6 +197,11 @@ function EditModal({ space, onClose, onSuccess }: EditModalProps) {
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
   const addressRef = useRef<HTMLInputElement>(null);
 
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  useEffect(() => {
+    getUsersAction().then(({ data }) => setUsers(data));
+  }, []);
+
   async function geocode() {
     const addr = addressRef.current?.value;
     if (!addr) return;
@@ -232,11 +237,17 @@ function EditModal({ space, onClose, onSuccess }: EditModalProps) {
           <fieldset className="fieldset">
             <legend className="fieldset__legend">{tPublish('sectionBasic')}</legend>
 
-            <label className="field">
-              <span className="field__label">Owner ID (UUID)</span>
-              <input name="owner_id" type="text" className="field__input"
-                defaultValue={space.ownerId ?? ''} placeholder="Ex: d4b3... (opcional)" />
-            </label>
+            <div className="field">
+              <span className="field__label">Propietari</span>
+              <select name="owner_id" className="field__input" defaultValue={space.ownerId ?? ''}>
+                <option value="">— Sense propietari —</option>
+                {users.map(u => (
+                  <option key={u.id} value={u.id}>
+                    {u.displayName ? `${u.displayName} · ${u.email}` : u.email}
+                  </option>
+                ))}
+              </select>
+            </div>
 
             <label className="field">
               <span className="field__label">{tPublish('fieldTitle')} *</span>
@@ -485,7 +496,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
 
 /* ── Users tab ───────────────────────────────────────────────────────────── */
 
-function UsersTab() {
+function UsersTab({ onCountChange }: { onCountChange?: (n: number) => void }) {
   const t = useTranslations('admin');
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -501,7 +512,7 @@ function UsersTab() {
     setError(null);
     const { data, error: err } = await getUsersAction();
     if (err) setError(err);
-    else setUsers(data);
+    else { setUsers(data); onCountChange?.(data.length); }
     setLoading(false);
   }
 
@@ -763,6 +774,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
   );
 
   const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages'>('spaces');
+  const [usersCount, setUsersCount] = useState<number | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -843,7 +855,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         >
           <Icon name="user" size={15} />
           {t('tabUsers')}
-          <span className="admin-tab__count">…</span>
+          <span className="admin-tab__count">{usersCount ?? '…'}</span>
         </button>
         <button
           type="button"
@@ -855,7 +867,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </button>
       </div>
 
-      {activeTab === 'users' && <UsersTab />}
+      {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} />}
       {activeTab === 'messages' && <MessagesTab />}
 
       {activeTab === 'spaces' && <>
