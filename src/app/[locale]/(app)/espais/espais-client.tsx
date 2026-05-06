@@ -4,12 +4,13 @@ import { useState, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import type { Space, SpaceType } from '@/lib/schemas/space';
 import { TYPE_TO_SLUG } from '@/lib/seo/type-slugs';
+import { Icon } from '@/components/ui/icon';
 
-const TYPES: Array<{ id: SpaceType; label: string }> = [
-  { id: 'workspace', label: 'Estudis' },
-  { id: 'room', label: 'Sales' },
-  { id: 'storage', label: 'Trasters' },
-  { id: 'garden', label: 'Exteriors' },
+const TYPES: Array<{ id: SpaceType }> = [
+  { id: 'workspace' },
+  { id: 'room' },
+  { id: 'storage' },
+  { id: 'garden' },
 ];
 
 const ALL_AMENITIES = [
@@ -75,40 +76,13 @@ export function EspaisClient({ spaces, locale }: Props) {
     <div className="espais-layout">
       {/* Sidebar filters */}
       <aside className="espais-filters">
-        <div className="espais-filters__header">
-          <span className="espais-filters__title">{t('seo.filterType')}</span>
-          {hasFilters && (
+        {hasFilters && (
+          <div className="espais-filters__header">
             <button type="button" className="espais-filters__clear" onClick={clearFilters}>
               {t('seo.clearFilters')}
             </button>
-          )}
-        </div>
-
-        {/* Type */}
-        <div className="espais-filter-group">
-          <label className="espais-filter-group__label">{t('seo.filterType')}</label>
-          <div className="espais-filter-chips">
-            <button
-              type="button"
-              className="chip"
-              aria-pressed={typeFilter === ''}
-              onClick={() => setTypeFilter('')}
-            >
-              {t('seo.allTypes')}
-            </button>
-            {TYPES.map(({ id, label }) => (
-              <button
-                key={id}
-                type="button"
-                className="chip"
-                aria-pressed={typeFilter === id}
-                onClick={() => setTypeFilter(typeFilter === id ? '' : id)}
-              >
-                {label}
-              </button>
-            ))}
           </div>
-        </div>
+        )}
 
         {/* City */}
         <div className="espais-filter-group">
@@ -126,11 +100,41 @@ export function EspaisClient({ spaces, locale }: Props) {
           </select>
         </div>
 
+        {/* Type */}
+        <div className="espais-filter-group">
+          <label className="espais-filter-group__label">{t('seo.filterType')}</label>
+          <div className="espais-filter-chips">
+            <button
+              type="button"
+              className="chip"
+              aria-pressed={typeFilter === ''}
+              onClick={() => setTypeFilter('')}
+            >
+              <span>{t('seo.allTypes')}</span>
+            </button>
+            {TYPES.map(({ id }) => (
+              <button
+                key={id}
+                type="button"
+                className="chip"
+                data-type={id}
+                aria-pressed={typeFilter === id}
+                onClick={() => setTypeFilter(typeFilter === id ? '' : id)}
+              >
+                <span className="chip__icon">
+                  <Icon name={id} size={16} />
+                </span>
+                <span>{t(`filter.${id}`)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Rating */}
         <div className="espais-filter-group">
           <label className="espais-filter-group__label">{t('seo.filterRating')}</label>
           <div className="espais-filter-chips">
-            {[0, 3, 4].map((r) => (
+            {[0, 1, 2, 3, 4].map((r) => (
               <button
                 key={r}
                 type="button"
@@ -138,7 +142,7 @@ export function EspaisClient({ spaces, locale }: Props) {
                 aria-pressed={minRating === r}
                 onClick={() => setMinRating(r)}
               >
-                {r === 0 ? t('seo.allTypes') : `${r}★+`}
+                {r}★
               </button>
             ))}
           </div>

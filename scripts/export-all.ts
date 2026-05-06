@@ -23,7 +23,7 @@ async function exportAll() {
       // Handle PostGIS location object if it's returned as string or object
       if (typeof val === "object" && val !== null) {
          // if it's geojson object
-         return "ST_GeomFromGeoJSON('" + JSON.stretch(val) + "')";
+         return "ST_GeomFromGeoJSON('" + JSON.stringify(val) + "')";
       }
       return "'" + val + "'";
     };

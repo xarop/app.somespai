@@ -11,6 +11,7 @@
     "designSystem": "Design system",
     "publish": "Publish a space",
     "close": "Close",
+    "map": "Map",
     "allSpaces": "All spaces",
     "cities": "Cities",
     "privacy": "Privacy",
@@ -326,7 +327,14 @@
     "help": "How it works",
     "publish": "Publish a space"
   },
+  "legal": {
+    "privacyTitle": "Privacy Policy",
+    "privacyPlaceholder": "This is the privacy policy page. This text is a placeholder and will be soon replaced by the official legal document regarding the processing of your data at Somespai.",
+    "termsTitle": "Terms of Use",
+    "termsPlaceholder": "These are the terms and conditions of use for Somespai. The complete legal document will be added shortly in this section."
+  },
   "seo": {
+    "filtersTitle": "Filters",
     "cityTitle": "Spaces in {city}",
     "cityDesc": "{count} available spaces in {city}: studios, storage, rooms and outdoors.",
     "typeTitle": "{typeLabel} in {city}",
