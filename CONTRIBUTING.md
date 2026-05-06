@@ -43,7 +43,8 @@ Segueix aquests passos per tenir l'aplicació funcionant a la teva màquina:
    NEXT_PUBLIC_MAP_TILES_URL=...
    
    # Opcional (fa bypass per entrar com a usuari autenticat en local)
-   NEXT_PUBLIC_ADMIN_EMAIL=seed@somespai.cat
+   ADMIN_EMAIL=el-teu-email@exemple.com
+   NEXT_PUBLIC_ADMIN_EMAIL=el-teu-email@exemple.com
    ```
 
 5. **Inicia el servidor de desenvolupament de Next.js:**
@@ -52,7 +53,15 @@ Segueix aquests passos per tenir l'aplicació funcionant a la teva màquina:
    ```
    Ara el projecte web estarà corrent a [http://localhost:3000](http://localhost:3000) connectat al Supabase de desenvolupament (API a la web o per localhost).
 
-## 3. Flux de treball (GitHub)
+## 3. Panell d'Administració i Autenticació Local
+
+En l'entorn de desenvolupament (`NODE_ENV=development`), t'hauràs adonat de la presència de les variables d'entorn `ADMIN_EMAIL` i/o `NEXT_PUBLIC_ADMIN_EMAIL`.
+
+Com a eina per facilitar les proves:
+- Quan inicies el projecte en local web, fas un "bypass" (saltes) de l'autenticació i entres directament connectat amb el correu configurat allà (exemple: posa el teu propi correu, com `el-teu-email@exemple.com`).
+- Aquest súper-usuari té permís per accedir al **Panell d'Administració d'Espais** des d'on podràs crear nous anuncis d'espais (`/admin` o `/publica`), editar-los i comprovar-ne els estats directament sense haver de fer servir l'inici de sessió de Supabase ni correus de validació *Magic Link*.
+
+## 4. Flux de treball (GitHub)
 
 La branca `main` està protegida per evitar trencaments a producció. **No fem push directe a `main`**. El correcte és fer servir el sistema de *Pull Requests*.
 
@@ -85,7 +94,7 @@ Si pertanys a l'equip (tens permisos de col·laborador), el procés és el segü
 
 ---
 
-## 4. Guies de Codi i Regles
+## 5. Guies de Codi i Regles
 
 **És obligatori** que abans d'escriure codi nou revisis la documentació oficial que governa aquest repositori. Pots trobar-la a l'arrel del projecte:
 
