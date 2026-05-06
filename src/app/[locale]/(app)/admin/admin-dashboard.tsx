@@ -625,7 +625,7 @@ function UsersTab({ onCountChange }: { onCountChange?: (n: number) => void }) {
 
 /* ── Messages tab ────────────────────────────────────────────────────────── */
 
-function MessagesTab() {
+function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: number; total: number }) => void }) {
   const t = useTranslations('admin');
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -635,24 +635,36 @@ function MessagesTab() {
 
   useEffect(() => { handleRefresh(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  function updateCounts(msgs: ContactMessage[]) {
+    onCountChange?.({ unread: msgs.filter(m => !m.read).length, total: msgs.length });
+  }
+
   async function handleRefresh() {
     setLoading(true);
     setError(null);
     const { data, error: err } = await getContactMessagesAction();
     if (err) setError(err);
-    else setMessages(data);
+    else { setMessages(data); updateCounts(data); }
     setLoading(false);
   }
 
   async function handleToggleRead(msg: ContactMessage) {
     await setContactMessageReadAction(msg.id, !msg.read);
-    setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, read: !m.read } : m));
+    setMessages(prev => {
+      const next = prev.map(m => m.id === msg.id ? { ...m, read: !m.read } : m);
+      updateCounts(next);
+      return next;
+    });
   }
 
   async function handleDelete(id: string) {
     setConfirmDeleteId(null);
     await deleteContactMessageAction(id);
-    setMessages(prev => prev.filter(m => m.id !== id));
+    setMessages(prev => {
+      const next = prev.filter(m => m.id !== id);
+      updateCounts(next);
+      return next;
+    });
   }
 
   function formatDate(iso: string) {
@@ -775,6 +787,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
 
   const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages'>('spaces');
   const [usersCount, setUsersCount] = useState<number | null>(null);
+  const [msgCounts, setMsgCounts] = useState<{ unread: number; total: number } | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -864,11 +877,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         >
           <Icon name="mail" size={15} />
           {t('tabMessages')}
+          {msgCounts && (
+            <span className="admin-tab__count">
+              {msgCounts.unread > 0 ? `${msgCounts.unread}/${msgCounts.total}` : msgCounts.total}
+            </span>
+          )}
         </button>
       </div>
 
       {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} />}
-      {activeTab === 'messages' && <MessagesTab />}
+      {activeTab === 'messages' && <MessagesTab onCountChange={setMsgCounts} />}
 
       {activeTab === 'spaces' && <>
       {/* Stats */}
