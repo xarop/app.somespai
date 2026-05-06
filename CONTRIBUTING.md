@@ -23,25 +23,34 @@ Segueix aquests passos per tenir l'aplicació funcionant a la teva màquina:
    bun install
    ```
 
-3. **Configura les variables d'entorn:**
-   Crea un fitxer `.env.local` a l'arrel del projecte duplicant i omplint l'estructura. Pots demanar a l'administrador les claus de desenvolupament per connectar-te a la base de dades comuna de *dev*:
+3. **Inicia Supabase en local (Requereix Docker):**
+   Atès que fem servir les eines de Supabase pel backend, necessites tenir **Docker** funcionant. Amb Docker obert en segon pla, engega l'entorn de Supabase:
+   ```bash
+   npx supabase start
+   ```
+   *El primer cop que s'executi descarregarà les imatges SQL i Edge Functions. Quan acabi et mostrarà per pantalla les URL API i les claus Anon de desenvolupament local.*
+
+4. **Configura les variables d'entorn:**
+   Crea un fitxer `.env.local` a l'arrel del projecte copiant i afegint-hi les claus locals (o del _dev_ online) de l'anterior o compartida per l'equip.
    
    ```env
-   # Exemple de .env.local
-   NEXT_PUBLIC_SUPABASE_URL=...
+   # Variables proporcionades normalment en local per 'npx supabase start'
+   NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54321
    NEXT_PUBLIC_SUPABASE_ANON_KEY=...
    SUPABASE_SERVICE_ROLE_KEY=...
+   
+   # Opcional - API Maptiler per Tiles del mapa.
    NEXT_PUBLIC_MAP_TILES_URL=...
    
    # Opcional (fa bypass per entrar com a usuari autenticat en local)
    NEXT_PUBLIC_ADMIN_EMAIL=seed@somespai.cat
    ```
 
-4. **Inicia el servidor de desenvolupament:**
+5. **Inicia el servidor de desenvolupament de Next.js:**
    ```bash
    bun run dev
    ```
-   Ara el projecte estarà corrent a [http://localhost:3000](http://localhost:3000).
+   Ara el projecte web estarà corrent a [http://localhost:3000](http://localhost:3000) connectat al Supabase de desenvolupament (API a la web o per localhost).
 
 ## 3. Flux de treball (GitHub)
 
