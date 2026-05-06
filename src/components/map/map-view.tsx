@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import maplibregl, { type Map as MapLibreMap, type Marker } from 'maplibre-gl';
+import Supercluster from 'supercluster';
 import type { Space } from '@/lib/schemas/space';
 import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
 
@@ -36,6 +37,23 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
+  const [clusterInfo, setClusterInfo] = useState<{ zoom: number; bounds: [number, number, number, number] | null }>({ zoom: 15.2, bounds: null });
+
+  // Initialize supercluster
+  const supercluster = useMemo(() => {
+    const sc = new Supercluster<{ id: string; space: Space }, any>({
+      radius: 35,
+      maxZoom: 18,
+    });
+    sc.load(
+      spaces.map((s) => ({
+        type: 'Feature',
+        properties: { cluster: false, id: s.id, space: s },
+        geometry: { type: 'Point', coordinates: [s.lng, s.lat] },
+      }))
+    );
+    return sc;
+  }, [spaces]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -57,7 +75,28 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     mapRef.current = map;
 
+    const updateClusters = () => {
+      const bounds = map.getBounds();
+      setClusterInfo({
+        zoom: Math.floor(map.getZoom()),
+        bounds: [
+          bounds.getWest(),
+          bounds.getSouth(),
+          bounds.getEast(),
+          bounds.getNorth(),
+        ],
+      });
+    };
+
+    map.on('move', updateClusters);
+    map.on('zoom', updateClusters);
+    
+    // Initial call after map configures itself
+    map.once('load', updateClusters);
+
     return () => {
+      map.off('move', updateClusters);
+      map.off('zoom', updateClusters);
       map.remove();
       mapRef.current = null;
       markersRef.current.clear();
@@ -70,31 +109,60 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
 
     const syncMarkers = () => {
       const existing = markersRef.current;
-      const nextIds = new Set(spaces.map((s) => s.id));
+      
+      const clusters = clusterInfo.bounds 
+        ? supercluster.getClusters(clusterInfo.bounds, clusterInfo.zoom)
+        : [];
+
+      // Create a set of next IDs. For clusters, ID is the cluster_id. For points, ID is the space.id.
+      const nextIds = new Set(clusters.map((c) => c.properties.cluster ? `cluster-${c.id}` : c.properties.id));
 
       for (const [id, marker] of existing) {
         if (!nextIds.has(id)) { marker.remove(); existing.delete(id); }
       }
 
-      for (const space of spaces) {
-        const m = existing.get(space.id);
+      for (const cluster of clusters) {
+        const isCluster = cluster.properties.cluster;
+        const id = isCluster ? `cluster-${cluster.id}` : cluster.properties.id;
+        
+        const m = existing.get(id);
         if (m) {
-          m.getElement().setAttribute('data-active', String(space.id === activeSpaceId));
+          if (!isCluster) {
+            m.getElement().setAttribute('data-active', String(id === activeSpaceId));
+          }
           continue;
         }
 
         const el = document.createElement('div');
-        el.className = 'marker';
-        el.setAttribute('data-active', String(space.id === activeSpaceId));
-        el.setAttribute('data-featured', String(!!space.isFeatured));
-        el.setAttribute('data-type', space.type);
-        el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${space.priceCents > 0 ? priceLabel(space.priceCents) : '?'}</span></div>`;
-        el.addEventListener('click', (e) => { e.stopPropagation(); onSelect?.(space); });
+        
+        if (isCluster) {
+          el.className = 'marker marker--cluster';
+          const count = cluster.properties.point_count;
+          el.innerHTML = `<div class="marker__pin" style="padding: 5px 8px; border-radius: 20px;"><span style="font-weight: 700;">${count}</span></div>`;
+          
+          el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const expansionZoom = supercluster.getClusterExpansionZoom(cluster.id as number);
+            map.flyTo({
+              center: [cluster.geometry.coordinates[0], cluster.geometry.coordinates[1]],
+              zoom: expansionZoom,
+              duration: 500
+            });
+          });
+        } else {
+          const space = cluster.properties.space;
+          el.className = 'marker';
+          el.setAttribute('data-active', String(space.id === activeSpaceId));
+          el.setAttribute('data-featured', String(!!space.isFeatured));
+          el.setAttribute('data-type', space.type);
+          el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${space.priceCents > 0 ? priceLabel(space.priceCents) : '?'}</span></div>`;
+          el.addEventListener('click', (e) => { e.stopPropagation(); onSelect?.(space); });
+        }
 
         const marker = new maplibregl.Marker({ element: el, anchor: 'bottom' })
-          .setLngLat([space.lng, space.lat])
+          .setLngLat([cluster.geometry.coordinates[0], cluster.geometry.coordinates[1]])
           .addTo(map);
-        existing.set(space.id, marker);
+        existing.set(id, marker);
       }
     };
 
@@ -103,7 +171,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
     } else {
       map.once('load', syncMarkers);
     }
-  }, [spaces, activeSpaceId, onSelect]);
+  }, [spaces, activeSpaceId, onSelect, supercluster, clusterInfo]);
 
   useEffect(() => {
     const map = mapRef.current;
