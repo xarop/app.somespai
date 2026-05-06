@@ -34,7 +34,7 @@
   "sheet": {
     "count": "{n, plural, =0 {No spaces} one {# space in {location}} other {# spaces in {location}}}",
     "countType": "{n, plural, =0 {No spaces} one {# {typeLabel} in {location}} other {# {typeLabel} in {location}}}",
-    "countAll":"{n, plural, =0 {No spaces found} one {# space found} other {# spaces found}}",
+    "countAll": "{n, plural, =0 {No spaces found} one {# space found} other {# spaces found}}",
     "empty": "No spaces match this filter. Try another.",
     "sortDistance": "Nearest",
     "sortPrice": "Price",

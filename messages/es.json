@@ -34,7 +34,7 @@
   "sheet": {
     "count": "{n, plural, =0 {Sin espacios} one {# espacio en {location}} other {# espacios en {location}}}",
     "countType": "{n, plural, =0 {Ningún espacio} one {# {typeLabel} en {location}} other {# {typeLabel} en {location}}}",
-    "countAll":"{n, plural, =0 {Sin resultados} one {# espacio encontrado} other {# espacios encontrados}}",
+    "countAll": "{n, plural, =0 {Sin resultados} one {# espacio encontrado} other {# espacios encontrados}}",
     "empty": "Sin resultados con este filtro. Prueba con otro.",
     "sortDistance": "Proximidad",
     "sortPrice": "Precio",
