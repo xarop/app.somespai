@@ -398,7 +398,7 @@
     "typeTitle": "{typeLabel} in {city}",
     "typeDesc": "{count} {typeLabel} available in {city}.",
     "allSpacesTitle": "All spaces on Somespai",
-    "allSpacesDesc": "Complete listing of available spaces: studios, storage, rooms and outdoors.",
+    "allSpacesDesc": "Complete listing of available spaces: studios, storage, rooms, outdoors and parkings.",
     "filterType": "Type",
     "filterCity": "City",
     "filterAmenities": "Amenities",
