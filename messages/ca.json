@@ -286,7 +286,21 @@
     "empty": "Cap espai amb aquest filtre.",
     "sectionStatus": "Estat i visibilitat",
     "fieldRegion": "Regió",
-    "searchPlaceholder": "Cerca per títol, adreça…"
+    "searchPlaceholder": "Cerca per títol, adreça…",
+    "searchUsersPlaceholder": "Cerca per email o nom…",
+    "tabSpaces": "Espais",
+    "tabUsers": "Usuaris",
+    "statsUsers": "Usuaris registrats",
+    "statsUsersWithSpaces": "Amb espais publicats",
+    "colEmail": "Email",
+    "colDisplayName": "Nom",
+    "colJoined": "Registrat",
+    "colLastLogin": "Últim accés",
+    "colSpacesCount": "Espais",
+    "deleteUser": "Eliminar",
+    "deleteUserConfirm": "Segur que vols eliminar aquest usuari? Els seus espais quedaran sense propietari.",
+    "emptyUsers": "Cap usuari trobat.",
+    "refresh": "Actualitzar"
   },
   "ds": {
     "title": "Sistema de disseny",

@@ -16,7 +16,9 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+  if (!user || user.email !== adminEmail) {
     redirect('/');
   }
 
@@ -31,7 +33,6 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <header className="page-form__header">
           <a href="/" className="page-form__back">←</a>
           <h1>{t('title')}</h1>
-          <p className="page-form__subtitle">{t('subtitle', { count: spaces.length })}</p>
         </header>
         <AdminDashboard spaces={spaces} initialEditId={edit} />
       </div>

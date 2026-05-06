@@ -13,20 +13,24 @@ import {
   getAdminReviewsAction,
   updateReviewAction,
   deleteReviewAction,
+  getUsersAction,
+  deleteUserAction,
 } from './actions';
 import type { Review } from '@/lib/supabase/reviews';
+import type { AdminUser } from '@/lib/supabase/admin';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
-type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room';
+type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room' | 'parking';
 
-const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room'] as const;
+const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
 
 const AMENITY_GROUPS: Record<string, string[]> = {
   'Connectivitat': ['wifi', 'fiber', 'hot_desk', 'fixed_desk', 'monitor', 'locker'],
   'Reunions': ['meeting_room', 'event_space', 'whiteboard', 'podcast_studio'],
   'Confort': ['ac', 'heating', 'dimmable_light', 'hardwood_floor'],
   'Serveis': ['coffee', 'kitchen', 'printer', 'printer_3d'],
-  'Accés': ['access_24h', 'cameras', 'van_access', 'parking', 'bike_parking'],
+  'Pàrquing': ['covered', 'ev_charger', 'auto_gate', 'motorbike_ok', 'van_access'],
+  'Accés': ['access_24h', 'cameras', 'parking', 'bike_parking'],
   'Exterior': ['terrace', 'bbq', 'pool', 'shade', 'sea_view', 'mountain_view'],
   'Equipament': ['projector', 'audio', 'tools', 'tables', 'chairs', 'electricity', 'water'],
   'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],
@@ -43,7 +47,7 @@ function StatusBadge({ status }: { status: string }) {
 function TypeBadge({ type }: { type: string }) {
   return (
     <span className={`type-badge type-badge--${type}`}>
-      <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room'} size={12} />
+      <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room' | 'parking'} size={12} />
       {type}
     </span>
   );
@@ -476,6 +480,139 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
   );
 }
 
+/* ── Users tab ───────────────────────────────────────────────────────────── */
+
+function UsersTab() {
+  const t = useTranslations('admin');
+  const [users, setUsers] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const router = useRouter();
+
+  useEffect(() => { handleRefresh(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleRefresh() {
+    setLoading(true);
+    setError(null);
+    try {
+      const fresh = await getUsersAction();
+      setUsers(fresh);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Error carregant usuaris');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setConfirmDeleteId(null);
+    await deleteUserAction(id);
+    setUsers(prev => prev.filter(u => u.id !== id));
+    router.refresh();
+  }
+
+  function formatDate(iso: string | null) {
+    if (!iso) return '—';
+    return new Date(iso).toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+
+  const filtered = users.filter(u => {
+    if (!searchQuery) return true;
+    const q = searchQuery.toLowerCase();
+    return u.email.toLowerCase().includes(q) || (u.displayName ?? '').toLowerCase().includes(q);
+  });
+
+  if (loading && users.length === 0) return <p className="admin-empty">Carregant usuaris…</p>;
+  if (error) return (
+    <div className="admin-empty">
+      <p style={{ color: 'var(--danger)', marginBottom: 'var(--s-3)' }}>{error}</p>
+      <button type="button" className="admin-action-btn" onClick={handleRefresh}>{t('refresh')}</button>
+    </div>
+  );
+
+  return (
+    <div className="admin-dashboard">
+      <div className="admin-stats">
+        <div className="admin-stat">
+          <span className="admin-stat__value">{users.length}</span>
+          <span className="admin-stat__label">{t('statsUsers')}</span>
+        </div>
+        <div className="admin-stat admin-stat--active">
+          <span className="admin-stat__value">{users.filter(u => u.spacesCount > 0).length}</span>
+          <span className="admin-stat__label">{t('statsUsersWithSpaces')}</span>
+        </div>
+      </div>
+
+      <div className="admin-search-wrap">
+        <Icon name="search" size={16} />
+        <input
+          type="search"
+          className="admin-search-input"
+          placeholder={t('searchUsersPlaceholder')}
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+        />
+        <button type="button" className="admin-action-btn" onClick={handleRefresh} disabled={loading}
+          style={{ marginLeft: 'auto' }}>
+          {loading ? '…' : t('refresh')}
+        </button>
+      </div>
+
+      <div className="admin-table-wrap">
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>{t('colEmail')}</th>
+              <th>{t('colDisplayName')}</th>
+              <th>{t('colJoined')}</th>
+              <th>{t('colLastLogin')}</th>
+              <th className="admin-cell--center">{t('colSpacesCount')}</th>
+              <th>{t('colActions')}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filtered.map(user => (
+              <tr key={user.id} className="admin-row admin-row--active">
+                <td className="admin-cell admin-cell--title">{user.email}</td>
+                <td>{user.displayName ?? <span style={{ color: 'var(--ink-mute)' }}>—</span>}</td>
+                <td>{formatDate(user.createdAt)}</td>
+                <td>{formatDate(user.lastSignIn)}</td>
+                <td className="admin-cell--center">
+                  {user.spacesCount > 0
+                    ? <strong>{user.spacesCount}</strong>
+                    : <span style={{ color: 'var(--ink-mute)' }}>0</span>}
+                </td>
+                <td>
+                  <div className="admin-actions">
+                    <button
+                      type="button"
+                      className="admin-action-btn admin-action-btn--delete"
+                      onClick={() => setConfirmDeleteId(user.id)}
+                    >
+                      {t('deleteUser')}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {filtered.length === 0 && <p className="admin-empty">{t('emptyUsers')}</p>}
+      </div>
+
+      {confirmDeleteId && (
+        <ConfirmDialog
+          message={t('deleteUserConfirm')}
+          onConfirm={() => handleDelete(confirmDeleteId)}
+          onCancel={() => setConfirmDeleteId(null)}
+        />
+      )}
+    </div>
+  );
+}
+
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 
 export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { spaces: Space[]; initialEditId?: string }) {
@@ -488,6 +625,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
     (_state: Space[], updater: (s: Space[]) => Space[]) => updater(_state),
   );
 
+  const [activeTab, setActiveTab] = useState<'spaces' | 'users'>('spaces');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -550,6 +688,31 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
 
   return (
     <div className="admin-dashboard">
+      {/* Tabs */}
+      <div className="admin-tabs">
+        <button
+          type="button"
+          className={`admin-tab${activeTab === 'spaces' ? ' admin-tab--active' : ''}`}
+          onClick={() => setActiveTab('spaces')}
+        >
+          <Icon name="list" size={15} />
+          {t('tabSpaces')}
+          <span className="admin-tab__count">{initialSpaces.length}</span>
+        </button>
+        <button
+          type="button"
+          className={`admin-tab${activeTab === 'users' ? ' admin-tab--active' : ''}`}
+          onClick={() => setActiveTab('users')}
+        >
+          <Icon name="user" size={15} />
+          {t('tabUsers')}
+          <span className="admin-tab__count">…</span>
+        </button>
+      </div>
+
+      {activeTab === 'users' && <UsersTab />}
+
+      {activeTab === 'spaces' && <>
       {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat">
@@ -600,7 +763,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
 
       {/* Filter row — type + featured */}
       <div className="admin-filter-bar admin-filter-bar--types">
-        {(['all', 'storage', 'workspace', 'garden', 'room'] as TypeFilter[]).map(type => (
+        {(['all', 'storage', 'workspace', 'garden', 'room', 'parking'] as TypeFilter[]).map(type => (
           <button key={type} type="button"
             className={`admin-filter-tab${typeFilter === type ? ' admin-filter-tab--active' : ''}`}
             onClick={() => setTypeFilter(type)}>
@@ -702,6 +865,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           onCancel={() => setDeletingId(null)}
         />
       )}
+      </>}
     </div>
   );
 }

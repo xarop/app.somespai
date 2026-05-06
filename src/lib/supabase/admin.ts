@@ -211,6 +211,49 @@ export async function deleteReviewAdmin(id: string, spaceId: string): Promise<vo
   await recalcSpaceRating(spaceId);
 }
 
+/* ── Users ───────────────────────────────────────────────────────────────── */
+
+export type AdminUser = {
+  id: string;
+  email: string;
+  createdAt: string;
+  lastSignIn: string | null;
+  spacesCount: number;
+  displayName: string | null;
+};
+
+export async function getUsersAdmin(): Promise<AdminUser[]> {
+  const supabase = createAdminClient();
+  const { data: { users }, error } = await supabase.auth.admin.listUsers({ perPage: 1000 });
+  if (error) throw new Error(error.message);
+
+  const [profilesRes, spacesRes] = await Promise.all([
+    supabase.from('profiles').select('id, display_name'),
+    supabase.from('spaces').select('owner_id').not('owner_id', 'is', null),
+  ]);
+
+  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, p.display_name as string | null]));
+  const spacesCount = new Map<string, number>();
+  for (const s of spacesRes.data ?? []) {
+    if (s.owner_id) spacesCount.set(s.owner_id, (spacesCount.get(s.owner_id) ?? 0) + 1);
+  }
+
+  return users.map(u => ({
+    id: u.id,
+    email: u.email ?? '',
+    createdAt: u.created_at,
+    lastSignIn: u.last_sign_in_at ?? null,
+    spacesCount: spacesCount.get(u.id) ?? 0,
+    displayName: profileMap.get(u.id) ?? null,
+  }));
+}
+
+export async function deleteUserAdmin(userId: string): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.auth.admin.deleteUser(userId);
+  if (error) throw new Error(error.message);
+}
+
 export async function uploadAdminPhoto(spaceId: string, file: File): Promise<string | null> {
   const supabase = createAdminClient();
   const ext = file.name.split('.').pop() ?? 'jpg';

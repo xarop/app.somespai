@@ -59,7 +59,9 @@ En l'entorn de desenvolupament (`NODE_ENV=development`), t'hauràs adonat de la 
 
 Com a eina per facilitar les proves:
 - Quan inicies el projecte en local web, fas un "bypass" (saltes) de l'autenticació i entres directament connectat amb el correu configurat allà (exemple: posa el teu propi correu, com `el-teu-email@exemple.com`).
-- Aquest súper-usuari té permís per accedir al **Panell d'Administració d'Espais** des d'on podràs crear nous anuncis d'espais (`/admin` o `/publica`), editar-los i comprovar-ne els estats directament sense haver de fer servir l'inici de sessió de Supabase ni correus de validació *Magic Link*.
+- Aquest súper-usuari té permís per accedir al **Panell d'Administració** (`/admin`), que té dues pestanyes:
+  - **Espais** — crear (`/publica`), editar, publicar/pausar, destacar i eliminar espais.
+  - **Usuaris** — llistat de tots els usuaris registrats amb data d'alta, últim accés, nombre d'espais i opció d'eliminar.
 
 ## 4. Flux de treball (GitHub)
 
