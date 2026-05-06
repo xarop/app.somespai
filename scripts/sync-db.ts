@@ -90,7 +90,7 @@ async function fetchSpaces(db: SupabaseClient): Promise<SpaceRow[]> {
     .select(SPACE_COLUMNS.join(", "))
     .order("created_at", { ascending: true });
   if (error) throw new Error(`fetchSpaces: ${error.message}`);
-  return (data ?? []) as SpaceRow[];
+  return (data ?? []) as unknown as SpaceRow[];
 }
 
 // Rebuilds the location geography value from lat/lng

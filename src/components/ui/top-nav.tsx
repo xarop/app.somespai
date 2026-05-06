@@ -262,6 +262,11 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
             {t('nav.help')}
           </a>
 
+          <a href={`/${locale}/contacte`} role="menuitem" onClick={() => setMenuOpen(false)}>
+            <Icon name="mail" size={16} />
+            {t('nav.contact')}
+          </a>
+
           <a href="/design-system" role="menuitem" onClick={() => setMenuOpen(false)}>
             <Icon name="grid" size={16} />
             {t('nav.designSystem')}

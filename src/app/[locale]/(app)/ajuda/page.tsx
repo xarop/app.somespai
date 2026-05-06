@@ -180,6 +180,12 @@ export default async function AjudaPage({ params }: PageProps) {
           <a href={`/${locale}/publica`} className="btn-secondary">{t('ctaPublish')}</a>
         </div>
 
+        {/* Contact prompt */}
+        <p className="help-contact-prompt">
+          {t('contactPrompt')}{' '}
+          <a href={`/${locale}/contacte`}>{t('contactLink')}</a>
+        </p>
+
       </div>
     </div>
     </>

@@ -15,9 +15,12 @@ import {
   deleteReviewAction,
   getUsersAction,
   deleteUserAction,
+  getContactMessagesAction,
+  setContactMessageReadAction,
+  deleteContactMessageAction,
 } from './actions';
 import type { Review } from '@/lib/supabase/reviews';
-import type { AdminUser } from '@/lib/supabase/admin';
+import type { AdminUser, ContactMessage } from '@/lib/supabase/admin';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
 type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room' | 'parking';
@@ -613,6 +616,148 @@ function UsersTab() {
   );
 }
 
+/* ── Messages tab ────────────────────────────────────────────────────────── */
+
+function MessagesTab() {
+  const t = useTranslations('admin');
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  useEffect(() => { handleRefresh(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function handleRefresh() {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getContactMessagesAction();
+      setMessages(data);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Error carregant missatges');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleToggleRead(msg: ContactMessage) {
+    await setContactMessageReadAction(msg.id, !msg.read);
+    setMessages(prev => prev.map(m => m.id === msg.id ? { ...m, read: !m.read } : m));
+  }
+
+  async function handleDelete(id: string) {
+    setConfirmDeleteId(null);
+    await deleteContactMessageAction(id);
+    setMessages(prev => prev.filter(m => m.id !== id));
+  }
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleString('ca-ES', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit',
+    });
+  }
+
+  const TYPE_LABELS: Record<string, string> = {
+    bug: t('typeBug'),
+    suggestion: t('typeSuggestion'),
+    question: t('typeQuestion'),
+    other: t('typeOther'),
+  };
+
+  if (loading && messages.length === 0) return <p className="admin-empty">Carregant missatges…</p>;
+  if (error) return (
+    <div className="admin-empty">
+      <p style={{ color: 'var(--danger)', marginBottom: 'var(--s-3)' }}>{error}</p>
+      <button type="button" className="admin-action-btn" onClick={handleRefresh}>{t('refresh')}</button>
+    </div>
+  );
+
+  const unread = messages.filter(m => !m.read).length;
+
+  return (
+    <div className="admin-messages">
+      <div className="admin-stats">
+        <div className="admin-stat">
+          <span className="admin-stat__value">{messages.length}</span>
+          <span className="admin-stat__label">{t('tabMessages')}</span>
+        </div>
+        {unread > 0 && (
+          <div className="admin-stat admin-stat--active">
+            <span className="admin-stat__value">{unread}</span>
+            <span className="admin-stat__label">No llegits</span>
+          </div>
+        )}
+        <button type="button" className="admin-action-btn" onClick={handleRefresh} disabled={loading}
+          style={{ marginLeft: 'auto', alignSelf: 'center' }}>
+          {loading ? '…' : t('refresh')}
+        </button>
+      </div>
+
+      {messages.length === 0 ? (
+        <p className="admin-empty">{t('noMessages')}</p>
+      ) : (
+        <div className="admin-message-list">
+          {messages.map(msg => (
+            <div
+              key={msg.id}
+              className={`admin-message${msg.read ? '' : ' admin-message--unread'}`}
+            >
+              <div className="admin-message__header">
+                <div className="admin-message__meta">
+                  <span className="admin-message__from">
+                    {msg.name} — <a href={`mailto:${msg.email}`}>{msg.email}</a>
+                  </span>
+                  <span className="admin-message__date">{formatDate(msg.createdAt)}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--s-2)', flexWrap: 'wrap' }}>
+                  <span className="admin-message__type">{TYPE_LABELS[msg.type] ?? msg.type}</span>
+                  <div className="admin-message__actions">
+                    <button
+                      type="button"
+                      className="admin-action-btn"
+                      onClick={() => setExpandedId(expandedId === msg.id ? null : msg.id)}
+                    >
+                      {expandedId === msg.id ? 'Plegar' : t('msgMessage')}
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-action-btn"
+                      onClick={() => handleToggleRead(msg)}
+                      title={msg.read ? t('markUnread') : t('markRead')}
+                    >
+                      {msg.read ? '○' : '●'}
+                    </button>
+                    <button
+                      type="button"
+                      className="admin-action-btn admin-action-btn--delete"
+                      onClick={() => setConfirmDeleteId(msg.id)}
+                    >
+                      {t('deleteMessage')}
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {expandedId === msg.id && (
+                <p className="admin-message__body">{msg.message}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {confirmDeleteId && (
+        <ConfirmDialog
+          message={t('deleteMessageConfirm')}
+          onConfirm={() => handleDelete(confirmDeleteId)}
+          onCancel={() => setConfirmDeleteId(null)}
+        />
+      )}
+    </div>
+  );
+}
+
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 
 export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { spaces: Space[]; initialEditId?: string }) {
@@ -625,7 +770,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
     (_state: Space[], updater: (s: Space[]) => Space[]) => updater(_state),
   );
 
-  const [activeTab, setActiveTab] = useState<'spaces' | 'users'>('spaces');
+  const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages'>('spaces');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
   const [featuredOnly, setFeaturedOnly] = useState(false);
@@ -708,9 +853,18 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           {t('tabUsers')}
           <span className="admin-tab__count">…</span>
         </button>
+        <button
+          type="button"
+          className={`admin-tab${activeTab === 'messages' ? ' admin-tab--active' : ''}`}
+          onClick={() => setActiveTab('messages')}
+        >
+          <Icon name="mail" size={15} />
+          {t('tabMessages')}
+        </button>
       </div>
 
       {activeTab === 'users' && <UsersTab />}
+      {activeTab === 'messages' && <MessagesTab />}
 
       {activeTab === 'spaces' && <>
       {/* Stats */}
