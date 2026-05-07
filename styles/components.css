@@ -58,6 +58,19 @@
     letter-spacing: -0.03em;
     padding: 0 var(--s-1);
     color: var(--ink);
+    position: relative;
+  }
+
+  .topnav__brand em {
+    position: absolute;
+    bottom: -6px;
+    left: 48px;
+    font-size: 0.45em;
+    color: var(--accent);
+    font-style: italic;
+    font-weight: 800;
+    font-variation-settings: var(--rx-standard);
+    letter-spacing: 0;
   }
 
   .topnav__brand-mark {
