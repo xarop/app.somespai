@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import dynamic from 'next/dynamic';
 import type { MapViewProps } from '@/components/map/map-view';
 import { TopNav } from '@/components/ui/top-nav';
@@ -13,6 +13,7 @@ import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
 import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
 import { createClient } from '@/lib/supabase/client';
 import type { Space } from '@/lib/schemas/space';
+import { filterSpacesByQuery } from '@/lib/search/space-search';
 
 const MapView = dynamic<MapViewProps>(
   () => import('@/components/map/map-view').then((m) => m.MapView),
@@ -36,6 +37,7 @@ interface HomeClientProps {
 
 export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilter, cityContext, typeContext }: HomeClientProps) {
   const t = useTranslations();
+  const locale = useLocale();
   const [filter, setFilter] = useState<FilterId>(initialFilter ?? 'all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortId>('distance');
@@ -61,13 +63,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
     let list = [...initialSpaces];
     if (filter === 'featured') list = list.filter((s) => s.isFeatured);
     else if (filter !== 'all') list = list.filter((s) => s.type === filter);
-    if (query) {
-      const q = query.toLowerCase();
-      list = list.filter((s) =>
-        [s.title, s.address, s.neighborhood, s.city, s.region, s.description, ...s.amenities]
-          .some((field) => field?.toLowerCase().includes(q)),
-      );
-    }
+    if (query) list = filterSpacesByQuery(list, query, locale);
     const center = userCenter ?? GRACIA_CENTER;
     if (sort === 'distance') {
       list.sort((a, b) => distanceSq(a, center) - distanceSq(b, center));
@@ -77,7 +73,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
       list.sort((a, b) => b.rating - a.rating);
     }
     return list;
-  }, [initialSpaces, filter, query, sort, userCenter]);
+  }, [initialSpaces, filter, locale, query, sort, userCenter]);
 
   const contextTypeLabel = typeContext ? t(`filter.${typeContext}`) : undefined;
 
