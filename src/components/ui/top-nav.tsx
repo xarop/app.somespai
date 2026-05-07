@@ -21,6 +21,7 @@ interface TopNavProps {
   onLocationFound?: (lat: number, lng: number) => void;
   onGeolocateClick?: () => void;
   forcedPlaceholder?: string;
+  hideSearch?: boolean;
   children?: React.ReactNode;
 }
 
@@ -45,7 +46,7 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | null> 
   }
 }
 
-export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick, forcedPlaceholder, children }: TopNavProps) {
+export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick, forcedPlaceholder, hideSearch, children }: TopNavProps) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
@@ -156,26 +157,28 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
           <em>beta</em>
         </a>
 
-        <label className="topnav__search">
-          <Icon name="search" size={18} />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            placeholder={placeholder}
-            aria-label={placeholder}
-          />
-          {onGeolocateClick && (
-            <button
-              type="button"
-              className="topnav__geolocate"
-              onClick={(e) => { e.preventDefault(); onGeolocateClick(); }}
-              aria-label="Centrar al meu lloc"
-            >
-              <Icon name="locate" size={16} />
-            </button>
-          )}
-        </label>
+        {!hideSearch && (
+          <label className="topnav__search">
+            <Icon name="search" size={18} />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => onQueryChange(e.target.value)}
+              placeholder={placeholder}
+              aria-label={placeholder}
+            />
+            {onGeolocateClick && (
+              <button
+                type="button"
+                className="topnav__geolocate"
+                onClick={(e) => { e.preventDefault(); onGeolocateClick(); }}
+                aria-label="Centrar al meu lloc"
+              >
+                <Icon name="locate" size={16} />
+              </button>
+            )}
+          </label>
+        )}
 
         <div className="topnav__actions">
           <a
@@ -342,6 +345,7 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
           <nav>
             <a href={`/${locale}/privacitat`} onClick={() => setMenuOpen(false)}>{t('nav.privacy')}</a>
             <a href={`/${locale}/termes`} onClick={() => setMenuOpen(false)}>{t('nav.terms')}</a>
+            <a href={`/${locale}/mapa-web`} onClick={() => setMenuOpen(false)}>Mapa</a>
           </nav>
         </div>
       </div>
