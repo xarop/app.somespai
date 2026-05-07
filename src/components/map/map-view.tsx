@@ -166,7 +166,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
       }
     };
 
-    if (map.loaded()) {
+    if (map.isStyleLoaded()) {
       syncMarkers();
     } else {
       map.once('load', syncMarkers);
@@ -192,7 +192,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
       map.fitBounds(bounds, { padding: 80, maxZoom: 16, duration: 800 });
     };
 
-    if (map.loaded()) fly();
+    if (map.isStyleLoaded()) fly();
     else map.once('load', fly);
   }, [spaces]);
 
@@ -201,7 +201,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
     if (!userCenter) return;
     const map = mapRef.current;
     const fly = () => map?.flyTo({ center: [userCenter.lng, userCenter.lat], zoom: 15, duration: 1000 });
-    if (map?.loaded()) fly();
+    if (map?.isStyleLoaded()) fly();
     else map?.once('load', fly);
   }, [userCenter]);
 
