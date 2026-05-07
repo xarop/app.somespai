@@ -14,7 +14,9 @@
     "db:status": "bun run scripts/sync-db.ts status",
     "db:pull": "bun run scripts/sync-db.ts pull",
     "db:push": "bun run scripts/sync-db.ts push",
-    "db:push:force": "bun run scripts/sync-db.ts push --force"
+    "db:push:force": "bun run scripts/sync-db.ts push --force",
+    "import:all": "bun run scripts/mass-import.ts",
+    "import:plan": "bun run scripts/mass-import.ts --dry-run"
   },
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
