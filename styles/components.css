@@ -2199,18 +2199,18 @@
   }
 
   .admin-bulk-bar .admin-action-btn {
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.18);
     color: var(--primary-ink);
-    border: 1px solid rgba(255,255,255,0.25);
+    border: 1px solid rgba(255, 255, 255, 0.25);
   }
 
   .admin-bulk-bar .admin-action-btn:hover {
-    background: rgba(255,255,255,0.3);
+    background: rgba(255, 255, 255, 0.3);
   }
 
   .admin-bulk-bar .admin-action-btn--delete {
-    background: rgba(220,50,50,0.25);
-    border-color: rgba(220,50,50,0.4);
+    background: rgba(220, 50, 50, 0.25);
+    border-color: rgba(220, 50, 50, 0.4);
   }
 
   .admin-cell--cb {
