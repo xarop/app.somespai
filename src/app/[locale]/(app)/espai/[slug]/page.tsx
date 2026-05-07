@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { getSpaceBySlug } from '@/lib/supabase/spaces';
 import { createClient } from '@/lib/supabase/server';
 import { SpaceDetailClient } from './space-detail-client';
@@ -12,17 +12,28 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   try {
     const space = await getSpaceBySlug(slug);
     if (!space) return {};
+
+    const t = await getTranslations({ locale });
+    const typeLabel = t(`filter.${space.type as any}`);
+    const cityText = space.city ? ` a ${space.city}` : '';
+    
+    const pageTitle = `${space.title} - ${typeLabel}${cityText}`;
+    const desc = space.description
+      ? space.description.substring(0, 155) + (space.description.length > 155 ? '...' : '')
+      : undefined;
+
     return {
-      title: space.title,
-      description: space.description ?? undefined,
+      title: pageTitle,
+      description: desc,
       openGraph: {
-        title: space.title,
-        description: space.description ?? undefined,
+        title: pageTitle,
+        description: desc,
         type: 'website',
+        ...(space.photos && space.photos.length > 0 ? { images: [space.photos[0]] } : {}),
       },
     };
   } catch {
