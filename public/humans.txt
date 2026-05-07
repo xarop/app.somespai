@@ -1,0 +1,9 @@
+/* TEAM */
+  Developer: xarop.com
+  Contact: xarop [at] xarop.com
+  From: Barcelona, Catalonia
+
+/* SITE */
+  Last update: 2026/05/07
+  Language: Catalan, Spanish, English
+  Doctype: HTML5
