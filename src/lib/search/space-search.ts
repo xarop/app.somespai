@@ -127,7 +127,7 @@ function buildSearchTokens(query: string, locale: string): SearchToken[] {
 
 function getSpaceSearchText(space: Space): string {
   return normalizeSearchText(
-    [space.title, space.description, space.address, space.neighborhood, space.city, space.region, ...space.amenities]
+    [space.title, space.description, space.address, space.neighborhood, space.city, space.region, ...(space.amenities ?? [])]
       .filter(Boolean)
       .join(' '),
   );
