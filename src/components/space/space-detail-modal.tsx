@@ -21,6 +21,7 @@ interface SpaceDetailModalProps {
   isAdmin?: boolean;
   currentUserId?: string;
   onReviewAdded?: (spaceId: string, rating: number, reviewsCount: number) => void;
+  standalone?: boolean;
 }
 
 function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
@@ -42,7 +43,7 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
   );
 }
 
-export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onReviewAdded }: SpaceDetailModalProps) {
+export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onReviewAdded, standalone }: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -149,8 +150,13 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
   } as const;
   const primaryContact = contactOptions[space.contactDefault] ?? Object.values(contactOptions).find(Boolean);
 
+  const Wrapper = standalone ? 'div' : 'dialog';
+  const wrapperProps = standalone 
+    ? { className: "space-standalone", 'aria-labelledby': "space-title" } 
+    : { ref: dialogRef as any, 'data-modal': true, 'aria-labelledby': "space-title" };
+
   return (
-    <dialog ref={dialogRef} data-modal aria-labelledby="space-title">
+    <Wrapper {...wrapperProps}>
       <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
         <Icon name="close" size={18} />
       </button>
@@ -311,6 +317,6 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
           )}
         </section>
       </div>
-    </dialog>
+    </Wrapper>
   );
 }

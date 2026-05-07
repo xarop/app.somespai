@@ -1,17 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import dynamic from 'next/dynamic';
 import { useRouter } from '@/lib/i18n/routing';
 import { TopNav } from '@/components/ui/top-nav';
 import { SpaceDetailModal } from '@/components/space/space-detail-modal';
-import { MOCK_SPACES } from '@/lib/data/mock-spaces';
 import type { Space } from '@/lib/schemas/space';
-
-const MapView = dynamic(
-  () => import('@/components/map/map-view').then((m) => m.MapView),
-  { ssr: false, loading: () => <div className="mapwrap__canvas" style={{ background: 'var(--bg-soft)' }} /> },
-);
 
 interface Props {
   space: Space;
@@ -24,11 +17,10 @@ export function SpaceDetailClient({ space, isAdmin, currentUserId }: Props) {
   const [query, setQuery] = useState('');
 
   return (
-    <div className="app">
+    <div className="app single-space-page">
       <TopNav query={query} onQueryChange={setQuery} />
-      <div className="mapwrap">
-        <MapView spaces={MOCK_SPACES} activeSpaceId={space.id} />
-        <SpaceDetailModal space={space} onClose={() => router.push('/')} isAdmin={isAdmin} currentUserId={currentUserId} />
+      <div className="single-space-content" style={{ maxWidth: '800px', margin: '0 auto', width: '100%', padding: 'var(--s-7) var(--s-4)', paddingBottom: 'calc(var(--s-7) + env(safe-area-inset-bottom, 0px))' }}>
+        <SpaceDetailModal space={space} onClose={() => router.push('/')} isAdmin={isAdmin} currentUserId={currentUserId} standalone />
       </div>
     </div>
   );
