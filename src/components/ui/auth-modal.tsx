@@ -85,7 +85,8 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
         window.location.reload();
       }
     } else if (mode === 'resetPassword') {
-      const currentLocale = window.location.pathname.split('/')[1] || 'ca';
+      const currentLocaleMatch = window.location.pathname.match(/^\/(ca|es|en)/);
+      const currentLocale = currentLocaleMatch ? currentLocaleMatch[1] : 'ca';
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/${currentLocale}/perfil`,
       });
