@@ -251,7 +251,8 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   /* Drawer footer (languages) */
@@ -330,10 +331,8 @@
   }
 
   .dropmenu__cities {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
   }
 
   .dropmenu__cities-header {

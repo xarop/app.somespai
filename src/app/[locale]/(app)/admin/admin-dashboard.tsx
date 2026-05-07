@@ -500,7 +500,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
 
 /* ── Users tab ───────────────────────────────────────────────────────────── */
 
-function UsersTab({ onCountChange, mainAdminEmail }: { onCountChange?: (n: number) => void; mainAdminEmail?: string; }) {
+function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCountChange?: (n: number) => void; mainAdminEmail?: string; onViewUserSpaces?: (userId: string) => void }) {
   const t = useTranslations('admin');
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -608,7 +608,21 @@ function UsersTab({ onCountChange, mainAdminEmail }: { onCountChange?: (n: numbe
                 <td>{formatDate(user.lastSignIn)}</td>
                 <td className="admin-cell--center">
                   {user.spacesCount > 0
-                    ? <strong>{user.spacesCount}</strong>
+                    ? (
+                      onViewUserSpaces ? (
+                        <button
+                          type="button"
+                          className="inline-link"
+                          style={{ fontWeight: 'bold' }}
+                          onClick={() => onViewUserSpaces(user.id)}
+                          title={`Veure els ${user.spacesCount} espais d'aquest usuari`}
+                        >
+                          {user.spacesCount}
+                        </button>
+                      ) : (
+                        <strong>{user.spacesCount}</strong>
+                      )
+                    )
                     : <span style={{ color: 'var(--ink-mute)' }}>0</span>}
                 </td>
                 <td>
@@ -1000,7 +1014,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
         </div>
       )}
 
-      {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} mainAdminEmail={mainAdminEmail} />}
+      {activeTab === 'users' && (
+        <UsersTab 
+          onCountChange={setUsersCount} 
+          mainAdminEmail={mainAdminEmail} 
+          onViewUserSpaces={(userId) => {
+            setOwnerFilter(userId);
+            setActiveTab('spaces');
+          }}
+        />
+      )}
       {activeTab === 'messages' && <MessagesTab onCountChange={setMsgCounts} />}
 
       {activeTab === 'spaces' && <>
