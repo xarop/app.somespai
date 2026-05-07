@@ -23,7 +23,6 @@ export function useNavCities(): string[] {
         }
         cache = [...counts.entries()]
           .sort((a, b) => b[1] - a[1])
-          .slice(0, 4)
           .map(([city]) => city);
         setCities(cache);
       });
