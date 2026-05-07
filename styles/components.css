@@ -4092,3 +4092,21 @@
     position: relative;
     box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Optional drop shadow for card effect */
   }
+
+  .app.single-space-page {
+    position: relative;
+    inset: auto;
+    display: block;
+    min-height: 100vh;
+    overflow: visible;
+  }
+  .app.single-space-page .single-space-content {
+    overflow: visible !important;
+    height: auto !important;
+  }
+  .space-standalone {
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    padding-bottom: 4rem;
+  }

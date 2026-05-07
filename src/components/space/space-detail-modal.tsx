@@ -157,9 +157,11 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
 
   return (
     <Wrapper {...wrapperProps}>
-      <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
-        <Icon name="close" size={18} />
-      </button>
+      {!standalone && (
+        <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
+          <Icon name="close" size={18} />
+        </button>
+      )}
       {isAdmin ? (
         <a
           href={`/${locale}/admin?edit=${space.id}`}
