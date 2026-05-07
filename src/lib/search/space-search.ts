@@ -107,8 +107,7 @@ function tokenizeQuery(query: string, locale: SupportedLocale): string[] {
   const stopwords = STOPWORDS[locale];
   return normalized
     .split(/[^\p{L}\p{N}]+/u)
-    .filter(Boolean)
-    .filter((token) => !stopwords.has(token));
+    .filter((token) => Boolean(token) && !stopwords.has(token));
 }
 
 function buildSearchTokens(query: string, locale: string): SearchToken[] {
