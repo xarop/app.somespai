@@ -15,6 +15,7 @@ import {
   deleteReviewAction,
   getUsersAction,
   deleteUserAction,
+  setUserAdminRoleAction,
   getContactMessagesAction,
   setContactMessageReadAction,
   deleteContactMessageAction,
@@ -499,7 +500,7 @@ function ConfirmDialog({ message, onConfirm, onCancel }: {
 
 /* ── Users tab ───────────────────────────────────────────────────────────── */
 
-function UsersTab({ onCountChange }: { onCountChange?: (n: number) => void }) {
+function UsersTab({ onCountChange, mainAdminEmail }: { onCountChange?: (n: number) => void; mainAdminEmail?: string; }) {
   const t = useTranslations('admin');
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -517,6 +518,12 @@ function UsersTab({ onCountChange }: { onCountChange?: (n: number) => void }) {
     if (err) setError(err);
     else { setUsers(data); onCountChange?.(data.length); }
     setLoading(false);
+  }
+
+  async function handleToggleAdmin(id: string, currentlyAdmin: boolean) {
+    await setUserAdminRoleAction(id, !currentlyAdmin);
+    setUsers(prev => prev.map(u => u.id === id ? { ...u, isAdmin: !currentlyAdmin } : u));
+    router.refresh();
   }
 
   async function handleDelete(id: string) {
@@ -599,13 +606,24 @@ function UsersTab({ onCountChange }: { onCountChange?: (n: number) => void }) {
                 </td>
                 <td>
                   <div className="admin-actions">
-                    <button
-                      type="button"
-                      className="admin-action-btn admin-action-btn--delete"
-                      onClick={() => setConfirmDeleteId(user.id)}
-                    >
-                      {t('deleteUser')}
-                    </button>
+                    {user.email !== mainAdminEmail && (
+                      <button
+                        type="button"
+                        className="admin-action-btn"
+                        onClick={() => handleToggleAdmin(user.id, user.isAdmin)}
+                      >
+                        {user.isAdmin ? 'Desfer Admin' : 'Fer Admin'}
+                      </button>
+                    )}
+                    {user.email !== mainAdminEmail && (
+                      <button
+                        type="button"
+                        className="admin-action-btn admin-action-btn--delete"
+                        onClick={() => setConfirmDeleteId(user.id)}
+                      >
+                        {t('deleteUser')}
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -778,7 +796,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
 
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 
-export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { spaces: Space[]; initialEditId?: string }) {
+export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdminEmail }: { spaces: Space[]; initialEditId?: string; mainAdminEmail?: string }) {
   const t = useTranslations('admin');
   const tFilter = useTranslations('filter');
   const router = useRouter();
@@ -975,7 +993,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </div>
       )}
 
-      {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} />}
+      {activeTab === 'users' && <UsersTab onCountChange={setUsersCount} mainAdminEmail={mainAdminEmail} />}
       {activeTab === 'messages' && <MessagesTab onCountChange={setMsgCounts} />}
 
       {activeTab === 'spaces' && <>

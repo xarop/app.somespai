@@ -18,7 +18,19 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const adminEmail = process.env.ADMIN_EMAIL || process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
-  if (!user || user.email !== adminEmail) {
+  let authorized = false;
+  if (user) {
+    if (user.email === adminEmail) {
+      authorized = true;
+    } else {
+      const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single();
+      if (profile?.is_admin) {
+        authorized = true;
+      }
+    }
+  }
+
+  if (!authorized) {
     redirect('/');
   }
 
@@ -34,7 +46,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <a href="/" className="page-form__back">←</a>
           <h1>{t('title')}</h1>
         </header>
-        <AdminDashboard spaces={spaces} initialEditId={edit} />
+        <AdminDashboard spaces={spaces} initialEditId={edit} mainAdminEmail={adminEmail} />
       </div>
     </div>
     </>

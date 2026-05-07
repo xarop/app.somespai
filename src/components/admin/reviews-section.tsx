@@ -2,10 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import type { Review } from '@/lib/supabase/reviews';
+import type { AdminUser } from '@/lib/supabase/admin';
 import {
   getAdminReviewsAction,
   updateReviewAction,
   deleteReviewAction,
+  getUsersAction,
+  addReviewAction,
 } from '@/app/[locale]/(app)/admin/actions';
 
 function StarPicker({ value, onChange }: { value: number; onChange: (v: number) => void }) {
@@ -23,32 +26,62 @@ function StarPicker({ value, onChange }: { value: number; onChange: (v: number) 
 
 export function ReviewsSection({ spaceId }: { spaceId: string }) {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editRating, setEditRating] = useState(5);
   const [editBody, setEditBody] = useState('');
+  const [editAuthorId, setEditAuthorId] = useState('');
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [addingNew, setAddingNew] = useState(false);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    getAdminReviewsAction(spaceId).then((r) => { setReviews(r); setLoading(false); });
+    Promise.all([
+      getAdminReviewsAction(spaceId),
+      getUsersAction()
+    ]).then(([r, u]) => { 
+      setReviews(r); 
+      setUsers(u.data);
+      setLoading(false); 
+    });
   }, [spaceId]);
 
   function startEdit(r: Review) {
     setEditingId(r.id);
     setEditRating(r.rating);
     setEditBody(r.body ?? '');
+    setEditAuthorId(r.authorId);
+  }
+
+  function startAdd() {
+    setAddingNew(true);
+    setEditRating(5);
+    setEditBody('');
+    setEditAuthorId(users[0]?.id || '');
   }
 
   async function saveEdit() {
     if (!editingId) return;
     setSaving(true);
     const r = reviews.find((x) => x.id === editingId)!;
-    await updateReviewAction(editingId, r.spaceId, editRating, editBody || null);
-    setReviews((prev) =>
-      prev.map((x) => x.id === editingId ? { ...x, rating: editRating, body: editBody || null } : x),
-    );
+    await updateReviewAction(editingId, r.spaceId, editRating, editBody || null, editAuthorId);
+    
+    // re-fetch reviews to get the updated emails and accurate authorIds
+    const updatedReviews = await getAdminReviewsAction(spaceId);
+    setReviews(updatedReviews);
     setEditingId(null);
+    setSaving(false);
+  }
+
+  async function saveNew() {
+    if (!editAuthorId) return;
+    setSaving(true);
+    await addReviewAction(spaceId, editAuthorId, editRating, editBody || null);
+    
+    const updatedReviews = await getAdminReviewsAction(spaceId);
+    setReviews(updatedReviews);
+    setAddingNew(false);
     setSaving(false);
   }
 
@@ -74,6 +107,16 @@ export function ReviewsSection({ spaceId }: { spaceId: string }) {
             <div key={r.id} className="admin-review-item">
               {editingId === r.id ? (
                 <div className="admin-review-edit">
+                  <div className="field">
+                    <label className="field__label">Correu de l'autor</label>
+                    <select
+                      className="field__input field__select"
+                      value={editAuthorId}
+                      onChange={(e) => setEditAuthorId(e.target.value)}
+                    >
+                      {users.map(u => <option key={u.id} value={u.id}>{u.email}</option>)}
+                    </select>
+                  </div>
                   <StarPicker value={editRating} onChange={setEditRating} />
                   <textarea
                     className="field__input field__textarea"
@@ -122,6 +165,43 @@ export function ReviewsSection({ spaceId }: { spaceId: string }) {
             </div>
           ))}
         </div>
+      )}
+      
+      {addingNew ? (
+        <div className="admin-review-item admin-review-edit">
+          <h4 style={{ margin: '0 0 1rem 0' }}>Nova Ressenya</h4>
+          <div className="field">
+            <label className="field__label">Autore (Usuari registrat)</label>
+            <select
+              className="field__input field__select"
+              value={editAuthorId}
+              onChange={(e) => setEditAuthorId(e.target.value)}
+            >
+              <option value="" disabled>Selecciona un usuari</option>
+              {users.map(u => <option key={u.id} value={u.id}>{u.email}</option>)}
+            </select>
+          </div>
+          <StarPicker value={editRating} onChange={setEditRating} />
+          <textarea
+            className="field__input field__textarea"
+            rows={3}
+            placeholder="Comentari (opcional)..."
+            value={editBody}
+            onChange={(e) => setEditBody(e.target.value)}
+          />
+          <div className="admin-review-edit-actions" style={{ marginTop: '1rem' }}>
+            <button type="button" data-variant="primary" onClick={saveNew} disabled={saving || !editAuthorId}>
+              {saving ? 'Creant…' : 'Crear'}
+            </button>
+            <button type="button" onClick={() => setAddingNew(false)} disabled={saving}>
+              Cancel·la
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button type="button" onClick={startAdd} style={{ marginTop: '1rem' }}>
+          + Afegir ressenya
+        </button>
       )}
     </div>
   );
