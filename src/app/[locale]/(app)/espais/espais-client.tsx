@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import type { Space, SpaceType } from '@/lib/schemas/space';
 import { TYPE_TO_SLUG } from '@/lib/seo/type-slugs';
@@ -41,6 +41,33 @@ export function EspaisClient({ spaces, locale }: Props) {
   const [minRating, setMinRating] = useState(0);
   const [maxPriceCents, setMaxPriceCents] = useState(0);
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
+
+  const handleSelectSpace = useCallback((space: Space | null) => {
+    if (space) {
+      const urlPrefix = locale === 'ca' ? '' : `/${locale}`;
+      if (selectedSpace) {
+        window.history.replaceState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+      } else {
+        window.history.pushState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+      }
+      setSelectedSpace(space);
+    } else {
+      if (window.history.state?.modalSpaceId === selectedSpace?.id) {
+        window.history.back();
+      }
+      setSelectedSpace(null);
+    }
+  }, [locale, selectedSpace]);
+
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (!e.state?.modalSpaceId) {
+        setSelectedSpace(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   const filtered = useMemo(() => {
     return spaces.filter((s) => {
@@ -203,7 +230,7 @@ export function EspaisClient({ spaces, locale }: Props) {
                 key={space.id}
                 href={`/${locale}/espai/${space.slug}`}
                 className="espais-row"
-                onClick={(e) => { e.preventDefault(); setSelectedSpace(space); }}
+                onClick={(e) => { e.preventDefault(); handleSelectSpace(space); }}
               >
                 {space.photos[0] ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -241,7 +268,7 @@ export function EspaisClient({ spaces, locale }: Props) {
         )}
       </main>
 
-      <SpaceDetailModal space={selectedSpace} onClose={() => setSelectedSpace(null)} />
+      <SpaceDetailModal space={selectedSpace} onClose={() => handleSelectSpace(null)} />
     </div>
   );
 }
