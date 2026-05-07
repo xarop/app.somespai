@@ -1,8 +1,18 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { PageNav } from '@/components/ui/page-nav';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  return {
+    title: `${t('legal.privacyTitle')} — somespai`,
+    description: t('legal.privacyTitle'),
+  };
 }
 
 export default async function PrivacitatPage({ params }: PageProps) {

@@ -3,6 +3,16 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { PublishForm } from './publish-form';
 import { PageNav } from '@/components/ui/page-nav';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  return {
+    title: `${t('publish.title')} — somespai`,
+    description: t('publish.subtitle'),
+  };
+}
 
 export default async function PublicarPage() {
   const supabase = await createClient();

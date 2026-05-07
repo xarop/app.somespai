@@ -1,6 +1,17 @@
 import { getSpaces } from '@/lib/supabase/spaces';
 import { createClient } from '@/lib/supabase/server';
 import { HomeClient } from './home-client';
+import { getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  return {
+    title: t('seo.homeTitle'),
+    description: t('seo.homeDesc'),
+  };
+}
 
 export default async function HomePage() {
   const [spaces, supabase] = await Promise.all([getSpaces(), createClient()]);

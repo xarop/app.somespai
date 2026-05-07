@@ -5,7 +5,10 @@ import { ContactForm } from './contact-form';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'contact' });
-  return { title: `${t('title')} — somespai` };
+  return { 
+    title: `${t('title')} — somespai`,
+    description: t('subtitle')
+  };
 }
 
 export default async function ContactePage() {

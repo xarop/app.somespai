@@ -6,10 +6,12 @@ import { EspaisClient } from './espais-client';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
   return {
-    title: 'Tots els espais — somespai',
-    description: "Llistat complet d'espais disponibles a Somespai: estudis, trasters, sales i exteriors. Cerca i filtra per tipus, ciutat i equipaments.",
+    title: `${t('seo.allSpacesTitle')} — somespai`,
+    description: t('seo.allSpacesDesc'),
   };
 }
 

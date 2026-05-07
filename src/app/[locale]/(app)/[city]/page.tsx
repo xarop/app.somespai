@@ -13,13 +13,14 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { city: encodedCity } = await params;
+  const { locale, city: encodedCity } = await params;
+  const t = await getTranslations({ locale });
   const city = decodeURIComponent(encodedCity);
   const spaces = await getSpacesByCity(city);
   const cityLabel = spaces[0]?.city ?? city;
   return {
-    title: `Espais a ${cityLabel} — somespai`,
-    description: `${spaces.length} espais disponibles a ${cityLabel}: estudis, trasters, sales i exteriors.`,
+    title: `${t('seo.cityTitle', { city: cityLabel })} — somespai`,
+    description: t('seo.cityDesc', { count: spaces.length, city: cityLabel }),
   };
 }
 

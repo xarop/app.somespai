@@ -407,6 +407,8 @@
     "termsPlaceholder": "Aquests són els termes i condicions d'ús de Somespai. El document legal complet s'afegirà pròximament en aquest apartat."
   },
   "seo": {
+    "homeTitle": "Somespai",
+    "homeDesc": "Marketplace P2P d'espais a Barcelona i Catalunya. Lloga trasters, estudis, sales, jardins i pàrquings.",
     "filtersTitle": "Filtres",
     "cityTitle": "Espais a {city}",
     "cityDesc": "{count} espais disponibles a {city}: estudis, trasters, sales i exteriors.",

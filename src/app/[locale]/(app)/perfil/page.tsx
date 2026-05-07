@@ -3,9 +3,19 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSpacesByOwner } from '@/lib/supabase/spaces';
 import { PageNav } from '@/components/ui/page-nav';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  return {
+    title: `${t('user.mySpaces')} — somespai`,
+    description: t('auth.leadSignIn'),
+  };
 }
 
 export default async function PerfilPage({ params }: PageProps) {
