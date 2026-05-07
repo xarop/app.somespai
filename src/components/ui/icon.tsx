@@ -71,6 +71,12 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <circle cx="12" cy="9" r="2.5" />
     </>
   ),
+  locate: (
+    <>
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
+    </>
+  ),
   grid: (
     <>
       <rect x="3" y="3" width="7" height="7" rx="1.2" />
