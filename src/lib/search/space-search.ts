@@ -18,7 +18,7 @@ const STOPWORDS: Record<SupportedLocale, Set<string>> = {
   en: new Set(['a', 'an', 'the', 'in', 'at', 'near', 'of', 'to', 'for', 'on']),
 };
 
-const SEARCH_RULES: Record<SupportedLocale, Record<string, SearchRule>> = {
+const RAW_SEARCH_RULES: Record<SupportedLocale, Record<string, SearchRule>> = {
   ca: {
     traster: { spaceTypes: ['storage'], expansions: ['storage'] },
     trasters: { spaceTypes: ['storage'], expansions: ['storage'] },
@@ -56,15 +56,33 @@ const SEARCH_RULES: Record<SupportedLocale, Record<string, SearchRule>> = {
     workspace: { spaceTypes: ['workspace'], expansions: ['coworking'] },
     workspaces: { spaceTypes: ['workspace'], expansions: ['coworking'] },
     parking: { spaceTypes: ['parking'] },
-    parkings: { spaceTypes: ['parking'], expansions: ['parking'] },
+    parkings: { spaceTypes: ['parking'] },
     garden: { spaceTypes: ['garden'] },
-    gardens: { spaceTypes: ['garden'], expansions: ['garden'] },
+    gardens: { spaceTypes: ['garden'] },
     studio: { spaceTypes: ['room'], expansions: ['room'] },
     studios: { spaceTypes: ['room'], expansions: ['room'] },
     room: { spaceTypes: ['room'] },
-    rooms: { spaceTypes: ['room'], expansions: ['room'] },
+    rooms: { spaceTypes: ['room'] },
   },
 };
+
+function normalizeSearchRules(
+  rules: Record<SupportedLocale, Record<string, SearchRule>>,
+): Record<SupportedLocale, Record<string, SearchRule>> {
+  return (Object.keys(rules) as SupportedLocale[]).reduce((normalizedRules, locale) => {
+    const localeRules = rules[locale];
+    normalizedRules[locale] = Object.entries(localeRules).reduce<Record<string, SearchRule>>((acc, [token, rule]) => {
+      acc[normalizeSearchText(token)] = {
+        spaceTypes: rule.spaceTypes,
+        expansions: rule.expansions?.map(normalizeSearchText),
+      };
+      return acc;
+    }, {});
+    return normalizedRules;
+  }, {} as Record<SupportedLocale, Record<string, SearchRule>>);
+}
+
+const SEARCH_RULES = normalizeSearchRules(RAW_SEARCH_RULES);
 
 function resolveLocale(locale: string): SupportedLocale {
   const normalizedLocale = locale.toLowerCase().split('-')[0];
@@ -100,7 +118,7 @@ function buildSearchTokens(query: string, locale: string): SearchToken[] {
 
   return tokens.map((token) => {
     const rule = rules[token];
-    const terms = Array.from(new Set([token, ...(rule?.expansions ?? []).map(normalizeSearchText)]));
+    const terms = Array.from(new Set([token, ...(rule?.expansions ?? [])]));
     return {
       terms,
       spaceTypes: rule?.spaceTypes ?? [],
