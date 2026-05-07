@@ -67,14 +67,19 @@
   "auth": {
     "titleSignIn": "Iniciar sesión",
     "titleSignUp": "Crear una cuenta",
+    "titleReset": "Recuperar contraseña",
     "leadSignIn": "Bienvenido/a de nuevo a Somespai.",
     "leadSignUp": "Regístrate para publicar y gestionar espacios.",
+    "leadReset": "Introduce tu correo y te enviaremos un enlace para crear una nueva contraseña.",
     "email": "Tu correo electrónico",
     "password": "Tu contraseña",
     "sendSignIn": "Entrar",
     "sendSignUp": "Crear cuenta",
+    "sendReset": "Enviar enlace",
     "toggleToSignUp": "¿No tienes cuenta? Regístrate",
-    "toggleToSignIn": "¿Ya tienes cuenta? Inicia sesión"
+    "toggleToSignIn": "¿Ya tienes cuenta? Inicia sesión",
+    "toggleToReset": "¿Has olvidado la contraseña?",
+    "resetEmailSent": "Te hemos enviado un correo con el enlace. Revisa tu buzón."
   },
   "amenity": {
     "wifi": "Wi-Fi",
