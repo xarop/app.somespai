@@ -13,8 +13,10 @@ interface AuthModalProps {
 export function AuthModal({ open, onClose }: AuthModalProps) {
   const t = useTranslations();
   const dialogRef = useRef<HTMLDialogElement>(null);
+  
+  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
   const [email, setEmail] = useState('');
-  const [sent, setSent] = useState(false);
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,7 +28,13 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   }, [open]);
 
   useEffect(() => {
-    if (!open) { setSent(false); setEmail(''); setLoading(false); setError(null); }
+    if (!open) {
+      setEmail('');
+      setPassword('');
+      setLoading(false);
+      setError(null);
+      setMode('signIn');
+    }
   }, [open]);
 
   useEffect(() => {
@@ -44,7 +52,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || loading) return;
+    if (!email || !password || loading) return;
     setLoading(true);
     setError(null);
 
@@ -57,17 +65,38 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     }
 
     const supabase = createClient();
-    const { error: otpError } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${window.location.origin}/api/auth/callback` },
-    });
-    if (otpError) {
-      setError(otpError.message);
-      setLoading(false);
+    
+    if (mode === 'signUp') {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+      } else {
+        // Assume email confirmation is disabled/we are logged in
+        onClose();
+        window.location.reload();
+      }
     } else {
-      setSent(true);
-      setLoading(false);
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (signInError) {
+        setError(signInError.message);
+        setLoading(false);
+      } else {
+        onClose();
+        window.location.reload();
+      }
     }
+  }
+
+  function toggleMode() {
+    setMode(m => m === 'signIn' ? 'signUp' : 'signIn');
+    setError(null);
   }
 
   return (
@@ -77,42 +106,51 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       </button>
 
       <div style={{ padding: 'var(--s-7) var(--s-5) var(--s-5)' }}>
-        {sent ? (
-          <div style={{ textAlign: 'center', padding: 'var(--s-5) 0' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: 'var(--s-3)' }}>📬</div>
-            <h2 style={{ fontSize: 'var(--t-lg)', fontWeight: 700, marginBottom: 'var(--s-2)' }}>
-              {t('auth.sent')}
-            </h2>
-            <p style={{ color: 'var(--ink-mute)', fontSize: 'var(--t-sm)' }}>{email}</p>
+        <h2 id="auth-title" style={{ fontSize: 'var(--t-xl)', fontWeight: 700, marginBottom: 'var(--s-2)' }}>
+          {mode === 'signIn' ? t('auth.titleSignIn') : t('auth.titleSignUp')}
+        </h2>
+        <p style={{ color: 'var(--ink-mute)', fontSize: 'var(--t-sm)', marginBottom: 'var(--s-5)' }}>
+          {mode === 'signIn' ? t('auth.leadSignIn') : t('auth.leadSignUp')}
+        </p>
+        
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+          <label className="field">
+            <span className="field__label">{t('auth.email')}</span>
+            <input
+              type="email"
+              className="field__input"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="nom@exemple.cat"
+              required
+              autoFocus
+            />
+          </label>
+          <label className="field">
+            <span className="field__label">{t('auth.password')}</span>
+            <input
+              type="password"
+              className="field__input"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="••••••••"
+              required
+              minLength={6}
+            />
+          </label>
+          
+          {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
+          
+          <button type="submit" data-variant="primary" disabled={loading} style={{ marginTop: 'var(--s-1)' }}>
+            {loading ? '…' : (mode === 'signIn' ? t('auth.sendSignIn') : t('auth.sendSignUp'))}
+          </button>
+          
+          <div style={{ textAlign: 'center', marginTop: 'var(--s-3)' }}>
+             <button type="button" className="inline-link" onClick={toggleMode} style={{ fontSize: 'var(--t-sm)' }}>
+               {mode === 'signIn' ? t('auth.toggleToSignUp') : t('auth.toggleToSignIn')}
+             </button>
           </div>
-        ) : (
-          <>
-            <h2 id="auth-title" style={{ fontSize: 'var(--t-xl)', fontWeight: 700, marginBottom: 'var(--s-2)' }}>
-              {t('auth.title')}
-            </h2>
-            <p style={{ color: 'var(--ink-mute)', fontSize: 'var(--t-sm)', marginBottom: 'var(--s-5)' }}>
-              {t('auth.lead')}
-            </p>
-            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
-              <label className="field">
-                <span className="field__label">{t('auth.email')}</span>
-                <input
-                  type="email"
-                  className="field__input"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="nom@exemple.cat"
-                  required
-                  autoFocus
-                />
-              </label>
-              {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
-              <button type="submit" data-variant="primary" disabled={loading} style={{ marginTop: 'var(--s-1)' }}>
-                {loading ? '…' : t('auth.send')}
-              </button>
-            </form>
-          </>
-        )}
+        </form>
       </div>
     </dialog>
   );

@@ -65,11 +65,16 @@
     "whatsapp": "WhatsApp"
   },
   "auth": {
-    "title": "Entra a Somespai",
-    "lead": "T'enviarem un enllaç màgic. Sense contrasenya, sense fricció.",
+    "titleSignIn": "Inicia sessió",
+    "titleSignUp": "Crea un compte",
+    "leadSignIn": "Benvingut/da de nou a Somespai.",
+    "leadSignUp": "Registra't per publicar i gestionar espais.",
     "email": "El teu correu",
-    "send": "Envia'm l'enllaç",
-    "sent": "Comprova la safata d'entrada"
+    "password": "Contrasenya",
+    "sendSignIn": "Entrar",
+    "sendSignUp": "Crear compte",
+    "toggleToSignUp": "No tens compte? Registra't",
+    "toggleToSignIn": "Ja tens compte? Inicia sessió"
   },
   "amenity": {
     "wifi": "Wi-Fi",

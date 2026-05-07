@@ -65,11 +65,16 @@
     "whatsapp": "WhatsApp"
   },
   "auth": {
-    "title": "Sign in to Somespai",
-    "lead": "We'll email you a magic link. No passwords, no friction.",
+    "titleSignIn": "Sign in",
+    "titleSignUp": "Create an account",
+    "leadSignIn": "Welcome back to Somespai.",
+    "leadSignUp": "Sign up to publish and manage spaces.",
     "email": "Your email",
-    "send": "Send me the link",
-    "sent": "Check your inbox"
+    "password": "Your password",
+    "sendSignIn": "Sign in",
+    "sendSignUp": "Sign up",
+    "toggleToSignUp": "Don't have an account? Sign up",
+    "toggleToSignIn": "Already have an account? Sign in"
   },
   "amenity": {
     "wifi": "Wi-Fi",
