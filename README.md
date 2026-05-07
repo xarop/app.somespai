@@ -11,7 +11,7 @@
 ## Stack
 
 - **Next.js 15** (App Router, RSC)
-- **Supabase** (Postgres + PostGIS, Auth magic-link, Storage, RLS)
+- **Supabase** (Postgres + PostGIS, Auth mail/password, Storage, RLS)
 - **MapLibre GL JS** (open-source maps)
 - **next-intl** (CA / ES / EN)
 - **CSS natiu** amb `@layer` — sense Tailwind, sense CSS-in-JS
@@ -84,10 +84,13 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0001_init.sql` | Esquema inicial: `profiles`, `spaces`, `reviews`, `favorites`, RLS, RPC `nearby_spaces` |
 | `0002_add_space_extra_fields.sql` | Afegeix `price_unit`, `contact_url`, `rating`, `reviews_count`, columnes generades `lat`/`lng` |
 | `0003_storage_photos.sql` | Bucket `space-photos` (públic, 5 MB, imatges) + RLS: lectura pública, pujada/eliminació per propietari |
-| `0004_add_contact_fields.sql` | Afegeix `phone`, `email_contact`, `whatsapp`, `web`, `contact_default` a `spaces` |
-| `0005_add_space_fields.sql` | Afegeix `address`, `neighborhood`, `region`, `owner_id` i RLS per propietari |
-| `0006_admin_storage_policy.sql` | Política RLS que permet a l'admin pujar/eliminar qualsevol foto |
-| `0007_profiles_self_insert.sql` | Política RLS que permet als usuaris autenticats crear el seu propi perfil (necessari per ressenyes) |
+| `0004_auto_create_profile.sql` | Funcions per auto-crear perfil d'usuari a Supabase auth |
+| `0005_owner_id_nullable.sql` | Modifica `owner_id` per fer-lo opcional (permetent importacions massives inicials) |
+| `0006_contact_fields.sql` | Afegeix camps de contacte a l'espai (`phone`, `email_contact`, `whatsapp`, `web`, `contact_default`) |
+| `0007_profiles_self_insert.sql` | Política RLS que permet als usuaris autenticats crear/modificar el seu propi perfil |
+| `0008_contact_messages.sql` | Taula `contact_messages` per emmagatzemar missatges enviats des dels espais |
+| `0009_admin_list_users_rpc.sql` | RPC (funció) per llistar els usuaris per al panell d'administrador |
+| `0010_profiles_is_admin.sql` | Afegeix camp `is_admin` als perfils en comptes de dependre només d'email |
 
 ---
 
@@ -201,7 +204,7 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 
 ## Phase 2 — fet
 
-- ✅ Auth amb magic-link (`signInWithOtp`) + callback route + sessió persistent via middleware
+- ✅ Auth amb correu i contrasenya (`signInWithPassword`) + callback route + sessió persistent via middleware
 - ✅ TopNav reescrit: botó "Publica un espai" sempre visible; resta d'accions dins hamburger menu
 - ✅ Formulari de creació d'espai (`/publica`): tipus, preu, mida, ubicació (geocodificació Nominatim), amenitats, fotos, contacte
 - ✅ Pujada de fotos a Supabase Storage (`space-photos` bucket, carpeta per usuari, 5 MB)

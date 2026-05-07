@@ -24,7 +24,7 @@ The economic agreement happens **off-platform**. Somespai introduces hosts and g
 |------------------|-----------------------------------|----------------------------------------------------|
 | Framework        | **Next.js 15 (App Router)**       | SPA-feel via client navigation, RSC, edge runtime  |
 | Database         | **PostgreSQL + PostGIS**          | Native spatial queries, scales to Catalonia        |
-| BaaS             | **Supabase**                      | Auth (magic link), Storage, RLS, Realtime          |
+| BaaS             | **Supabase**                      | Auth (Email/Password), Storage, RLS, Realtime      |
 | Maps             | **MapLibre GL JS**                | Open-source, no vendor lock                        |
 | Tiles            | **Protomaps** (self-host) or MapTiler free tier | Cost-effective at scale                  |
 | Styling          | **Native CSS + `@layer`**         | Semantic, no Tailwind                              |
@@ -211,7 +211,7 @@ limit 50;
 
 ## 7. Auth
 
-- **Magic link only** in v1. No password, no OAuth (yet).
+- **Email/Password** in v1. No OAuth (yet).
 - Profile fields are **all optional** post-signup. Show no friction.
 - RLS on every table. Default deny.
 
