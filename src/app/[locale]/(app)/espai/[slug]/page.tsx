@@ -59,5 +59,33 @@ export default async function SpaceDetailPage({ params }: PageProps) {
     }
   }
 
-  return <SpaceDetailClient space={space} isAdmin={isAdmin} currentUserId={user?.id} />;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: space.title,
+    description: space.description || undefined,
+    image: space.photos?.length ? space.photos : undefined,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'EUR',
+      price: (space.priceCents / 100).toFixed(2),
+      availability: 'https://schema.org/InStock',
+      url: `https://app.somespai.net/${locale}/espai/${space.slug}`,
+    },
+    aggregateRating: space.reviewsCount > 0 ? {
+      '@type': 'AggregateRating',
+      ratingValue: space.rating.toFixed(1),
+      reviewCount: space.reviewsCount,
+    } : undefined,
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <SpaceDetailClient space={space} isAdmin={isAdmin} currentUserId={user?.id} />
+    </>
+  );
 }
