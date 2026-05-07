@@ -2,9 +2,19 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { PageNav } from '@/components/ui/page-nav';
 import type { SpaceType } from '@/lib/schemas/space';
+import type { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale });
+  return {
+    title: `${t('help.title')} — somespai`,
+    description: t('help.subtitle'),
+  };
 }
 
 const TYPES: ReadonlyArray<{ id: SpaceType; iconName: IconName }> = [

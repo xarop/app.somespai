@@ -407,6 +407,8 @@
     "termsPlaceholder": "These are the terms and conditions of use for Somespai. The complete legal document will be added shortly in this section."
   },
   "seo": {
+    "homeTitle": "Somespai",
+    "homeDesc": "P2P marketplace for spaces in Barcelona and Catalonia. Rent storage, studios, rooms, gardens and parking.",
     "filtersTitle": "Filters",
     "cityTitle": "Spaces in {city}",
     "cityDesc": "{count} available spaces in {city}: studios, storage, rooms and outdoors.",

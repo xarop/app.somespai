@@ -23,14 +23,17 @@ export async function generateStaticParams({ params }: { params: { locale: strin
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, city: encodedCity, type } = await params;
+  const t = await getTranslations({ locale });
   const city = decodeURIComponent(encodedCity);
   const dbType = getTypeFromSlug(type, locale);
   if (!dbType) return {};
   const spaces = await getSpacesByCity(city, dbType);
   const cityLabel = spaces[0]?.city ?? city;
+  const typeLabel = t(`filter.${dbType}`).toLowerCase();
+  
   return {
-    title: `${type.charAt(0).toUpperCase() + type.slice(1)} a ${cityLabel} — somespai`,
-    description: `${spaces.length} ${type} disponibles a ${cityLabel}.`,
+    title: `${t('seo.typeTitle', { typeLabel: typeLabel.charAt(0).toUpperCase() + typeLabel.slice(1), city: cityLabel })} — somespai`,
+    description: t('seo.typeDesc', { count: spaces.length, typeLabel, city: cityLabel }),
   };
 }
 
