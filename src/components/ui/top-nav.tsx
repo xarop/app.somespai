@@ -277,23 +277,21 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
             {t('nav.allSpaces')}
           </a>
 
+          <div className="dropmenu__cities-header">
+            <span className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</span>
+            <a href={`/${locale}/ciutats`} className="dropmenu__all-cities" onClick={() => setMenuOpen(false)}>
+              {t('nav.allCitiesLink')}
+            </a>
+          </div>
           {cities.length > 0 && (
-            <>
-              <div className="dropmenu__cities-header">
-                <span className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</span>
-                <a href={`/${locale}/ciutats`} className="dropmenu__all-cities" onClick={() => setMenuOpen(false)}>
-                  {t('nav.allCitiesLink')}
+            <div className="dropmenu__cities">
+              {cities.map((city) => (
+                <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                  <Icon name="pin" size={16} />
+                  {t('seo.cityTitle', { city })}
                 </a>
-              </div>
-              <div className="dropmenu__cities">
-                {cities.map((city) => (
-                  <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
-                    <Icon name="pin" size={16} />
-                    {t('seo.cityTitle', { city })}
-                  </a>
-                ))}
-              </div>
-            </>
+              ))}
+            </div>
           )}
 
           <div className="dropmenu__divider" />
