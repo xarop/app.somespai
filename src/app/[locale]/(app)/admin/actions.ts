@@ -12,9 +12,11 @@ import {
   bulkDeleteSpaceAdmin,
   getReviewsAdmin,
   updateReviewAdmin,
+  addReviewAdmin,
   deleteReviewAdmin,
   getUsersAdmin,
   deleteUserAdmin,
+  setUserAdminRole,
   getContactMessagesAdmin,
   setContactMessageReadAdmin,
   deleteContactMessageAdmin,
@@ -29,7 +31,12 @@ async function requireAdmin(): Promise<void> {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+
+  if (!user) throw new Error('Unauthorized');
+
+  const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single();
+
+  if (user.email !== process.env.ADMIN_EMAIL && !profile?.is_admin) {
     throw new Error('Unauthorized');
   }
 }
@@ -74,9 +81,20 @@ export async function updateReviewAction(
   spaceId: string,
   rating: number,
   body: string | null,
+  authorId?: string,
 ): Promise<void> {
   await requireAdmin();
-  await updateReviewAdmin(id, spaceId, rating, body);
+  await updateReviewAdmin(id, spaceId, rating, body, authorId);
+}
+
+export async function addReviewAction(
+  spaceId: string,
+  authorId: string,
+  rating: number,
+  body: string | null,
+): Promise<void> {
+  await requireAdmin();
+  await addReviewAdmin(spaceId, authorId, rating, body);
 }
 
 export async function deleteReviewAction(id: string, spaceId: string): Promise<void> {
@@ -98,6 +116,11 @@ export async function getUsersAction(): Promise<{ data: AdminUser[]; error: stri
 export async function deleteUserAction(userId: string): Promise<void> {
   await requireAdmin();
   await deleteUserAdmin(userId);
+}
+
+export async function setUserAdminRoleAction(userId: string, isAdmin: boolean): Promise<void> {
+  await requireAdmin();
+  await setUserAdminRole(userId, isAdmin);
 }
 
 export async function getContactMessagesAction(): Promise<{ data: ContactMessage[]; error: string | null }> {

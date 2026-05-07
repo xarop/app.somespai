@@ -206,12 +206,29 @@ export async function updateReviewAdmin(
   spaceId: string,
   rating: number,
   body: string | null,
+  authorId?: string,
+): Promise<void> {
+  const supabase = createAdminClient();
+  const updateData: any = { rating, body: body?.trim() || null };
+  if (authorId) updateData.author_id = authorId;
+  const { error } = await supabase
+    .from('reviews')
+    .update(updateData)
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+  await recalcSpaceRating(spaceId);
+}
+
+export async function addReviewAdmin(
+  spaceId: string,
+  authorId: string,
+  rating: number,
+  body: string | null,
 ): Promise<void> {
   const supabase = createAdminClient();
   const { error } = await supabase
     .from('reviews')
-    .update({ rating, body: body?.trim() || null })
-    .eq('id', id);
+    .insert({ space_id: spaceId, author_id: authorId, rating, body: body?.trim() || null });
   if (error) throw new Error(error.message);
   await recalcSpaceRating(spaceId);
 }
@@ -232,6 +249,7 @@ export type AdminUser = {
   lastSignIn: string | null;
   spacesCount: number;
   displayName: string | null;
+  isAdmin: boolean;
 };
 
 export async function getUsersAdmin(): Promise<AdminUser[]> {
@@ -239,31 +257,41 @@ export async function getUsersAdmin(): Promise<AdminUser[]> {
 
   const [rpcRes, profilesRes, spacesRes] = await Promise.all([
     supabase.rpc('admin_list_users'),
-    supabase.from('profiles').select('id, display_name'),
+    supabase.from('profiles').select('id, display_name, is_admin'),
     supabase.from('spaces').select('owner_id').not('owner_id', 'is', null),
   ]);
 
   if (rpcRes.error) throw new Error(rpcRes.error.message);
 
-  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, p.display_name as string | null]));
+  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, { name: p.display_name as string | null, isAdmin: !!p.is_admin }]));
   const spacesCount = new Map<string, number>();
   for (const s of spacesRes.data ?? []) {
     if (s.owner_id) spacesCount.set(s.owner_id, (spacesCount.get(s.owner_id) ?? 0) + 1);
   }
 
-  return (rpcRes.data ?? []).map((u: { id: string; email: string; created_at: string; last_sign_in_at: string | null }) => ({
-    id: u.id,
-    email: u.email ?? '',
-    createdAt: u.created_at,
-    lastSignIn: u.last_sign_in_at ?? null,
-    spacesCount: spacesCount.get(u.id) ?? 0,
-    displayName: profileMap.get(u.id) ?? null,
-  }));
+  return (rpcRes.data ?? []).map((u: { id: string; email: string; created_at: string; last_sign_in_at: string | null }) => {
+    const prof = profileMap.get(u.id);
+    return {
+      id: u.id,
+      email: u.email ?? '',
+      createdAt: u.created_at,
+      lastSignIn: u.last_sign_in_at ?? null,
+      spacesCount: spacesCount.get(u.id) ?? 0,
+      displayName: prof?.name ?? null,
+      isAdmin: prof?.isAdmin ?? false,
+    };
+  });
 }
 
 export async function deleteUserAdmin(userId: string): Promise<void> {
   const supabase = createAdminClient();
   const { error } = await supabase.auth.admin.deleteUser(userId);
+  if (error) throw new Error(error.message);
+}
+
+export async function setUserAdminRole(userId: string, isAdmin: boolean): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('profiles').update({ is_admin: isAdmin }).eq('id', userId);
   if (error) throw new Error(error.message);
 }
 
