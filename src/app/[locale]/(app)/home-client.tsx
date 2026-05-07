@@ -98,6 +98,10 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   }, [cityContext]);
 
   const handleGeolocateClick = useCallback(() => {
+    if (cityContext) {
+      window.location.href = `/${locale}`;
+      return;
+    }
     navigator.geolocation?.getCurrentPosition(
       ({ coords }) => {
         setUserCenter({ lat: coords.latitude, lng: coords.longitude });
@@ -106,7 +110,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
       undefined,
       { timeout: 6000 },
     );
-  }, []);
+  }, [cityContext, locale]);
 
   const toggleLike = useCallback(async (id: string) => {
     // Optimistic update
