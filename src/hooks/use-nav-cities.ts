@@ -17,9 +17,14 @@ export function useNavCities(): string[] {
       .eq('status', 'active')
       .not('city', 'is', null)
       .then(({ data }) => {
-        const seen = new Set<string>();
-        for (const row of data ?? []) if (row.city) seen.add(row.city as string);
-        cache = [...seen].sort();
+        const counts = new Map<string, number>();
+        for (const row of data ?? []) {
+          if (row.city) counts.set(row.city as string, (counts.get(row.city as string) ?? 0) + 1);
+        }
+        cache = [...counts.entries()]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 4)
+          .map(([city]) => city);
         setCities(cache);
       });
   }, []);
