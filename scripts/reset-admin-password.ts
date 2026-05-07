@@ -6,14 +6,21 @@ const supabaseServiceKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXB
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 async function main() {
-  const { data: users, error: listError } = await supabase.auth.admin.listUsers();
-  if (listError) throw listError;
-
-  const adminUser = users.users.find(u => u.email === 'ajl@xarop.com');
-  if (!adminUser) {
-    console.log("Admin user not found.");
+  console.log("Fetching users via custom RPC admin_list_users()...");
+  const { data: users, error: listError } = await supabase.rpc("admin_list_users");
+  
+  if (listError) {
+    console.error("RPC Error:", listError);
     return;
   }
+
+  const adminUser = users.find(u => u.email === 'ajl@xarop.com');
+  if (!adminUser) {
+    console.log("Admin user not found in RPC results.");
+    return;
+  }
+  
+  console.log(`Found admin user: ${adminUser.id}. Updating password...`);
 
   const { data, error } = await supabase.auth.admin.updateUserById(
     adminUser.id,
@@ -21,7 +28,7 @@ async function main() {
   );
 
   if (error) {
-    console.error("Error setting password:", error);
+    console.error("Error setting password via admin API:", error);
   } else {
     console.log("Success! Password set to: PasswordAdmin2026!");
   }

@@ -13,7 +13,16 @@ export function createClient() {
   // ==========================================================================
   // DEV BYPASS: Auto-login as ADMIN to make testing easy over local network
   // ==========================================================================
-  if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined' && window.localStorage.getItem('dev_admin_bypass') === 'true') {
+  let bypassEnabled = false;
+  if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+    try {
+      bypassEnabled = window.localStorage.getItem('dev_admin_bypass') === 'true';
+    } catch {
+      // Ignored (e.g. Incognito mode blocking localStorage)
+    }
+  }
+
+  if (bypassEnabled) {
     const mockUser = {
       id: '00000000-0000-0000-0000-000000000001',
       email: process.env.NEXT_PUBLIC_ADMIN_EMAIL,

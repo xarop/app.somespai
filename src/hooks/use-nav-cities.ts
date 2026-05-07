@@ -10,13 +10,21 @@ export function useNavCities(): string[] {
 
   useEffect(() => {
     if (cache) { setCities(cache); return; }
-    const supabase = createClient();
-    supabase
-      .from('spaces')
-      .select('city')
-      .eq('status', 'active')
-      .not('city', 'is', null)
-      .then(({ data }) => {
+    
+    async function fetchCities() {
+      try {
+        const supabase = createClient();
+        const { data, error } = await supabase
+          .from('spaces')
+          .select('city')
+          .eq('status', 'active')
+          .not('city', 'is', null);
+
+        if (error) {
+          console.error("Cities fetch error:", error);
+          return;
+        }
+
         const counts = new Map<string, number>();
         for (const row of data ?? []) {
           if (row.city) counts.set(row.city as string, (counts.get(row.city as string) ?? 0) + 1);
@@ -26,7 +34,12 @@ export function useNavCities(): string[] {
           .slice(0, 10)
           .map(([city]) => city);
         setCities(cache);
-      });
+      } catch (err) {
+        console.error("Cities fetch outer error:", err);
+      }
+    }
+    
+    fetchCities();
   }, []);
 
   return cities;

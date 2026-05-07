@@ -64,7 +64,11 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     // DEV BYPASS: intercept local admin sign-in
     if (process.env.NODE_ENV === 'development' && email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
       document.cookie = 'dev_admin_bypass=true; path=/';
-      if (typeof window !== 'undefined') window.localStorage.setItem('dev_admin_bypass', 'true');
+      if (typeof window !== 'undefined') {
+        try {
+          window.localStorage.setItem('dev_admin_bypass', 'true');
+        } catch { /* ignore */ }
+      }
       window.location.reload();
       return;
     }
