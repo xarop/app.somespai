@@ -14,6 +14,7 @@
     "map": "Mapa",
     "allSpaces": "Todos los espacios",
     "cities": "Ciudades",
+    "allCitiesLink": "Todas las ciudades →",
     "contact": "Contacto",
     "privacy": "Privacidad",
     "terms": "T\u00e9rminos de uso",
@@ -422,5 +423,12 @@
       "jardins": "Exteriores",
       "parking": "Parkings"
     }
+  },
+  "cities": {
+    "title": "Ciudades",
+    "subtitle": "Todos los espacios disponibles en Cataluña, por ciudad y barrio.",
+    "spaces": "{n, plural, one {# espacio} other {# espacios}}",
+    "neighborhoods": "Barrios",
+    "viewCity": "Ver espacios en {city}"
   }
 }

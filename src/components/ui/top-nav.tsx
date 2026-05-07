@@ -246,12 +246,17 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
           {cities.length > 0 && (
             <>
               <div className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</div>
-              {cities.map((city) => (
-                <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
-                  <Icon name="pin" size={16} />
-                  {t('seo.cityTitle', { city })}
+              <div className="dropmenu__cities">
+                {cities.map((city) => (
+                  <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                    <Icon name="pin" size={16} />
+                    {t('seo.cityTitle', { city })}
+                  </a>
+                ))}
+                <a href={`/${locale}/ciutats`} role="menuitem" className="dropmenu__all-cities" onClick={() => setMenuOpen(false)}>
+                  {t('nav.allCitiesLink')}
                 </a>
-              ))}
+              </div>
             </>
           )}
 

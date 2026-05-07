@@ -17,6 +17,7 @@
     "map": "Mapa",
     "allSpaces": "Tots els espais",
     "cities": "Ciutats",
+    "allCitiesLink": "Totes les ciutats →",
     "contact": "Contacte"
   },
   "view": {
@@ -422,5 +423,12 @@
       "jardins": "Exteriors",
       "parking": "Pàrquings"
     }
+  },
+  "cities": {
+    "title": "Ciutats",
+    "subtitle": "Tots els espais disponibles a Catalunya, per ciutat i barri.",
+    "spaces": "{n, plural, one {# espai} other {# espais}}",
+    "neighborhoods": "Barris",
+    "viewCity": "Veure espais a {city}"
   }
 }

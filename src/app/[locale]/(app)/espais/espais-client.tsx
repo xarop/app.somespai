@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import type { Space, SpaceType } from '@/lib/schemas/space';
 import { TYPE_TO_SLUG } from '@/lib/seo/type-slugs';
 import { Icon } from '@/components/ui/icon';
+import { SpaceDetailModal } from '@/components/space/space-detail-modal';
 
 const TYPES: Array<{ id: SpaceType }> = [
   { id: 'workspace' },
@@ -39,6 +40,7 @@ export function EspaisClient({ spaces, locale }: Props) {
   const [amenityFilters, setAmenityFilters] = useState<Set<string>>(new Set());
   const [minRating, setMinRating] = useState(0);
   const [maxPriceCents, setMaxPriceCents] = useState(0);
+  const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
 
   const filtered = useMemo(() => {
     return spaces.filter((s) => {
@@ -201,6 +203,7 @@ export function EspaisClient({ spaces, locale }: Props) {
                 key={space.id}
                 href={`/${locale}/espai/${space.slug}`}
                 className="espais-row"
+                onClick={(e) => { e.preventDefault(); setSelectedSpace(space); }}
               >
                 {space.photos[0] ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -237,6 +240,8 @@ export function EspaisClient({ spaces, locale }: Props) {
           </div>
         )}
       </main>
+
+      <SpaceDetailModal space={selectedSpace} onClose={() => setSelectedSpace(null)} />
     </div>
   );
 }

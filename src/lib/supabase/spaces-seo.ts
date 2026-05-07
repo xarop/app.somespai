@@ -41,6 +41,42 @@ function createSeoClient() {
   );
 }
 
+export interface CityStats {
+  city: string;
+  count: number;
+  neighborhoods: Array<{ name: string; count: number }>;
+}
+
+export async function getCitiesWithStats(): Promise<CityStats[]> {
+  const supabase = createSeoClient();
+  const { data } = await supabase
+    .from('spaces')
+    .select('city, neighborhood')
+    .eq('status', 'active')
+    .not('city', 'is', null);
+
+  const cityMap = new Map<string, { count: number; neighborhoods: Map<string, number> }>();
+  for (const row of data ?? []) {
+    if (!row.city) continue;
+    if (!cityMap.has(row.city)) cityMap.set(row.city, { count: 0, neighborhoods: new Map() });
+    const entry = cityMap.get(row.city)!;
+    entry.count++;
+    if (row.neighborhood) {
+      entry.neighborhoods.set(row.neighborhood, (entry.neighborhoods.get(row.neighborhood) ?? 0) + 1);
+    }
+  }
+
+  return [...cityMap.entries()]
+    .map(([city, { count, neighborhoods }]) => ({
+      city,
+      count,
+      neighborhoods: [...neighborhoods.entries()]
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count),
+    }))
+    .sort((a, b) => b.count - a.count);
+}
+
 export async function getDistinctCities(): Promise<string[]> {
   const supabase = createSeoClient();
   const { data } = await supabase

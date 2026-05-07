@@ -14,6 +14,7 @@
     "map": "Map",
     "allSpaces": "All spaces",
     "cities": "Cities",
+    "allCitiesLink": "All cities →",
     "contact": "Contact",
     "privacy": "Privacy",
     "terms": "Terms of use",
@@ -422,5 +423,12 @@
       "jardins": "Outdoors",
       "parking": "Parking"
     }
+  },
+  "cities": {
+    "title": "Cities",
+    "subtitle": "All available spaces in Catalonia, by city and neighbourhood.",
+    "spaces": "{n, plural, one {# space} other {# spaces}}",
+    "neighborhoods": "Neighbourhoods",
+    "viewCity": "View spaces in {city}"
   }
 }
