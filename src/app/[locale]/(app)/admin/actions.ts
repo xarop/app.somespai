@@ -8,6 +8,8 @@ import {
   updateSpaceFullAdmin,
   uploadAdminPhoto,
   deleteSpaceAdmin,
+  bulkSetSpaceStatusAdmin,
+  bulkDeleteSpaceAdmin,
   getReviewsAdmin,
   updateReviewAdmin,
   deleteReviewAdmin,
@@ -50,6 +52,16 @@ export async function updateSpaceAction(id: string, data: AdminSpaceUpdate) {
 export async function deleteSpaceAction(id: string) {
   await requireAdmin();
   await deleteSpaceAdmin(id);
+}
+
+export async function bulkSetStatusAction(ids: string[], status: 'active' | 'paused' | 'removed'): Promise<void> {
+  await requireAdmin();
+  await bulkSetSpaceStatusAdmin(ids, status);
+}
+
+export async function bulkDeleteAction(ids: string[]): Promise<void> {
+  await requireAdmin();
+  await bulkDeleteSpaceAdmin(ids);
 }
 
 export async function getAdminReviewsAction(spaceId: string): Promise<Review[]> {
