@@ -336,11 +336,24 @@
     overscroll-behavior: contain;
   }
 
+  .dropmenu__cities-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    padding: 0 var(--s-4) 0 0;
+  }
+
+  .dropmenu__cities-header .dropmenu__item {
+    flex: 1;
+  }
+
   .dropmenu__all-cities {
     font-size: var(--t-xs) !important;
     color: var(--ink-mute) !important;
-    padding-top: var(--s-1) !important;
-    padding-bottom: var(--s-2) !important;
+    padding: var(--s-2) var(--s-3) !important;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .dropmenu__all-cities:hover {
