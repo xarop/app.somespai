@@ -256,7 +256,12 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
 
           {cities.length > 0 && (
             <>
-              <div className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</div>
+              <div className="dropmenu__cities-header">
+                <span className="dropmenu__item dropmenu__item--label">{t('nav.cities')}</span>
+                <a href={`/${locale}/ciutats`} className="dropmenu__all-cities" onClick={() => setMenuOpen(false)}>
+                  {t('nav.allCitiesLink')}
+                </a>
+              </div>
               <div className="dropmenu__cities">
                 {cities.map((city) => (
                   <a key={city} href={`/${locale}/${city.toLowerCase()}`} role="menuitem" onClick={() => setMenuOpen(false)}>
@@ -264,9 +269,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
                     {t('seo.cityTitle', { city })}
                   </a>
                 ))}
-                <a href={`/${locale}/ciutats`} role="menuitem" className="dropmenu__all-cities" onClick={() => setMenuOpen(false)}>
-                  {t('nav.allCitiesLink')}
-                </a>
               </div>
             </>
           )}
