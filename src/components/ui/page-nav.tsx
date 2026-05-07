@@ -30,6 +30,12 @@ export function PageNav() {
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const handleOpenAuth = () => setAuthOpen(true);
+    window.addEventListener('open-auth-modal', handleOpenAuth);
+    return () => window.removeEventListener('open-auth-modal', handleOpenAuth);
+  }, []);
+
+  useEffect(() => {
     const supabase = createClient();
 
     const checkAdmin = async (u: User | null) => {
@@ -97,9 +103,6 @@ export function PageNav() {
           <a
             href="/publica"
             className="btn-publish"
-            onClick={(e) => {
-              if (!user) { e.preventDefault(); setAuthOpen(true); }
-            }}
           >
             {t('nav.publish')}
           </a>

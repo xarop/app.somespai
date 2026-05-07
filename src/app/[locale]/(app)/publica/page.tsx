@@ -7,7 +7,6 @@ import { PageNav } from '@/components/ui/page-nav';
 export default async function PublicarPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect('/');
 
   const t = await getTranslations('publish');
 
@@ -21,7 +20,7 @@ export default async function PublicarPage() {
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{t('subtitle')}</p>
         </header>
-        <PublishForm />
+        <PublishForm isLoggedIn={!!user} />
       </div>
     </div>
     </>

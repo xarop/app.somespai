@@ -19,10 +19,14 @@ const AMENITY_GROUPS: Record<string, string[]> = {
   'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],
 };
 
-export function PublishForm() {
+interface PublishFormProps {
+  isLoggedIn?: boolean;
+}
+
+export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
   const t = useTranslations('publish');
   const tAmenity = useTranslations('amenity');
-  const tFilter = useTranslations('filter');
+  const tSpaceType = useTranslations('spaceType');
 
   const [state, formAction, isPending] = useActionState(createSpaceAction, null);
 
@@ -59,10 +63,41 @@ export function PublishForm() {
     setPhotoPreviews(files.map(f => URL.createObjectURL(f)));
   }
 
+  if (state === 'SUCCESS_GUEST') {
+    return (
+      <div className="publish-success">
+        <Icon name="check" size={48} className="publish-success__icon" />
+        <h2>Gràcies! Hem rebut el teu espai.</h2>
+        <p>
+          Com que no havies iniciat sessió, l'espai està <strong>pendent de validació</strong>.
+          <br /><br />
+          Contactarem amb tu a l'adreça de correu que has indicat per verificar la teva identitat i publicar l'espai definitivament.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <form action={formAction} className="publish-form">
-      {state && (
+      {state && state !== 'SUCCESS_GUEST' && (
         <div className="form-error">{state}</div>
+      )}
+      
+      {!isLoggedIn && (
+        <div className="form-notice">
+          <strong>No has iniciat sessió.</strong> Pots publicar l'espai igualment, deixant les teves dades a continuació. O si vols publicar-ho directament, registra't en un minut <button type="button" className="inline-link" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>clicant aquí</button>.
+        </div>
+      )}
+
+      {!isLoggedIn && (
+        <fieldset className="fieldset">
+          <legend className="fieldset__legend">Les teves dades</legend>
+          <label className="field">
+            <span className="field__label">{t('fieldEmail')} <span style={{ color: 'var(--danger)', marginLeft: 4 }}>*</span></span>
+            <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" required />
+            <p className="field__help">Necessitem el teu email per crear l'usuari i vincular-hi aquest espai.</p>
+          </label>
+        </fieldset>
       )}
 
       {/* ── Basic info ── */}
@@ -77,14 +112,14 @@ export function PublishForm() {
 
         <div className="field">
           <span className="field__label">{t('fieldType')} *</span>
-          <div className="type-picker">
+          <div className="espais-filter-chips">
             {SPACE_TYPES.map(type => (
-              <label key={type} className="type-option">
-                <input type="radio" name="type" value={type} required />
-                <span>
-                  <Icon name={type} size={20} />
-                  {tFilter(type)}
+              <label key={type} className="chip" data-type={type}>
+                <input type="radio" name="type" value={type} required className="visually-hidden" />
+                <span className="chip__icon">
+                  <Icon name={type} size={16} />
                 </span>
+                <span>{tSpaceType(type)}</span>
               </label>
             ))}
           </div>
@@ -109,9 +144,9 @@ export function PublishForm() {
 
         <div className="field-row">
           <label className="field field--grow">
-            <span className="field__label">{t('fieldPrice')} *</span>
-            <input name="price" type="number" className="field__input" required min="0" step="0.01"
-              placeholder="150" />
+            <span className="field__label">{t('fieldPrice')}</span>
+            <input name="price" type="number" className="field__input" min="0" step="0.01"
+               />
           </label>
           <label className="field">
             <span className="field__label">{t('fieldPriceUnit')}</span>
@@ -210,10 +245,12 @@ export function PublishForm() {
           <input name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" />
         </label>
 
-        <label className="field">
-          <span className="field__label">{t('fieldEmail')}</span>
-          <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
-        </label>
+        {isLoggedIn && (
+          <label className="field">
+            <span className="field__label">{t('fieldEmail')}</span>
+            <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
+          </label>
+        )}
 
         <label className="field">
           <span className="field__label">{t('fieldWhatsapp')}</span>

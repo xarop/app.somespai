@@ -17,7 +17,7 @@
     "allCitiesLink": "Todas las ciudades →",
     "contact": "Contacto",
     "privacy": "Privacidad",
-    "terms": "T\u00e9rminos de uso",
+    "terms": "Términos de uso",
     "help": "Ayuda"
   },
   "view": {
@@ -354,18 +354,18 @@
   },
   "help": {
     "back": "Inicio",
-    "title": "C\u00f3mo funciona somespai",
+    "title": "Cómo funciona somespai",
     "intro": "somespai conecta propietarios de espacios infrautilizados con personas que los necesitan, de forma directa y sin intermediarios.",
     "step1Title": "Explora el mapa",
     "step1Body": "Descubre los espacios disponibles en el mapa interactivo o cambia a la vista en lista. Cada pin es un espacio real en el barrio.",
     "step2Title": "Filtra y busca",
-    "step2Body": "Selecciona el tipo de espacio: trastero, estudio, exterior o sala. Ordena por proximidad, precio o puntuaci\u00f3n.",
+    "step2Body": "Selecciona el tipo de espacio: trastero, estudio, exterior o sala. Ordena por proximidad, precio o puntuación.",
     "step3Title": "Consulta los detalles",
     "step3Body": "Haz clic en cualquier espacio para ver fotos, equipamiento, precio y los datos de contacto directo con el propietario.",
     "step4Title": "Publica tu espacio",
-    "step4Body": "\u00bfTienes un local, patio o sala infrautilizada? Publ\u00edcalo en menos de 5 minutos y empieza a recibir contactos.",
-    "mobileTitle": "En m\u00f3vil",
-    "mobileDesc": "Toca cualquier pin para ver el espacio. Usa el bot\u00f3n flotante para cambiar entre mapa y lista.",
+    "step4Body": "¿Tienes un local, patio o sala infrautilizada? Publícalo en menos de 5 minutos y empieza a recibir contactos.",
+    "mobileTitle": "En móvil",
+    "mobileDesc": "Toca cualquier pin para ver el espacio. Usa el botón flotante para cambiar entre mapa y lista.",
     "desktopTitle": "En ordenador",
     "desktopDesc": "A la derecha aparece la lista de espacios. A la izquierda, el mapa se actualiza en tiempo real mientras navegas.",
     "ctaExplore": "Explorar espacios",
@@ -430,5 +430,12 @@
     "spaces": "{n, plural, one {# espacio} other {# espacios}}",
     "neighborhoods": "Barrios",
     "viewCity": "Ver espacios en {city}"
+  },
+  "spaceType": {
+    "storage": "Trastero",
+    "workspace": "Estudio",
+    "garden": "Exterior",
+    "room": "Sala",
+    "parking": "Aparcamiento"
   }
 }

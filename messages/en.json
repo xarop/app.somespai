@@ -430,5 +430,12 @@
     "spaces": "{n, plural, one {# space} other {# spaces}}",
     "neighborhoods": "Neighbourhoods",
     "viewCity": "View spaces in {city}"
+  },
+  "spaceType": {
+    "storage": "Storage unit",
+    "workspace": "Workspace",
+    "garden": "Outdoor space",
+    "room": "Room",
+    "parking": "Parking spot"
   }
 }
