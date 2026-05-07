@@ -39,16 +39,6 @@ export async function middleware(request: NextRequest) {
     } as any;
   }
 
-  // Protect /publica — redirect unauthenticated users to home with auth prompt
-  if (!user && /\/publica/.test(request.nextUrl.pathname)) {
-    const url = request.nextUrl.clone();
-    url.pathname = '/';
-    url.searchParams.set('auth', '1');
-    const redirect = NextResponse.redirect(url);
-    supabaseResponse.cookies.getAll().forEach(c => redirect.cookies.set(c.name, c.value));
-    return redirect;
-  }
-
   // Protect /admin — redirect unauthenticated users to home
   if (!user && /\/admin/.test(request.nextUrl.pathname)) {
     const url = request.nextUrl.clone();
