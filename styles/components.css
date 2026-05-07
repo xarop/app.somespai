@@ -4084,3 +4084,11 @@
     margin: 0;
   }
 }
+  .space-standalone {
+    background: var(--bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); /* Optional drop shadow for card effect */
+  }
