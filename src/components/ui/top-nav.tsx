@@ -307,6 +307,11 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
             {t('nav.contact')}
           </a>
 
+          <a href="https://www.instagram.com/somespai/" role="menuitem" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+            <Icon name="instagram" size={16} />
+            Instagram
+          </a>
+
           <a href="/design-system" role="menuitem" onClick={() => setMenuOpen(false)}>
             <Icon name="grid" size={16} />
             {t('nav.designSystem')}
