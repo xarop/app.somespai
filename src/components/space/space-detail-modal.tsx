@@ -20,6 +20,7 @@ interface SpaceDetailModalProps {
   onClose: () => void;
   isAdmin?: boolean;
   currentUserId?: string;
+  onReviewAdded?: (spaceId: string, rating: number, reviewsCount: number) => void;
 }
 
 function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
@@ -41,7 +42,7 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
   );
 }
 
-export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: SpaceDetailModalProps) {
+export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onReviewAdded }: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -117,6 +118,8 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
       setReviews(updated);
       setUserRating(newRating);
       setNewBody('');
+      const newAvg = updated.reduce((s, r) => s + r.rating, 0) / updated.length;
+      onReviewAdded?.(space.id, newAvg, updated.length);
     } catch (err) {
       setReviewError(err instanceof Error ? err.message : 'Error desconegut');
     }

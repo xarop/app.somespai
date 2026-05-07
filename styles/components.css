@@ -2672,6 +2672,25 @@
     border-top: 1px solid var(--border);
   }
 
+  .admin-reviews-section {
+    margin-top: var(--s-8);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--glass-border);
+  }
+
+  .admin-reviews-section__title {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    margin-bottom: var(--s-4);
+  }
+
+  .admin-reviews-section__count {
+    font-weight: 400;
+  }
+
   .admin-reviews-title {
     font-size: var(--t-sm);
     font-weight: 600;

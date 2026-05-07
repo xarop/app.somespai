@@ -47,6 +47,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number; key: number } | null>(null);
   const [view, setView] = useState<'map' | 'list'>('map');
+  const [ratingPatch, setRatingPatch] = useState<Record<string, { rating: number; reviewsCount: number }>>({});
 
   // Load favorites when user logs in
   useEffect(() => {
@@ -61,7 +62,10 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   }, []);
 
   const filteredSpaces = useMemo(() => {
-    let list = [...initialSpaces];
+    let list = initialSpaces.map(s => {
+      const patch = ratingPatch[s.id];
+      return patch ? { ...s, ...patch } : s;
+    });
     if (filter === 'featured') list = list.filter((s) => s.isFeatured);
     else if (filter !== 'all') list = list.filter((s) => s.type === filter);
     if (query) list = filterSpacesByQuery(list, query, locale);
@@ -74,7 +78,11 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
       list.sort((a, b) => b.rating - a.rating);
     }
     return list;
-  }, [initialSpaces, filter, locale, query, sort, userCenter]);
+  }, [initialSpaces, filter, locale, query, sort, userCenter, ratingPatch]);
+
+  const handleReviewAdded = useCallback((spaceId: string, rating: number, reviewsCount: number) => {
+    setRatingPatch(p => ({ ...p, [spaceId]: { rating, reviewsCount } }));
+  }, []);
 
   const contextTypeLabel = typeContext ? t(`filter.${typeContext}`) : undefined;
 
@@ -157,6 +165,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
           onClose={() => setSelectedSpace(null)}
           isAdmin={isAdmin}
           currentUserId={currentUserId}
+          onReviewAdded={handleReviewAdded}
         />
       </div>
 
