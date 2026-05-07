@@ -8,7 +8,7 @@
 ## 1. Design Principles
 
 1. **Radical minimalism, not minimal effort.** Every element earns its place.
-2. **Friction is the enemy.** Magic link, optional fields, one-tap share.
+2. **Friction is the enemy.** Email and password login, optional fields, one-tap share.
 3. **Place over product.** The map and the neighborhood lead. Listings serve the place.
 4. **Glass over solid.** Floating UI lets the map breathe. Glassmorphism is subtle, never loud.
 5. **Semantic before decorative.** A `<button>` looks like a button without `.btn-primary-large-rounded-shadow`.
@@ -75,6 +75,7 @@ Each type has three levels — main, soft (gradient start), tint (badge/icon bg)
 | garden | `--type-garden` | `#3d7a4a` green | `#7fba92` | `#cde8d4` |
 | storage | `--type-storage` | `#c4782c` orange | `#e8b87a` | `#f5e0c0` |
 | room | `--type-room` | `#b54336` red | `#d4806f` | `#f0d0ca` |
+| parking | `--type-parking` | `#6a6761` grey | `#9a9791` | `#e1dfdc` |
 
 ---
 
@@ -197,7 +198,7 @@ Glass pill (`--r-md`). Type icon in a square glass badge. No shadow.
 ## 9. Iconography
 
 - Stroke-based, 1.5px, rounded caps (Lucide-style).
-- 4 type icons: storage, workspace, garden, room.
+- 5 type icons: storage, workspace, garden, room, parking.
 
 ---
 
