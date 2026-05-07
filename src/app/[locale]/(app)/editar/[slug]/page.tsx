@@ -17,7 +17,13 @@ export default async function EditSpacePage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
-  const isAdmin = user.email === process.env.ADMIN_EMAIL;
+  let isAdmin = false;
+  if (user.email === process.env.ADMIN_EMAIL || user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    isAdmin = true;
+  } else {
+    const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single();
+    if (profile?.is_admin) isAdmin = true;
+  }
   const space = await getSpaceBySlugForOwner(slug, user.id);
   if (!space) notFound();
 
