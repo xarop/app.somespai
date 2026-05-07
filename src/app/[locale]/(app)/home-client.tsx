@@ -49,6 +49,33 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   const [view, setView] = useState<'map' | 'list'>('map');
   const [ratingPatch, setRatingPatch] = useState<Record<string, { rating: number; reviewsCount: number }>>({});
 
+  const handleSelectSpace = useCallback((space: Space | null) => {
+    if (space) {
+      const urlPrefix = locale === 'ca' ? '' : `/${locale}`;
+      if (selectedSpace) {
+        window.history.replaceState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+      } else {
+        window.history.pushState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+      }
+      setSelectedSpace(space);
+    } else {
+      if (window.history.state?.modalSpaceId === selectedSpace?.id) {
+        window.history.back();
+      }
+      setSelectedSpace(null);
+    }
+  }, [locale, selectedSpace]);
+
+  useEffect(() => {
+    const handlePopState = (e: PopStateEvent) => {
+      if (!e.state?.modalSpaceId) {
+        setSelectedSpace(null);
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Load favorites when user logs in
   useEffect(() => {
     const supabase = createClient();
@@ -143,7 +170,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
             spaces={filteredSpaces}
             activeSpaceId={selectedSpace?.id ?? null}
             hoveredSpaceId={hoveredSpaceId}
-            onSelect={setSelectedSpace}
+            onSelect={handleSelectSpace}
             flyTarget={flyTarget}
           />
         </div>
@@ -152,7 +179,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
           likedIds={likedIds}
           sort={sort}
           onSortChange={setSort}
-          onSelect={setSelectedSpace}
+          onSelect={handleSelectSpace}
           onToggleLike={toggleLike}
           onHover={setHoveredSpaceId}
           locationLabel={locationLabel}
@@ -162,7 +189,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
         />
         <SpaceDetailModal
           space={selectedSpace}
-          onClose={() => setSelectedSpace(null)}
+          onClose={() => handleSelectSpace(null)}
           isAdmin={isAdmin}
           currentUserId={currentUserId}
           onReviewAdded={handleReviewAdded}
