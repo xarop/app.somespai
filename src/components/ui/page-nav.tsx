@@ -25,14 +25,34 @@ export function PageNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+
+    const checkAdmin = async (u: User | null) => {
+      if (!u) {
+        setIsAdmin(false);
+        return;
+      }
+      if (u.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        setIsAdmin(true);
+        return;
+      }
+      const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', u.id).single();
+      setIsAdmin(!!profile?.is_admin);
+    };
+
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      checkAdmin(data.user);
+    });
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
       setUser(session?.user ?? null);
+      checkAdmin(session?.user ?? null);
     });
     return () => subscription.unsubscribe();
   }, []);
@@ -142,6 +162,12 @@ export function PageNav() {
                 <Icon name="user" size={16} />
                 {t('user.mySpaces')}
               </a>
+              {isAdmin && (
+                <a href={`/${locale}/admin`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                  <Icon name="shield" size={16} />
+                  Administració
+                </a>
+              )}
               <button type="button" role="menuitem" onClick={handleSignOut}>
                 {t('user.signOut')}
               </button>
