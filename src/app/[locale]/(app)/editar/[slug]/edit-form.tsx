@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { useRouter } from '@/lib/i18n/routing';
 import { Icon } from '@/components/ui/icon';
 import { updateOwnSpaceAction, deleteOwnSpaceAction } from './actions';
+import { ReviewsSection } from '@/components/admin/reviews-section';
 import type { Space } from '@/lib/schemas/space';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room'] as const;
@@ -23,9 +24,10 @@ const AMENITY_GROUPS: Record<string, string[]> = {
 
 interface Props {
   space: Space;
+  isAdmin?: boolean;
 }
 
-export function EditSpaceForm({ space }: Props) {
+export function EditSpaceForm({ space, isAdmin }: Props) {
   const t = useTranslations('publish');
   const tEdit = useTranslations('edit');
   const tAmenity = useTranslations('amenity');
@@ -94,6 +96,7 @@ export function EditSpaceForm({ space }: Props) {
   }
 
   return (
+    <>
     <form action={formAction} className="publish-form">
       {state && state !== 'ok' && <div className="form-error">{state}</div>}
       {deleteError && <div className="form-error">{deleteError}</div>}
@@ -328,5 +331,8 @@ export function EditSpaceForm({ space }: Props) {
         </p>
       )}
     </form>
+
+    {isAdmin && <ReviewsSection spaceId={space.id} />}
+    </>
   );
 }

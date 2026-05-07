@@ -17,6 +17,7 @@ export default async function EditSpacePage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
+  const isAdmin = user.email === process.env.ADMIN_EMAIL;
   const space = await getSpaceBySlugForOwner(slug, user.id);
   if (!space) notFound();
 
@@ -32,7 +33,7 @@ export default async function EditSpacePage({ params }: PageProps) {
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{space.title}</p>
         </header>
-        <EditSpaceForm space={space} />
+        <EditSpaceForm space={space} isAdmin={isAdmin} />
       </div>
     </div>
     </>
