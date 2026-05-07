@@ -14,11 +14,12 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   const t = useTranslations();
   const dialogRef = useRef<HTMLDialogElement>(null);
   
-  const [mode, setMode] = useState<'signIn' | 'signUp'>('signIn');
+  const [mode, setMode] = useState<'signIn' | 'signUp' | 'resetPassword'>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -33,6 +34,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       setPassword('');
       setLoading(false);
       setError(null);
+      setSuccessMsg(null);
       setMode('signIn');
     }
   }, [open]);
@@ -52,9 +54,12 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || !password || loading) return;
+    if (!email || loading) return;
+    if (mode !== 'resetPassword' && !password) return;
+    
     setLoading(true);
     setError(null);
+    setSuccessMsg(null);
 
     // DEV BYPASS: intercept local admin sign-in
     if (process.env.NODE_ENV === 'development' && email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
@@ -79,6 +84,17 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
         onClose();
         window.location.reload();
       }
+    } else if (mode === 'resetPassword') {
+      const currentLocale = window.location.pathname.split('/')[1] || 'ca';
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/${currentLocale}/perfil`,
+      });
+      if (resetError) {
+        setError(resetError.message);
+      } else {
+        setSuccessMsg(t('auth.resetEmailSent'));
+      }
+      setLoading(false);
     } else {
       const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
@@ -97,6 +113,13 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   function toggleMode() {
     setMode(m => m === 'signIn' ? 'signUp' : 'signIn');
     setError(null);
+    setSuccessMsg(null);
+  }
+
+  function toggleResetMode() {
+    setMode(m => m === 'resetPassword' ? 'signIn' : 'resetPassword');
+    setError(null);
+    setSuccessMsg(null);
   }
 
   return (
@@ -107,10 +130,10 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
 
       <div style={{ padding: 'var(--s-7) var(--s-5) var(--s-5)' }}>
         <h2 id="auth-title" style={{ fontSize: 'var(--t-xl)', fontWeight: 700, marginBottom: 'var(--s-2)' }}>
-          {mode === 'signIn' ? t('auth.titleSignIn') : t('auth.titleSignUp')}
+          {mode === 'signIn' ? t('auth.titleSignIn') : mode === 'signUp' ? t('auth.titleSignUp') : t('auth.titleReset')}
         </h2>
         <p style={{ color: 'var(--ink-mute)', fontSize: 'var(--t-sm)', marginBottom: 'var(--s-5)' }}>
-          {mode === 'signIn' ? t('auth.leadSignIn') : t('auth.leadSignUp')}
+          {mode === 'signIn' ? t('auth.leadSignIn') : mode === 'signUp' ? t('auth.leadSignUp') : t('auth.leadReset')}
         </p>
         
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
@@ -126,29 +149,44 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
               autoFocus
             />
           </label>
-          <label className="field">
-            <span className="field__label">{t('auth.password')}</span>
-            <input
-              type="password"
-              className="field__input"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              required
-              minLength={6}
-            />
-          </label>
+          
+          {mode !== 'resetPassword' && (
+            <label className="field">
+              <span className="field__label">{t('auth.password')}</span>
+              <input
+                type="password"
+                className="field__input"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                minLength={6}
+              />
+            </label>
+          )}
           
           {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
+          {successMsg && <p className="form-success" style={{ margin: 0, color: 'green', fontSize: 'var(--t-sm)' }}>{successMsg}</p>}
           
           <button type="submit" data-variant="primary" disabled={loading} style={{ marginTop: 'var(--s-1)' }}>
-            {loading ? '…' : (mode === 'signIn' ? t('auth.sendSignIn') : t('auth.sendSignUp'))}
+            {loading ? '…' : (mode === 'signIn' ? t('auth.sendSignIn') : mode === 'signUp' ? t('auth.sendSignUp') : t('auth.sendReset'))}
           </button>
           
           <div style={{ textAlign: 'center', marginTop: 'var(--s-3)' }}>
-             <button type="button" className="inline-link" onClick={toggleMode} style={{ fontSize: 'var(--t-sm)' }}>
-               {mode === 'signIn' ? t('auth.toggleToSignUp') : t('auth.toggleToSignIn')}
-             </button>
+             {mode === 'signIn' && (
+               <button type="button" className="inline-link" onClick={toggleResetMode} style={{ fontSize: 'var(--t-sm)', display: 'block', margin: '0 auto var(--s-2)' }}>
+                 {t('auth.toggleToReset')}
+               </button>
+             )}
+             {mode === 'resetPassword' ? (
+               <button type="button" className="inline-link" onClick={toggleResetMode} style={{ fontSize: 'var(--t-sm)' }}>
+                 {t('auth.toggleToSignIn')}
+               </button>
+             ) : (
+               <button type="button" className="inline-link" onClick={toggleMode} style={{ fontSize: 'var(--t-sm)' }}>
+                 {mode === 'signIn' ? t('auth.toggleToSignUp') : t('auth.toggleToSignIn')}
+               </button>
+             )}
           </div>
         </form>
       </div>
