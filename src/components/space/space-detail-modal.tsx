@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Space } from '@/lib/schemas/space';
 import { Icon, type IconName } from '@/components/ui/icon';
-import { getReviews, addReview, getUserReview, type Review } from '@/lib/supabase/reviews';
+import { getReviews, addReview, type Review } from '@/lib/supabase/reviews';
 import { createClient } from '@/lib/supabase/client';
 
 const TYPE_ICON: Record<Space['type'], IconName> = {
@@ -82,9 +82,17 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
   useEffect(() => {
     if (!space) { setReviews([]); setUserRating(null); setReviewsLoaded(false); return; }
     const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user));
-    getReviews(space.id).then(r => { setReviews(r); setReviewsLoaded(true); });
-    getUserReview(space.id).then(r => setUserRating(r));
+    supabase.auth.getUser().then(async ({ data }) => {
+      const loggedIn = !!data.user;
+      setIsLoggedIn(loggedIn);
+      const r = await getReviews(space.id);
+      setReviews(r);
+      setReviewsLoaded(true);
+      if (loggedIn && data.user) {
+        const mine = r.find(rev => rev.authorId === data.user!.id);
+        setUserRating(mine?.rating ?? null);
+      }
+    });
   }, [space]);
 
   async function handleShare() {
@@ -187,7 +195,12 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId }: Spa
               )}
               <span>
                 <Icon name="star" size={14} />
-                {space.rating.toFixed(1)} · {t('detail.reviews', { n: space.reviewsCount })}
+                {reviewsLoaded
+                  ? (reviews.length > 0
+                      ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
+                      : space.rating.toFixed(1))
+                  : space.rating.toFixed(1)
+                } · {t('detail.reviews', { n: reviewsLoaded ? reviews.length : space.reviewsCount })}
               </span>
             </p>
           </div>
