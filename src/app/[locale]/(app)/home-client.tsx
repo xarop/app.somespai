@@ -45,6 +45,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [hoveredSpaceId, setHoveredSpaceId] = useState<string | null>(null);
   const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
+  const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number; key: number } | null>(null);
   const [view, setView] = useState<'map' | 'list'>('map');
 
   // Load favorites when user logs in
@@ -91,6 +92,22 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
     return cityContext ?? null;
   }, [query, cityContext]);
 
+  const handleLocationFound = useCallback((lat: number, lng: number) => {
+    setUserCenter({ lat, lng });
+    if (!cityContext) setFlyTarget({ lat, lng, key: Date.now() });
+  }, [cityContext]);
+
+  const handleGeolocateClick = useCallback(() => {
+    navigator.geolocation?.getCurrentPosition(
+      ({ coords }) => {
+        setUserCenter({ lat: coords.latitude, lng: coords.longitude });
+        setFlyTarget({ lat: coords.latitude, lng: coords.longitude, key: Date.now() });
+      },
+      undefined,
+      { timeout: 6000 },
+    );
+  }, []);
+
   const toggleLike = useCallback(async (id: string) => {
     // Optimistic update
     setLikedIds((prev) => {
@@ -105,7 +122,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
 
   return (
     <div className="app">
-      <TopNav query={query} onQueryChange={setQuery} onLocationFound={(lat, lng) => setUserCenter({ lat, lng })} forcedPlaceholder={forcedPlaceholder}>
+      <TopNav query={query} onQueryChange={setQuery} onLocationFound={handleLocationFound} onGeolocateClick={handleGeolocateClick} forcedPlaceholder={forcedPlaceholder}>
         <FilterBar active={filter} onChange={setFilter} />
       </TopNav>
       <div className="mapwrap" data-view={view}>
@@ -115,7 +132,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
             activeSpaceId={selectedSpace?.id ?? null}
             hoveredSpaceId={hoveredSpaceId}
             onSelect={setSelectedSpace}
-            userCenter={userCenter}
+            flyTarget={flyTarget}
           />
         </div>
         <SpaceSheet

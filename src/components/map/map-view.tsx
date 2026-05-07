@@ -30,10 +30,10 @@ export interface MapViewProps {
   activeSpaceId?: string | null;
   hoveredSpaceId?: string | null;
   onSelect?: (space: Space) => void;
-  userCenter?: { lat: number; lng: number } | null;
+  flyTarget?: { lat: number; lng: number; key: number } | null;
 }
 
-export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userCenter }: MapViewProps) {
+export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, flyTarget }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreMap | null>(null);
   const markersRef = useRef<Map<string, Marker>>(new Map());
@@ -61,7 +61,7 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
 
     const style: string = process.env.NEXT_PUBLIC_MAP_TILES_URL || CARTO_POSITRON;
 
-    const center = userCenter ?? GRACIA_CENTER;
+    const center = GRACIA_CENTER;
 
     const map = new maplibregl.Map({
       container,
@@ -196,14 +196,20 @@ export function MapView({ spaces, activeSpaceId, hoveredSpaceId, onSelect, userC
     else map.once('load', fly);
   }, [spaces]);
 
-  // Fly to user location when geolocation resolves
+  // Fly to target when explicitly requested (geolocation button or home page auto-center)
   useEffect(() => {
-    if (!userCenter) return;
+    if (!flyTarget) return;
     const map = mapRef.current;
-    const fly = () => map?.flyTo({ center: [userCenter.lng, userCenter.lat], zoom: 15, duration: 1000 });
-    if (map?.isStyleLoaded()) fly();
-    else map?.once('load', fly);
-  }, [userCenter]);
+    if (!map) return;
+    const fly = () => map.flyTo({ center: [flyTarget.lng, flyTarget.lat], zoom: 15, duration: 1000 });
+    if (map.isStyleLoaded()) {
+      fly();
+    } else {
+      map.once('load', fly);
+      return () => { map.off('load', fly); };
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [flyTarget?.key]);
 
   // Update data-hover attribute without re-creating markers
   useEffect(() => {

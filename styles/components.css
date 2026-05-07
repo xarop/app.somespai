@@ -99,6 +99,24 @@
     color: var(--ink-mute);
   }
 
+  .topnav__geolocate {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    color: var(--ink-mute);
+    border-radius: var(--r-sm);
+    transition: color var(--t-fast) var(--ease);
+  }
+
+  .topnav__geolocate:hover {
+    color: var(--primary);
+  }
+
   .topnav__actions {
     grid-area: actions;
     display: flex;
@@ -168,7 +186,7 @@
     z-index: 100;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow: hidden;
     transform: translateX(100%);
     visibility: hidden;
     transition:
@@ -230,8 +248,10 @@
   /* Drawer body */
   .dropmenu__body {
     flex: 1;
+    min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
 
   /* Drawer footer (languages) */
@@ -239,6 +259,17 @@
     border-top: 1px solid var(--glass-border);
     flex-shrink: 0;
     padding-bottom: env(safe-area-inset-bottom, 0px);
+    display: flex;
+    flex-direction: row;
+  }
+
+  .dropmenu__footer .dropmenu__item {
+    display: none;
+  }
+
+  .dropmenu__footer button {
+    flex: 1;
+    justify-content: center;
   }
 
   .dropmenu button,
@@ -299,7 +330,8 @@
   }
 
   .dropmenu__cities {
-    max-height: 220px;
+    flex: 1;
+    min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
   }

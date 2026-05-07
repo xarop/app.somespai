@@ -19,6 +19,7 @@ interface TopNavProps {
   query: string;
   onQueryChange: (value: string) => void;
   onLocationFound?: (lat: number, lng: number) => void;
+  onGeolocateClick?: () => void;
   forcedPlaceholder?: string;
   children?: React.ReactNode;
 }
@@ -44,7 +45,7 @@ async function reverseGeocode(lat: number, lng: number): Promise<string | null> 
   }
 }
 
-export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholder, children }: TopNavProps) {
+export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick, forcedPlaceholder, children }: TopNavProps) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
@@ -143,6 +144,16 @@ export function TopNav({ query, onQueryChange, onLocationFound, forcedPlaceholde
             placeholder={placeholder}
             aria-label={placeholder}
           />
+          {onGeolocateClick && (
+            <button
+              type="button"
+              className="topnav__geolocate"
+              onClick={(e) => { e.preventDefault(); onGeolocateClick(); }}
+              aria-label="Centrar al meu lloc"
+            >
+              <Icon name="locate" size={16} />
+            </button>
+          )}
         </label>
 
         <div className="topnav__actions">
