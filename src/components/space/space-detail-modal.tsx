@@ -193,10 +193,10 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       <div className="detail__body">
         <header className="detail__head">
           <div>
-            <h2 id="space-title" className="detail__title">
+            <h1 id="space-title" className="detail__title">
               {space.title}
               {isVerified && <span className="badge-verified" title="Verificat">✓</span>}
-            </h2>
+            </h1>
             <p className="detail__meta">
               <span><Icon name="pin" size={14} />{[space.address, space.city].filter(Boolean).join(', ')}</span>
               {space.sizeM2 != null && (

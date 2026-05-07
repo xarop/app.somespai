@@ -18,8 +18,8 @@ export function SpaceDetailClient({ space, isAdmin, currentUserId }: Props) {
 
   return (
     <div className="app single-space-page">
-      <TopNav query={query} onQueryChange={setQuery} />
-      <div className="single-space-content" style={{ maxWidth: '800px', margin: '0 auto', width: '100%', padding: 'var(--s-7) var(--s-4)', paddingBottom: 'calc(var(--s-7) + env(safe-area-inset-bottom, 0px))' }}>
+      <TopNav query={query} onQueryChange={setQuery} hideSearch />
+      <div className="single-space-content" style={{ maxWidth: '800px', margin: '0 auto', width: '100%', height: '100%', padding: 'var(--s-7) var(--s-4)', paddingBottom: 'calc(var(--s-7) + env(safe-area-inset-bottom, 0px))', overflowY: 'auto' }}>
         <SpaceDetailModal space={space} onClose={() => router.push('/')} isAdmin={isAdmin} currentUserId={currentUserId} standalone />
       </div>
     </div>
