@@ -180,9 +180,6 @@ export function TopNav({ query, onQueryChange, onLocationFound, onGeolocateClick
           <a
             href="/publica"
             className="btn-publish"
-            onClick={(e) => {
-              if (!user) { e.preventDefault(); setAuthOpen(true); }
-            }}
           >
             {t('nav.publish')}
           </a>

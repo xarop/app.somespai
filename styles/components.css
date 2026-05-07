@@ -618,43 +618,54 @@
     transition: all var(--t-fast) var(--ease);
   }
 
+  label.chip {
+    cursor: pointer;
+  }
+
   .chip:hover {
     background: #fff;
     border-color: rgba(31, 28, 23, 0.18);
   }
 
-  .chip[aria-pressed="true"] {
+  .chip[aria-pressed="true"],
+  .chip:has(input:checked) {
     background: var(--ink);
     color: var(--bg);
     border-color: var(--ink);
   }
 
-  .chip[data-type="workspace"][aria-pressed="true"] {
+  .chip[data-type="workspace"][aria-pressed="true"],
+  .chip[data-type="workspace"]:has(input:checked) {
     background: var(--type-workspace);
     border-color: var(--type-workspace);
   }
 
-  .chip[data-type="garden"][aria-pressed="true"] {
+  .chip[data-type="garden"][aria-pressed="true"],
+  .chip[data-type="garden"]:has(input:checked) {
     background: var(--type-garden);
     border-color: var(--type-garden);
   }
 
-  .chip[data-type="storage"][aria-pressed="true"] {
+  .chip[data-type="storage"][aria-pressed="true"],
+  .chip[data-type="storage"]:has(input:checked) {
     background: var(--type-storage);
     border-color: var(--type-storage);
   }
 
-  .chip[data-type="room"][aria-pressed="true"] {
+  .chip[data-type="room"][aria-pressed="true"],
+  .chip[data-type="room"]:has(input:checked) {
     background: var(--type-room);
     border-color: var(--type-room);
   }
 
-  .chip[data-type="parking"][aria-pressed="true"] {
+  .chip[data-type="parking"][aria-pressed="true"],
+  .chip[data-type="parking"]:has(input:checked) {
     background: var(--type-parking);
     border-color: var(--type-parking);
   }
 
-  .chip[data-type="featured"][aria-pressed="true"] {
+  .chip[data-type="featured"][aria-pressed="true"],
+  .chip[data-type="featured"]:has(input:checked) {
     background: var(--type-featured);
     border-color: var(--type-featured);
   }
@@ -703,7 +714,8 @@
     color: var(--type-featured);
   }
 
-  .chip[aria-pressed="true"] .chip__icon {
+  .chip[aria-pressed="true"] .chip__icon,
+  .chip:has(input:checked) .chip__icon {
     background: transparent;
     color: var(--bg);
   }
@@ -1894,6 +1906,45 @@
     color: var(--danger);
     font-size: var(--t-sm);
     margin-bottom: var(--s-4);
+  }
+
+  .form-notice {
+    background: var(--primary-soft);
+    color: var(--primary-ink);
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-5);
+    font-size: var(--t-sm);
+  }
+
+  .form-notice button.inline-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .publish-success {
+    text-align: center;
+    padding: var(--s-10) var(--s-5);
+  }
+
+  .publish-success__icon {
+    color: var(--success);
+  }
+
+  .publish-success h2 {
+    margin-top: var(--s-4);
+    margin-bottom: var(--s-2);
+  }
+
+  .publish-success p {
+    color: var(--ink-mute);
   }
 
   /* ── Reviews ──────────────────────────────────────────────────────────── */

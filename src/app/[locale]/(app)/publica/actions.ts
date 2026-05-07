@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { slugify } from '@/lib/geo';
 import { redirect } from 'next/navigation';
 
@@ -10,7 +11,14 @@ export async function createSpaceAction(
 ): Promise<string | null> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return 'Not authenticated';
+
+  const supabaseAdmin = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+
+  const emailContact = (formData.get('email_contact') as string)?.trim() || null;
+  if (!user && !emailContact) return 'Es requereix un correu electrònic per usuaris no registrats';
 
   const title = (formData.get('title') as string).trim();
   const type = formData.get('type') as string;
@@ -26,7 +34,6 @@ export async function createSpaceAction(
   const lat = parseFloat(formData.get('lat') as string);
   const lng = parseFloat(formData.get('lng') as string);
   const phone = (formData.get('phone') as string)?.trim() || null;
-  const emailContact = (formData.get('email_contact') as string)?.trim() || null;
   const whatsapp = (formData.get('whatsapp') as string)?.trim() || null;
   const web = (formData.get('web') as string)?.trim() || null;
   const contactDefault = (formData.get('contact_default') as string) || 'web';
@@ -35,18 +42,21 @@ export async function createSpaceAction(
   if (isNaN(lat) || isNaN(lng)) return 'Invalid coordinates — geocode the address first';
 
   // Ensure profile exists (defensive — trigger handles new signups automatically)
-  await supabase.from('profiles').upsert({ id: user.id, display_name: user.email }, { onConflict: 'id', ignoreDuplicates: true });
+  if (user) {
+    await supabase.from('profiles').upsert({ id: user.id, display_name: user.email }, { onConflict: 'id', ignoreDuplicates: true });
+  }
 
   // Upload photos
   const photos: string[] = [];
   const files = formData.getAll('photos') as File[];
+  const folderId = user?.id || 'guest';
   for (const file of files) {
     if (!file || file.size === 0) continue;
     const ext = file.name.split('.').pop() ?? 'jpg';
-    const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from('space-photos').upload(path, file);
+    const path = `${folderId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+    const { error } = await supabaseAdmin.storage.from('space-photos').upload(path, file);
     if (!error) {
-      const { data: { publicUrl } } = supabase.storage.from('space-photos').getPublicUrl(path);
+      const { data: { publicUrl } } = supabaseAdmin.storage.from('space-photos').getPublicUrl(path);
       photos.push(publicUrl);
     }
   }
@@ -59,10 +69,11 @@ export async function createSpaceAction(
     .eq('slug', slug);
   if (count && count > 0) slug = `${slug}-${Date.now().toString(36)}`;
 
-  const { data: space, error } = await supabase
+  const { data: space, error } = await supabaseAdmin
     .from('spaces')
     .insert({
-      owner_id: user.id,
+      owner_id: user?.id || null,
+      status: user ? 'active' : 'pending',
       slug,
       title,
       type,
@@ -82,12 +93,16 @@ export async function createSpaceAction(
       whatsapp,
       web,
       contact_default: contactDefault,
-      status: 'active',
     })
     .select('slug')
     .single();
 
   if (error) return error.message;
+
+  if (!user) {
+    // Show a success message telling them it's pending validation
+    return 'SUCCESS_GUEST';
+  }
 
   redirect(`/espai/${space.slug}`);
 }

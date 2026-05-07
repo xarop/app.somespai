@@ -47,6 +47,15 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     if (!email || loading) return;
     setLoading(true);
     setError(null);
+
+    // DEV BYPASS: intercept local admin sign-in
+    if (process.env.NODE_ENV === 'development' && email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      document.cookie = 'dev_admin_bypass=true; path=/';
+      if (typeof window !== 'undefined') window.localStorage.setItem('dev_admin_bypass', 'true');
+      window.location.reload();
+      return;
+    }
+
     const supabase = createClient();
     const { error: otpError } = await supabase.auth.signInWithOtp({
       email,
