@@ -594,8 +594,15 @@ function UsersTab({ onCountChange, mainAdminEmail }: { onCountChange?: (n: numbe
           </thead>
           <tbody>
             {filtered.map(user => (
-              <tr key={user.id} className="admin-row admin-row--active">
-                <td className="admin-cell admin-cell--title">{user.email}</td>
+              <tr key={user.id} className="admin-row admin-row--active" style={{ backgroundColor: (user.isAdmin || user.email === mainAdminEmail) ? 'color-mix(in srgb, var(--primary) 40%, transparent)' : undefined }}>
+                <td className="admin-cell admin-cell--title">
+                  {user.email}
+                  {(user.isAdmin || user.email === mainAdminEmail) && (
+                    <span style={{ marginLeft: '8px', fontSize: '0.8rem', padding: '2px 6px', background: 'var(--primary)', color: 'var(--brand-ink)', borderRadius: '4px', fontWeight: 'bold' }}>
+                      Admin
+                    </span>
+                  )}
+                </td>
                 <td>{user.displayName ?? <span style={{ color: 'var(--ink-mute)' }}>—</span>}</td>
                 <td>{formatDate(user.createdAt)}</td>
                 <td>{formatDate(user.lastSignIn)}</td>
