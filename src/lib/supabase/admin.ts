@@ -106,6 +106,18 @@ export async function deleteSpaceAdmin(id: string): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
+export async function bulkSetSpaceStatusAdmin(ids: string[], status: 'active' | 'paused' | 'removed'): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('spaces').update({ status }).in('id', ids);
+  if (error) throw new Error(error.message);
+}
+
+export async function bulkDeleteSpaceAdmin(ids: string[]): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('spaces').delete().in('id', ids);
+  if (error) throw new Error(error.message);
+}
+
 export type AdminSpaceFullUpdate = {
   title: string;
   description: string | null;

@@ -298,6 +298,23 @@
     text-overflow: ellipsis;
   }
 
+  .dropmenu__cities {
+    max-height: 220px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .dropmenu__all-cities {
+    font-size: var(--t-xs) !important;
+    color: var(--ink-mute) !important;
+    padding-top: var(--s-1) !important;
+    padding-bottom: var(--s-2) !important;
+  }
+
+  .dropmenu__all-cities:hover {
+    color: var(--ink) !important;
+  }
+
   .lang-code {
     font-family: var(--font);
     font-variation-settings: var(--rx-mono);
@@ -2055,6 +2072,61 @@
     color: var(--ink-mute);
   }
 
+  .admin-owner-select {
+    border: none;
+    background: transparent;
+    font-size: var(--t-sm);
+    color: var(--ink);
+    cursor: pointer;
+    outline: none;
+    padding: 0 var(--s-1);
+    border-left: 1px solid var(--glass-border);
+    padding-left: var(--s-2);
+    max-width: 200px;
+  }
+
+  .admin-bulk-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    background: var(--primary);
+    border-radius: var(--r-md);
+    flex-wrap: wrap;
+  }
+
+  .admin-bulk-bar__count {
+    font-size: var(--t-sm);
+    font-weight: 600;
+    color: var(--primary-ink);
+    margin-right: var(--s-1);
+  }
+
+  .admin-bulk-bar .admin-action-btn {
+    background: rgba(255,255,255,0.18);
+    color: var(--primary-ink);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+
+  .admin-bulk-bar .admin-action-btn:hover {
+    background: rgba(255,255,255,0.3);
+  }
+
+  .admin-bulk-bar .admin-action-btn--delete {
+    background: rgba(220,50,50,0.25);
+    border-color: rgba(220,50,50,0.4);
+  }
+
+  .admin-cell--cb {
+    width: 36px;
+    text-align: center;
+    padding: 0 var(--s-1) !important;
+  }
+
+  .admin-row--selected {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+  }
+
   .admin-search-input {
     flex: 1;
     border: none;
@@ -3634,6 +3706,74 @@
 
   .help-contact-prompt a:hover {
     text-decoration: underline;
+  }
+
+  /* ── Cities page ─────────────────────────────────────────────────────── */
+
+  .cities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+  }
+
+  .city-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+    padding: var(--s-4);
+    background: var(--bg-soft);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-lg);
+    text-decoration: none;
+    color: inherit;
+    transition: border-color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  }
+
+  .city-card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
+  }
+
+  .city-card__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-2);
+  }
+
+  .city-card__name {
+    font-size: var(--t-md);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .city-card__count {
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+    white-space: nowrap;
+  }
+
+  .city-card__neighborhoods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+  }
+
+  .city-card__nbhd {
+    font-size: 11px;
+    padding: 2px var(--s-2);
+    background: var(--bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 99px;
+    color: var(--ink-soft);
+    white-space: nowrap;
+  }
+
+  .city-card__nbhd--more {
+    color: var(--ink-mute);
+    font-weight: 600;
   }
 
   /* ── Contact page ─────────────────────────────────────────────────────── */

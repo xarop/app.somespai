@@ -18,12 +18,15 @@ import {
   getContactMessagesAction,
   setContactMessageReadAction,
   deleteContactMessageAction,
+  bulkSetStatusAction,
+  bulkDeleteAction,
 } from './actions';
 import type { Review } from '@/lib/supabase/reviews';
 import type { AdminUser, ContactMessage } from '@/lib/supabase/admin';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
 type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room' | 'parking';
+type OwnerFilter = 'all' | 'none' | string;
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
 
@@ -790,10 +793,19 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
   const [msgCounts, setMsgCounts] = useState<{ unread: number; total: number } | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [typeFilter, setTypeFilter] = useState<TypeFilter>('all');
+  const [ownerFilter, setOwnerFilter] = useState<OwnerFilter>('all');
   const [featuredOnly, setFeaturedOnly] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [editingSpace, setEditingSpace] = useState<Space | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
+  const [filterUsers, setFilterUsers] = useState<AdminUser[]>([]);
+  const selectAllRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    getUsersAction().then(({ data }) => setFilterUsers(data));
+  }, []);
 
   useEffect(() => {
     if (!initialEditId) return;
@@ -813,6 +825,8 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
     if (statusFilter !== 'all' && s.status !== statusFilter) return false;
     if (typeFilter !== 'all' && s.type !== typeFilter) return false;
     if (featuredOnly && !s.isFeatured) return false;
+    if (ownerFilter === 'none' && s.ownerId) return false;
+    if (ownerFilter !== 'all' && ownerFilter !== 'none' && s.ownerId !== ownerFilter) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return [s.title, s.address, s.neighborhood, s.city, s.description]
@@ -820,6 +834,48 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
     }
     return true;
   });
+
+  const allFilteredSelected = filtered.length > 0 && filtered.every(s => selectedIds.has(s.id));
+  const someSelected = selectedIds.size > 0;
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = someSelected && !allFilteredSelected;
+    }
+  }, [someSelected, allFilteredSelected]);
+
+  function toggleSelect(id: string) {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds(allFilteredSelected ? new Set() : new Set(filtered.map(s => s.id)));
+  }
+
+  function handleBulkStatus(status: 'active' | 'paused') {
+    const ids = [...selectedIds];
+    startTransition(async () => {
+      setSpacesOptimistic(prev => prev.map(s => ids.includes(s.id) ? { ...s, status } : s));
+      await bulkSetStatusAction(ids, status);
+      setSelectedIds(new Set());
+      router.refresh();
+    });
+  }
+
+  function handleBulkDelete() {
+    const ids = [...selectedIds];
+    setBulkDeleteConfirm(false);
+    startTransition(async () => {
+      setSpacesOptimistic(prev => prev.filter(s => !ids.includes(s.id)));
+      await bulkDeleteAction(ids);
+      setSelectedIds(new Set());
+      router.refresh();
+    });
+  }
 
   function handleToggleStatus(space: Space) {
     const next = space.status === 'active' ? 'paused' : 'active';
@@ -947,7 +1003,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </div>
       </div>
 
-      {/* Search */}
+      {/* Search + owner filter */}
       <div className="admin-search-wrap">
         <Icon name="search" size={16} />
         <input
@@ -957,6 +1013,19 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
         />
+        <select
+          className="admin-owner-select"
+          value={ownerFilter}
+          onChange={e => { setOwnerFilter(e.target.value); setSelectedIds(new Set()); }}
+        >
+          <option value="all">Tots els propietaris</option>
+          <option value="none">Sense propietari</option>
+          {filterUsers.map(u => (
+            <option key={u.id} value={u.id}>
+              {u.displayName ? `${u.displayName} · ${u.email}` : u.email}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Filter tabs — status */}
@@ -989,11 +1058,33 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
         </button>
       </div>
 
+      {/* Bulk action bar */}
+      {someSelected && (
+        <div className="admin-bulk-bar">
+          <span className="admin-bulk-bar__count">{selectedIds.size} espais seleccionats</span>
+          <button type="button" className="admin-action-btn" onClick={() => handleBulkStatus('active')} disabled={isPending}>
+            Activar
+          </button>
+          <button type="button" className="admin-action-btn" onClick={() => handleBulkStatus('paused')} disabled={isPending}>
+            Pausar
+          </button>
+          <button type="button" className="admin-action-btn admin-action-btn--delete" onClick={() => setBulkDeleteConfirm(true)} disabled={isPending}>
+            Eliminar
+          </button>
+          <button type="button" className="admin-action-btn" onClick={() => setSelectedIds(new Set())} style={{ marginLeft: 'auto' }}>
+            Cancel·lar
+          </button>
+        </div>
+      )}
+
       {/* Table */}
       <div className="admin-table-wrap">
         <table className="admin-table">
           <thead>
             <tr>
+              <th className="admin-cell--cb">
+                <input type="checkbox" ref={selectAllRef} checked={allFilteredSelected} onChange={toggleSelectAll} />
+              </th>
               <th>{t('colTitle')}</th>
               <th className="admin-cell--center">Prop.</th>
               <th>{t('colType')}</th>
@@ -1007,7 +1098,10 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           </thead>
           <tbody>
             {filtered.map(space => (
-              <tr key={space.id} className={`admin-row admin-row--${space.status}`}>
+              <tr key={space.id} className={`admin-row admin-row--${space.status}${selectedIds.has(space.id) ? ' admin-row--selected' : ''}`}>
+                <td className="admin-cell--cb">
+                  <input type="checkbox" checked={selectedIds.has(space.id)} onChange={() => toggleSelect(space.id)} />
+                </td>
                 <td className="admin-cell admin-cell--title">
                   <a href={`/espai/${space.slug}`} target="_blank" rel="noopener noreferrer"
                     className="admin-space-link">
@@ -1073,6 +1167,14 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId }: { space
           message={t('deleteConfirm')}
           onConfirm={() => handleDelete(deletingId)}
           onCancel={() => setDeletingId(null)}
+        />
+      )}
+
+      {bulkDeleteConfirm && (
+        <ConfirmDialog
+          message={`Eliminar ${selectedIds.size} espais? Aquesta acció no es pot desfer.`}
+          onConfirm={handleBulkDelete}
+          onCancel={() => setBulkDeleteConfirm(false)}
         />
       )}
       </>}
