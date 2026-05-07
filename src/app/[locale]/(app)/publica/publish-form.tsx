@@ -84,8 +84,19 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       )}
       
       {!isLoggedIn && (
-        <div className="form-notice">
-          <strong>No has iniciat sessió.</strong> Pots publicar l'espai igualment, deixant les teves dades a continuació. O si vols publicar-ho directament, registra't en un minut <button type="button" className="inline-link" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>clicant aquí</button>.
+        <div className="form-notice" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+          <div>
+            <strong>No has iniciat sessió.</strong><br />
+            Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus espais. O si ho prefereixes, pots publicar l'espai com a invitat deixant el teu correu electrònic a continuació.
+          </div>
+          <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
+            <button type="button" data-variant="primary" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
+              Inicia sessió
+            </button>
+            <button type="button" data-variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
+              Registra't
+            </button>
+          </div>
         </div>
       )}
 
