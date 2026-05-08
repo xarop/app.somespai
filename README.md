@@ -1,6 +1,9 @@
-# app.somespai
+## Somespai
 
 > Marketplace P2P d'espais a Barcelona i Catalunya. Trasters, estudis, jardins, sales i pàrquings.
+
+Desenvolupat per [xarop.com](https://xarop.com) amb ajuda de la IA. Les contribucions són benvingudes: llegeix el protocol a [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+
 
 **Demo:** https://app.somespai.net/
 

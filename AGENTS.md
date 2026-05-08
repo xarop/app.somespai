@@ -2,6 +2,7 @@
 
 > Reading this file is mandatory before writing or modifying code.
 > Audience: AI agents (Claude, Cursor, Copilot) and human contributors.
+> **Developed by [xarop.com](https://xarop.com) with AI assistance.** Want to contribute? Check [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ---
 
