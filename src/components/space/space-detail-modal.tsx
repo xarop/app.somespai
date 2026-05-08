@@ -181,6 +181,25 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
         </a>
       ) : null}
 
+      {standalone && (
+        <nav className="detail__breadcrumbs" aria-label="Breadcrumb" style={{ paddingBottom: 'var(--s-3)' }}>
+          <a href={locale === 'ca' ? '/' : `/${locale}`}>{t('nav.home')}</a>
+          <span className="separator"> / </span>
+          {space.city && (
+            <>
+              <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}`}>
+                {space.city}
+              </a>
+              <span className="separator"> / </span>
+              <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}/${getSlugFromType(space.type, locale)}`}>
+                {t(`filter.${space.type as any}`)}
+              </a>
+              <span className="separator"> / </span>
+            </>
+          )}
+        </nav>
+      )}
+
       <div className="detail__hero" data-type={space.type}>
         {space.photos[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -196,24 +215,6 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       <div className="detail__body">
         <header className="detail__head">
           <div>
-            {standalone && (
-              <nav className="detail__breadcrumbs" aria-label="Breadcrumb">
-                <a href={locale === 'ca' ? '/' : `/${locale}`}>{t('nav.home') || 'Somespai'}</a>
-                <span className="separator"> / </span>
-                {space.city && (
-                  <>
-                    <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}`}>
-                      {space.city}
-                    </a>
-                    <span className="separator"> / </span>
-                    <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}/${getSlugFromType(space.type, locale)}`}>
-                      {t(`filter.${space.type as any}`)}
-                    </a>
-                    <span className="separator"> / </span>
-                  </>
-                )}
-              </nav>
-            )}
             <h1 id="space-title" className="detail__title">
               {space.title}
               {isVerified && <span className="badge-verified" title="Verificat">✓</span>}

@@ -3,6 +3,7 @@
     "name": "somespai"
   },
   "nav": {
+    "home": "Inici",
     "searchPlaceholder": "Cerca espais a prop teu…",
     "searchLocating": "Localitzant…",
     "searchNear": "Cerca espais a {location}…",
