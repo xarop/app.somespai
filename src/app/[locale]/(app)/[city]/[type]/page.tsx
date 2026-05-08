@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { getDistinctCityTypePairs, getSpacesByCity } from '@/lib/supabase/spaces-seo';
 import { getTypeFromSlug, getSlugFromType, TYPE_TO_SLUG_BY_LOCALE } from '@/lib/seo/type-slugs';
 import { HomeClient } from '@/app/[locale]/(app)/home-client';
