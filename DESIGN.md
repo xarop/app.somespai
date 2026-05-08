@@ -2,6 +2,7 @@
 
 > Geolocated P2P marketplace for spaces in Vila de Gràcia, scaling to Catalonia.
 > Minimalist, organic, mobile-first. Editorial sensibility, neighborhood warmth.
+> **Developed by [xarop.com](https://xarop.com) with AI assistance.** Want to contribute? Check [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
 ---
 
@@ -20,6 +21,7 @@
 
 - **Mood**: Mediterranean afternoon. Olive grove. Sun on terracotta. The patience of an old neighborhood.
 - **Voice**: Catalan-first, warm, brief. Never corporate. "Lloga el teu espai" not "Optimitza la teva monetització immobiliària".
+- **Logo**: A text-based custom SVG using the brand's Primary, Accent, and Gold colors. Readily available in `/design-system`.
 - **Adjectives we are**: orgànic, proper, càlid, honest, calm.
 - **Adjectives we are not**: corporate, gamified, urgent, neon, dark-mode-by-default.
 
@@ -71,11 +73,12 @@ Each type has three levels — main, soft (gradient start), tint (badge/icon bg)
 
 | Type | Token prefix | Main | Soft | Tint |
 |---|---|---|---|---|
-| workspace | `--type-workspace` | `#3d6fa8` blue | `#7fb0d4` | `#d0e4f2` |
-| garden | `--type-garden` | `#3d7a4a` green | `#7fba92` | `#cde8d4` |
-| storage | `--type-storage` | `#c4782c` orange | `#e8b87a` | `#f5e0c0` |
-| room | `--type-room` | `#b54336` red | `#d4806f` | `#f0d0ca` |
-| parking | `--type-parking` | `#6a6761` grey | `#9a9791` | `#e1dfdc` |
+| workspace (Estudis) | `--type-workspace` | `#3d6fa8` blue | `#7fb0d4` | `#d0e4f2` |
+| garden (Jardins) | `--type-garden` | `#3d7a4a` green | `#7fba92` | `#cde8d4` |
+| storage (Trasters) | `--type-storage` | `#c4782c` orange | `#e8b87a` | `#f5e0c0` |
+| room (Sales) | `--type-room` | `#b54336` red | `#d4806f` | `#f0d0ca` |
+| parking (Pàrquings) | `--type-parking` | `#7878a8` purple-grey | `#a8a8c4` | `#e8e8f2` |
+| featured (Destacats) | `--type-featured` | `#c8a400` gold | `#e8cc5a` | `#fef3c0` |
 
 ---
 
