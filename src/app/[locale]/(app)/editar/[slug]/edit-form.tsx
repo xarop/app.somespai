@@ -41,7 +41,7 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
   );
 
   useEffect(() => {
-    if (state === 'ok') router.push(`/espai/${space.slug}` as Parameters<typeof router.push>[0]);
+    if (state === 'ok') router.push(`/slot/${space.slug}` as Parameters<typeof router.push>[0]);
   }, [state, router, space.slug]);
 
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');

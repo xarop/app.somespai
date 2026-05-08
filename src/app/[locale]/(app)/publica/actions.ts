@@ -62,7 +62,7 @@ export async function createSpaceAction(
   }
 
   // Unique slug
-  let slug = slugify(title) || 'espai';
+  let slug = slugify(title) || 'slot';
   const { count } = await supabase
     .from('spaces')
     .select('id', { count: 'exact', head: true })
@@ -104,5 +104,5 @@ export async function createSpaceAction(
     return 'SUCCESS_GUEST';
   }
 
-  redirect(`/espai/${space.slug}`);
+  redirect(`/slot/${space.slug}`);
 }

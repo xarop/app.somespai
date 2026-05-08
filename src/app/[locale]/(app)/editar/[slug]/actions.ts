@@ -17,7 +17,7 @@ export async function updateOwnSpaceAction(
     .eq('id', spaceId)
     .eq('owner_id', user.id)
     .maybeSingle();
-  if (!existing) return 'No tens permís per editar aquest espai.';
+  if (!existing) return 'No tens permís per editar aquest slot.';
 
   const title = (formData.get('title') as string ?? '').trim();
   const type = formData.get('type') as string;

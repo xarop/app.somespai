@@ -114,7 +114,7 @@ function ReviewsSection({ spaceId }: { spaceId: string }) {
   }
 
   if (loading) return <p className="field__hint">Carregant ressenyes…</p>;
-  if (reviews.length === 0) return <p className="field__hint">Cap ressenya per a aquest espai.</p>;
+  if (reviews.length === 0) return <p className="field__hint">Cap ressenya per a aquest slot.</p>;
 
   return (
     <div className="admin-reviews">
@@ -995,7 +995,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
           </p>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <a 
-              href="https://vercel.com/xarops-projects/app-somespai/analytics" 
+              href="https://vercel.com/xarops-projects/app-BRAND_NAME_PLACEHOLDER/analytics" 
               target="_blank" 
               rel="noopener noreferrer"
               className="button button--secondary"
@@ -1151,7 +1151,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
                   <input type="checkbox" checked={selectedIds.has(space.id)} onChange={() => toggleSelect(space.id)} />
                 </td>
                 <td className="admin-cell admin-cell--title">
-                  <a href={`/espai/${space.slug}`} target="_blank" rel="noopener noreferrer"
+                  <a href={`/slot/${space.slug}`} target="_blank" rel="noopener noreferrer"
                     className="admin-space-link">
                     {space.title}
                   </a>

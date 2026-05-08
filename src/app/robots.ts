@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/admin/',
     },
-    sitemap: 'https://app.somespai.net/sitemap.xml',
+    sitemap: 'https://APP_DOMAIN_PLACEHOLDER/sitemap.xml',
   };
 }

@@ -48,7 +48,7 @@ const RAW_SEARCH_RULES: Record<SupportedLocale, Record<string, SearchRule>> = {
     polivalent: { spaceTypes: ['room'], expansions: ['room', 'sala'] },
     polivalents: { spaceTypes: ['room'], expansions: ['room', 'sales'] },
     storage: { spaceTypes: ['storage'], expansions: ['traster'] },
-    espai: { spaceTypes: ['storage', 'workspace', 'garden', 'room', 'parking'], expansions: [] },
+    slot: { spaceTypes: ['storage', 'workspace', 'garden', 'room', 'parking'], expansions: [] },
     espais: { spaceTypes: ['storage', 'workspace', 'garden', 'room', 'parking'], expansions: [] },
   },
   es: {

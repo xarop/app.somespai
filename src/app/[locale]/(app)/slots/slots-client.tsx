@@ -46,9 +46,9 @@ export function EspaisClient({ spaces, locale }: Props) {
     if (space) {
       const urlPrefix = locale === 'ca' ? '' : `/${locale}`;
       if (selectedSpace) {
-        window.history.replaceState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+        window.history.replaceState({ modalSpaceId: space.id }, '', `${urlPrefix}/slot/${space.slug}`);
       } else {
-        window.history.pushState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+        window.history.pushState({ modalSpaceId: space.id }, '', `${urlPrefix}/slot/${space.slug}`);
       }
       setSelectedSpace(space);
     } else {
@@ -228,7 +228,7 @@ export function EspaisClient({ spaces, locale }: Props) {
             {filtered.map((space) => (
               <a
                 key={space.id}
-                href={`/${locale}/espai/${space.slug}`}
+                href={`/${locale}/slot/${space.slug}`}
                 className="espais-row"
                 onClick={(e) => { e.preventDefault(); handleSelectSpace(space); }}
               >

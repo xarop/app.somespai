@@ -67,11 +67,11 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
     return (
       <div className="publish-success">
         <Icon name="check" size={48} className="publish-success__icon" />
-        <h2>Gràcies! Hem rebut el teu espai.</h2>
+        <h2>Gràcies! Hem rebut el teu slot.</h2>
         <p>
-          Com que no havies iniciat sessió, l'espai està <strong>pendent de validació</strong>.
+          Com que no havies iniciat sessió, l'slot està <strong>pendent de validació</strong>.
           <br /><br />
-          Contactarem amb tu a l'adreça de correu que has indicat per verificar la teva identitat i publicar l'espai definitivament.
+          Contactarem amb tu a l'adreça de correu que has indicat per verificar la teva identitat i publicar l'slot definitivament.
         </p>
       </div>
     );
@@ -87,7 +87,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
         <div className="form-notice" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
           <div>
             <strong>No has iniciat sessió.</strong><br />
-            Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus espais. O si ho prefereixes, pots publicar l'espai com a invitat deixant el teu correu electrònic a continuació.
+            Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus espais. O si ho prefereixes, pots publicar l'slot com a invitat deixant el teu correu electrònic a continuació.
           </div>
           <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
             <button type="button" data-variant="primary" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
@@ -106,7 +106,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           <label className="field">
             <span className="field__label">{t('fieldEmail')} <span style={{ color: 'var(--danger)', marginLeft: 4 }}>*</span></span>
             <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" required />
-            <p className="field__help">Necessitem el teu email per crear l'usuari i vincular-hi aquest espai.</p>
+            <p className="field__help">Necessitem el teu email per crear l'usuari i vincular-hi aquest slot.</p>
           </label>
         </fieldset>
       )}

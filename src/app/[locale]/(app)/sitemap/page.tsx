@@ -16,7 +16,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'sitemap' });
-  return { title: `${t('title')} — somespai`, description: t('desc') };
+  return { title: `${t('title')} — BRAND_NAME_PLACEHOLDER`, description: t('desc') };
 }
 
 export default async function MapaWebPage({ params }: Props) {
@@ -58,7 +58,7 @@ export default async function MapaWebPage({ params }: Props) {
             <h2 className="sitemap-section__title">{t('sectionMain')}</h2>
             <ul className="sitemap-list">
               <li><a href={`${localePrefix}/`}>{t('home')}</a></li>
-              <li><a href={`${localePrefix}/espais`}>{t('allSpaces')}</a></li>
+              <li><a href={`${localePrefix}/slots`}>{t('allSpaces')}</a></li>
               <li><a href={`${localePrefix}/ajuda`}>{t('help')}</a></li>
               <li><a href={`${localePrefix}/publica`}>{t('publish')}</a></li>
             </ul>
@@ -99,7 +99,7 @@ export default async function MapaWebPage({ params }: Props) {
             <ul className="sitemap-list sitemap-list--spaces">
               {spaces.map((space) => (
                 <li key={space.slug}>
-                  <a href={`${localePrefix}/espai/${space.slug}`}>
+                  <a href={`${localePrefix}/slot/${space.slug}`}>
                     {space.title}
                     {space.city && <span className="sitemap-space-city"> — {space.city}</span>}
                   </a>

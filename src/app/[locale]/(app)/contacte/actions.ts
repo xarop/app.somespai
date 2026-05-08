@@ -40,7 +40,7 @@ export async function submitContactAction(
   // Optional email notification via Resend
   const resendKey   = process.env.RESEND_API_KEY;
   const adminEmail  = process.env.ADMIN_EMAIL;
-  const fromDomain  = process.env.RESEND_FROM ?? 'noreply@somespai.net';
+  const fromDomain  = process.env.RESEND_FROM ?? 'noreply@BRAND_NAME_PLACEHOLDER.net';
 
   if (resendKey && adminEmail) {
     const typeLabels: Record<string, string> = {
@@ -60,7 +60,7 @@ export async function submitContactAction(
           from: fromDomain,
           to: adminEmail,
           reply_to: email,
-          subject: `[Somespai] ${typeLabels[type] ?? type}: ${name}`,
+          subject: `[BRAND_NAME_CAP_PLACEHOLDER] ${typeLabels[type] ?? type}: ${name}`,
           html: `
 <p><strong>De:</strong> ${name} &lt;${email}&gt;</p>
 <p><strong>Motiu:</strong> ${typeLabels[type] ?? type}</p>

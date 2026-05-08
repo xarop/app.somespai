@@ -124,7 +124,7 @@ export function SpaceDetailModal({
 
   async function handleShare() {
     if (!space) return;
-    const url = `${window.location.origin}/${locale}/espai/${space.slug}`;
+    const url = `${window.location.origin}/${locale}/slot/${space.slug}`;
     if (navigator.share) {
       try {
         await navigator.share({

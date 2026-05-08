@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const typeLabel = t(`filter.${dbType}`).toLowerCase();
 
   return {
-    title: `${t("seo.typeTitle", { typeLabel: typeLabel.charAt(0).toUpperCase() + typeLabel.slice(1), city: cityLabel })} — somespai`,
+    title: `${t("seo.typeTitle", { typeLabel: typeLabel.charAt(0).toUpperCase() + typeLabel.slice(1), city: cityLabel })} — BRAND_NAME_PLACEHOLDER`,
     description: t("seo.typeDesc", {
       count: spaces.length,
       typeLabel,

@@ -35,7 +35,7 @@ export default async function EditSpacePage({ params }: PageProps) {
     <div className="page-form">
       <div className="page-form__inner">
         <header className="page-form__header">
-          <a href={`/${locale}/espai/${space.slug}`} className="page-form__back">←</a>
+          <a href={`/${locale}/slot/${space.slug}`} className="page-form__back">←</a>
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{space.title}</p>
         </header>

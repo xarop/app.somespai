@@ -27,17 +27,17 @@ export async function generateMetadata({ params }: PageProps) {
         (space.description.length > 155 ? "..." : "")
       : undefined;
 
-    const canonicalPath = `/espai/${slug}`;
+    const canonicalPath = `/slot/${slug}`;
 
     return {
       title: pageTitle,
       description: desc,
       alternates: {
-        canonical: `https://app.somespai.net${locale === "ca" ? "" : `/${locale}`}${canonicalPath}`,
+        canonical: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}${canonicalPath}`,
         languages: {
-          ca: `https://app.somespai.net${canonicalPath}`,
-          es: `https://app.somespai.net/es${canonicalPath}`,
-          en: `https://app.somespai.net/en${canonicalPath}`,
+          ca: `https://APP_DOMAIN_PLACEHOLDER${canonicalPath}`,
+          es: `https://APP_DOMAIN_PLACEHOLDER/es${canonicalPath}`,
+          en: `https://APP_DOMAIN_PLACEHOLDER/en${canonicalPath}`,
         },
       },
       openGraph: {
@@ -95,7 +95,7 @@ export default async function SpaceDetailPage({ params }: PageProps) {
       priceCurrency: "EUR",
       price: (space.priceCents / 100).toFixed(2),
       availability: "https://schema.org/InStock",
-      url: `https://app.somespai.net/${locale}/espai/${space.slug}`,
+      url: `https://APP_DOMAIN_PLACEHOLDER/${locale}/slot/${space.slug}`,
     },
     aggregateRating:
       space.reviewsCount > 0

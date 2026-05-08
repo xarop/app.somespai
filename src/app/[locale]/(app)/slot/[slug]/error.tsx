@@ -15,7 +15,7 @@ export default function SpaceDetailError({
 
   return (
     <div style={{ padding: '2rem', textAlign: 'center' }}>
-      <h2>No s&apos;ha pogut carregar l&apos;espai</h2>
+      <h2>No s&apos;ha pogut carregar l&apos;slot</h2>
       <p style={{ color: 'var(--ink-mute)', marginTop: '0.5rem' }}>
         {error.digest ? `Error: ${error.digest}` : 'Intenta-ho de nou.'}
       </p>

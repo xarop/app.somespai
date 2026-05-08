@@ -108,13 +108,13 @@ export function HomeClient({
           window.history.replaceState(
             { modalSpaceId: space.id },
             "",
-            `${urlPrefix}/espai/${space.slug}`,
+            `${urlPrefix}/slot/${space.slug}`,
           );
         } else {
           window.history.pushState(
             { modalSpaceId: space.id },
             "",
-            `${urlPrefix}/espai/${space.slug}`,
+            `${urlPrefix}/slot/${space.slug}`,
           );
         }
         setSelectedSpace(space);

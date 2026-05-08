@@ -247,7 +247,7 @@ export function PageNav() {
           </a>
 
           <a
-            href={`/${locale}/espais`}
+            href={`/${locale}/slots`}
             role="menuitem"
             onClick={() => setMenuOpen(false)}
           >
@@ -295,7 +295,7 @@ export function PageNav() {
           </a>
 
           <a
-            href="https://www.instagram.com/somespai/"
+            href="https://www.instagram.com/BRAND_NAME_PLACEHOLDER/"
             role="menuitem"
             target="_blank"
             rel="noopener noreferrer"
@@ -336,7 +336,7 @@ export function PageNav() {
 
         <div className="dropmenu__copyright">
           <span>
-            © {year} somespai by{" "}
+            © {year} BRAND_NAME_PLACEHOLDER by{" "}
             <a
               href="https://xarop.com"
               target="_blank"

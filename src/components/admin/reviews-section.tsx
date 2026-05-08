@@ -100,7 +100,7 @@ export function ReviewsSection({ spaceId }: { spaceId: string }) {
         Ressenyes <span className="admin-reviews-section__count">({reviews.length})</span>
       </h3>
       {reviews.length === 0 ? (
-        <p className="field__hint">Cap ressenya per a aquest espai.</p>
+        <p className="field__hint">Cap ressenya per a aquest slot.</p>
       ) : (
         <div className="admin-reviews">
           {reviews.map((r) => (

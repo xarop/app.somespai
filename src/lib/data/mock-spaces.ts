@@ -100,7 +100,7 @@ export const MOCK_SPACES: Space[] = [
   {
     id: '4',
     slug: 'placa-diamant-polivalent',
-    title: 'Plaça del Diamant — espai polivalent',
+    title: 'Plaça del Diamant — slot polivalent',
     type: 'room',
     priceCents: 22000,
     currency: 'EUR',
@@ -351,7 +351,7 @@ export const MOCK_SPACES: Space[] = [
     photos: [],
     status: 'active',
     description:
-      'Lloc de coworking fix en espai privat. Comunitat creativa i tranquil·la. Part dels espais compartits Sira10 al carrer Verdi.',
+      'Lloc de coworking fix en slot privat. Comunitat creativa i tranquil·la. Part dels espais compartits Sira10 al carrer Verdi.',
     priceUnit: 'month',
     phone: null,
     emailContact: null,
@@ -421,7 +421,7 @@ export const MOCK_SPACES: Space[] = [
   {
     id: '20',
     slug: 'aticco-pallars-193',
-    title: 'Aticco — espai flexible al 22@',
+    title: 'Aticco — slot flexible al 22@',
     type: 'workspace',
     priceCents: 19000,
     currency: 'EUR',
@@ -704,7 +704,7 @@ export const MOCK_SPACES: Space[] = [
   },
   {
     id: '13',
-    slug: 'espai-coworking-rural-teia',
+    slug: 'slot-coworking-rural-teia',
     title: 'Espai de treball rural amb terrassa',
     type: 'workspace',
     priceCents: 20000,
@@ -726,7 +726,7 @@ export const MOCK_SPACES: Space[] = [
       'Estudi diàfan amb terrassa privada i vistes a la muntanya. Fibra simètrica, aire condicionat, cuina equipada. Silenci i aire net a 20 minuts de Barcelona.',
     priceUnit: 'month',
     phone: null,
-    emailContact: 'espai.teia@gmail.com',
+    emailContact: 'slot.teia@gmail.com',
     whatsapp: null,
     web: null,
     contactDefault: 'email',

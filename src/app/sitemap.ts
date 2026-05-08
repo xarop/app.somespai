@@ -7,7 +7,7 @@ import {
 import { TYPE_TO_SLUG_BY_LOCALE } from "@/lib/seo/type-slugs";
 import type { SpaceType } from "@/lib/schemas/space";
 
-const BASE = "https://app.somespai.net";
+const BASE = "https://APP_DOMAIN_PLACEHOLDER";
 const LOCALES = ["ca", "es", "en"] as const;
 
 export const revalidate = 0; // Force generating fresh sitemap
@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 1.0,
     });
     entries.push({
-      url: u("/espais", locale),
+      url: u("/slots", locale),
       changeFrequency: "daily",
       priority: 0.8,
     });
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   for (const slug of slugs) {
     for (const locale of LOCALES) {
       entries.push({
-        url: u(`/espai/${slug}`, locale),
+        url: u(`/slot/${slug}`, locale),
         changeFrequency: "weekly",
         priority: 0.8,
       });

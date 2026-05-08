@@ -18,18 +18,18 @@ export async function generateMetadata({
     title,
     description: desc,
     alternates: {
-      canonical: `https://app.somespai.net${locale === "ca" ? "" : `/${locale}`}`,
+      canonical: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}`,
       languages: {
-        ca: "https://app.somespai.net",
-        es: "https://app.somespai.net/es",
-        en: "https://app.somespai.net/en",
+        ca: "https://APP_DOMAIN_PLACEHOLDER",
+        es: "https://APP_DOMAIN_PLACEHOLDER/es",
+        en: "https://APP_DOMAIN_PLACEHOLDER/en",
       },
     },
     openGraph: {
-      title: `${title} · Somespai`,
+      title: `${title} · BRAND_NAME_CAP_PLACEHOLDER`,
       description: desc,
       type: "website",
-      url: `https://app.somespai.net${locale === "ca" ? "" : `/${locale}`}`,
+      url: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}`,
     },
   };
 }
@@ -68,14 +68,14 @@ export default async function HomePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Somespai",
-    url: "https://app.somespai.net",
+    name: "BRAND_NAME_CAP_PLACEHOLDER",
+    url: "https://APP_DOMAIN_PLACEHOLDER",
     description: t("seo.homeDesc"),
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://app.somespai.net/espais?q={search_term_string}",
+        urlTemplate: "https://APP_DOMAIN_PLACEHOLDER/slots?q={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     },
