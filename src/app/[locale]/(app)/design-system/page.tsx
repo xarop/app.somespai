@@ -80,7 +80,7 @@ export default function DesignSystemPage() {
                   gap: "var(--s-2)",
                 }}
               >
-                  <span className="ds__type-meta">Amb beta</span>
+                <span className="ds__type-meta">Amb beta</span>
                 <div
                   className="topnav__brand"
                   style={{ pointerEvents: "none" }}
@@ -121,7 +121,7 @@ export default function DesignSystemPage() {
                   gap: "var(--s-2)",
                 }}
               >
-                  <span className="ds__type-meta">Sense beta</span>
+                <span className="ds__type-meta">Sense beta</span>
                 <div
                   className="topnav__brand"
                   style={{ pointerEvents: "none" }}
