@@ -22,7 +22,7 @@ function iconSvg(type: Space['type']): string {
 }
 
 function priceLabel(cents: number) {
-  return `${Math.round(cents / 100)}€`;
+  return `${Math.round(cents / 100)}€/mes`;
 }
 
 export interface MapViewProps {
