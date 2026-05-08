@@ -7,14 +7,32 @@ import type { Metadata } from 'next';
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
+  const title = t('seo.homeTitle');
+  const desc = t('seo.homeDesc');
+
   return {
-    title: t('seo.homeTitle'),
-    description: t('seo.homeDesc'),
+    title,
+    description: desc,
+    alternates: {
+      canonical: `https://app.somespai.net${locale === 'ca' ? '' : `/${locale}`}`,
+      languages: {
+        'ca': 'https://app.somespai.net',
+        'es': 'https://app.somespai.net/es',
+        'en': 'https://app.somespai.net/en',
+      }
+    },
+    openGraph: {
+      title: `${title} · Somespai`,
+      description: desc,
+      type: 'website',
+      url: `https://app.somespai.net${locale === 'ca' ? '' : `/${locale}`}`,
+    },
   };
 }
 
-export default async function HomePage() {
-  const [spaces, supabase] = await Promise.all([getSpaces(), createClient()]);
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const [{ locale }, spaces, supabase] = await Promise.all([params, getSpaces(), createClient()]);
+  const t = await getTranslations({ locale });
   const { data: { user } } = await supabase.auth.getUser();
   let isAdmin = false;
   if (user) {
@@ -25,5 +43,30 @@ export default async function HomePage() {
       if (profile?.is_admin) isAdmin = true;
     }
   }
-  return <HomeClient initialSpaces={spaces} isAdmin={isAdmin} currentUserId={user?.id} />;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Somespai',
+    url: 'https://app.somespai.net',
+    description: t('seo.homeDesc'),
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://app.somespai.net/espais?q={search_term_string}'
+      },
+      'query-input': 'required name=search_term_string'
+    }
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HomeClient initialSpaces={spaces} isAdmin={isAdmin} currentUserId={user?.id} />
+    </>
+  );
 }

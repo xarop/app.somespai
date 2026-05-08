@@ -408,8 +408,8 @@
     "termsPlaceholder": "Estos son los términos y condiciones de uso de Somespai. El documento legal completo se añadirá próximamente en este apartado."
   },
   "seo": {
-    "homeTitle": "Somespai",
-    "homeDesc": "Marketplace P2P de espacios en Barcelona y Cataluña. Alquila trasteros, estudios, salas, jardines y parkings.",
+    "homeTitle": "Alquila trasteros, salas, estudios y jardines",
+    "homeDesc": "El marketplace P2P de espacios. Encuentra, alquila y pon en alquiler trasteros, estudios, salas, jardines y parkings cercanos sin intermediarios.",
     "filtersTitle": "Filtros",
     "cityTitle": "Espacios en {city}",
     "cityDesc": "{count} espacios disponibles en {city}: estudios, trasteros, salas y exteriores.",
