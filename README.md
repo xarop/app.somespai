@@ -190,113 +190,72 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 
 ---
 
-## Phase 1 — fet
-
-- ✅ Estructura del repo (`src/app`, `src/components`, `src/lib`, `messages`, `styles`)
-- ✅ Sistema CSS en capes (`tokens` → `elements` → `components` → `utilities`)
-- ✅ i18n amb `ca`, `es`, `en` (CA per defecte)
-- ✅ Home: mapa MapLibre centrat a Vila de Gràcia + llista filtrable
-- ✅ 27 espais reals de Barcelona (Gràcia, Poblenou, Eixample, Teià) carregats des de Supabase
-- ✅ URLs compartibles (`/[locale]/espai/[slug]`)
-- ✅ `/design-system` galeria interactiva de components
-- ✅ Postgres + PostGIS operatiu en local i en cloud
-- ✅ RLS configurat (default deny, políiques per taula)
-
-## Phase 2 — fet
-
-- ✅ Auth amb correu i contrasenya (`signInWithPassword`) + callback route + sessió persistent via middleware
-- ✅ TopNav reescrit: botó "Publica un espai" sempre visible; resta d'accions dins hamburger menu
-- ✅ Formulari de creació d'espai (`/publica`): tipus, preu, mida, ubicació (geocodificació Nominatim), amenitats, fotos, contacte
-- ✅ Pujada de fotos a Supabase Storage (`space-photos` bucket, carpeta per usuari, 5 MB)
-- ✅ Preferits persistits a DB amb optimistic update
-- ✅ Ressenyes: llistat + formulari amb star rating (StarRating component)
-- ✅ Web Share API a la pàgina de detall
-- ✅ Endpoint d'importació admin: `POST /api/admin/import` (autenticació per service role key)
-- ✅ Badge verificat per espais amb `ownerVerified`
-
-**Endpoint d'importació (API):**
-
-```bash
-curl -X POST https://app.somespai.net/api/admin/import \
-  -H "Authorization: Bearer <SUPABASE_SERVICE_ROLE_KEY>" \
-  -H "Content-Type: application/json" \
-  -d '[{"slug":"...", "title":"...", ...}]'
-```
-
-**Eina d'importació massiva (Script):**
-
-L'eina `scripts/bulk-scraper.ts` permet importar llistats d'espais cercant a la xarxa a través de Google Places API i incloent les imatges optimitzades a WebP. Deixa els espais al panell com a "Pausats" per a la seva revisió.
-Calen les variables d'entorn següents a `.env.local`: `GOOGLE_PLACES_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, i `SUPABASE_SERVICE_ROLE_KEY`.
-
-```bash
-# Exemple per descarregar trasters de Badalona passant-los al tipus 'storage':
-bun run scripts/bulk-scraper.ts "trasteros en Badalona" storage
-
-# Exemple per sales de coworking de Gràcia passant-los al tipus 'workspace':
-bun run scripts/bulk-scraper.ts "coworking a Gràcia" workspace
-```
-
-## Phase 3 — fet
-
-### Dashboard d'administrador (`/[locale]/admin`)
-
-Accés exclusiu a l'usuari amb `ADMIN_EMAIL`. Protegit per middleware i guard de servidor.
-
-Dues pestanyes:
-
-**Pestanya Espais:**
-- Taula de tots els espais (totes les estats: actius, pausats, eliminats)
-- Estadístiques: total, publicats, pausats, eliminats, destacats
-- Filtres: estat · tipus d'espai · destacats · cerca lliure de text
-- Accions ràpides per fila: publicar/pausar, destacar/treure destacat, eliminar
-- Modal d'edició completa: tots els camps del DB (títol, tipus, descripció, preu, ubicació amb geocodificació, amenitats, fotos, contacte, estat, destacat)
-- Gestió de fotos: eliminar existents + pujar noves
-- Gestió de ressenyes: editar rating/text, eliminar, recàlcul automàtic de puntuació
-- Icona d'edició directa (✏) als cards i a la fitxa de l'espai quan l'usuari és admin
-
-**Pestanya Usuaris:**
-- Taula de tots els usuaris registrats (email, nom, data d'alta, últim accés, nº d'espais)
-- Cerca per email o nom
-- Eliminació d'usuari amb confirmació
-- Càrrega lazy en primer clic (no bloqueja si l'API auth falla)
-
-**Accés:** `https://app.somespai.net/ca/admin`
-
-### Edició d'espais per propietari (`/[locale]/editar/[slug]`)
-
-Els usuaris autenticats poden editar els seus propis espais.
-
-**Funcionalitats:**
-- Formulari complet pre-emplenat amb les dades actuals
-- Gestió de fotos: eliminar existents + pujar noves
-- Control d'estat: publicar o pausar (no visible temporalment)
-- Eliminació de l'espai amb confirmació
-- Icona d'edició directa (✏) als cards i a la fitxa quan l'usuari és el propietari
-
-### Perfil d'usuari (`/[locale]/perfil`)
-
-Llista tots els espais publicats (i pausats) per l'usuari autenticat, amb accés directe a l'edició.
-
-**Accés:** menú superior → "Els meus espais" (quan s'és autenticat)
-
 ---
 
-## Phase 4 — fet
+## Roadmap i Estratègies
 
-### Header simplificat per pàgines de contingut (`PageNav`)
+A continuació es detalla l'estat del projecte dividit per fases, marcant el que ja s'ha implementat i propostes per al futur.
 
-El `TopNav` (amb cercador) s'utilitza només a la home i la fitxa d'espai. Totes les pàgines de contingut (ajuda, design-system, perfil, publica, editar, admin) utilitzen el nou component `PageNav` que inclou logo + botó "Publica un espai" + hamburger menú, però **sense el cercador**.
+### Phase 1 — Fonaments i UI principal (Fet) ✅
 
-- `src/components/ui/top-nav.tsx` — nav complet (home + fitxa d'espai)
-- `src/components/ui/page-nav.tsx` — nav simplificat (totes les altres pàgines)
+- [x] Estructura del repo (`src/app`, `src/components`, `src/lib`, `messages`, `styles`)
+- [x] Sistema CSS en capes (`tokens` → `elements` → `components` → `utilities`)
+- [x] i18n complet amb Next-Intl (CA / ES / EN), CA per defecte
+- [x] Home amb mapa MapLibre (centrat a Gràcia) i llistat de targetes d'espais
+- [x] Càrrega de 27 espais reals des de Supabase (Poblenou, Eixample, Teià, Gràcia)
+- [x] Segregació visual d'estats: mapa i llista sincronitzada (disseny responsiu)
+- [x] Pàgina de detall d'espai integrada sobre el mapa (`/[locale]/espai/[slug]`)
+- [x] Design system interactiu accessible via `/design-system`
+- [x] Configuració base de dades PostgreSQL + PostGIS (activa localment i al cloud)
+- [x] Polítiques de RLS (Row Level Security) per defecte a Supabase
+- [x] Fitxer `AGENTS.md` definint regles de codificació pels agents IA
 
-### Ressenyes per admin
+### Phase 2 — Creació, Auth i Backoffice bàsic (Fet) ✅
 
-Al modal d'edició del dashboard d'admin s'han afegit:
-- Llistat de totes les ressenyes d'un espai
-- Edició inline de rating i text
-- Eliminació amb confirmació
-- Recàlcul automàtic del rating de l'espai
+- [x] Auth local i de producció amb correu/contrasenya via Supabase Auth
+- [x] Pàgina i formulari per publicar espais (`/[locale]/publica`)
+- [x] Integració de pujada d'arxius/fotos al bucket `space-photos` (Cloud Storage)
+- [x] Funcionalitat de Preferits (cors) guardats a la DB amb actualització optimista
+- [x] Sistema de Ressenyes (lectura, llistat i component visual de rating d'estrelles)
+- [x] Web Share API per compartir la fitxa d'espai
+- [x] Creació i suport de script d'importació d'anuncis automatitzat associat a l'API `admin/import`
+
+### Phase 3 — Panell d'Administració complet i Gestió d'Usuaris (Fet) ✅
+
+- [x] Creació de la pàgina `/admin` protegida per variable d'entorn i JWT
+- [x] Taula completa de Gestió d'Espais per a l'admin (editar, publicar, pausar, esborrar, destacar)
+- [x] Panell de Gestió d'Usuaris (visualitzar llistat, estat i funcionalitat d'esborrat manual)
+- [x] Edició autònoma de la fitxa d'espais per propietat (formulari restringit a `/editar/[slug]`)
+- [x] Secció centralitzada al perfil per veure "Els Meus Espais" (`/perfil`)
+- [x] Afegit badge de Verificat / Garantitzat
+
+### Phase 4 — SEO Avançat, SSR i Indexabilitat (Fet) ✅
+
+- [x] Sitemap dinàmic i multilingüe localitzat generat per la request d'usuari a build time
+- [x] Redireccions Canonical absolutes i links alternatius de Hreflang en idiomes suportats
+- [x] Schema.org `Product` amb metadata i BreadcrumbList introduït manualment en JSON-LD
+- [x] Refactor de rutes SEO amistoses (`/ciutat` i `/ciutat/tipus_despai`) amb un display tipus "landing page"
+- [x] Generació de meta tags dinámics OpenGraph (title, description, tags, URLs d'imatge) a Server Components
+- [x] Transformació de la pàgina de detall d'espai de "Modal" a pàgina HTML normal sense constraints quan és accedida directament (millor crawler reading)
+- [x] Sincronització intel·ligent del breadcrumb de ciutat amb la base de dades
+- [x] Pàgina HTML "Mapa Web" generada estàticament indexant tot el portal per millorar el crawling (`/[locale]/sitemap`)
+
+### Phase 5 — Futur pròxim: Monetització i Retenció (Pendent) ⭕
+
+- [ ] **Pagaments Integrats (Escrow/SaaS)**
+  - Stripe Connect per retenir parcialment fons mentre dura l'estada o model freemium SaaS.
+- [ ] **Sistema d'Anuncis i "Featured Spaces" de pagament**
+  - Pasarel·la de checkout pels propietaris per col·locar el seu espai a "Destacats" 7 o 30 dies.
+- [ ] **Validació d'Identitat i Host Verificat**
+  - Utilització d'una eina com Stripe Identity / Onfido per validar amfitrions a canvi d'un Check de Qualitat.
+- [ ] **Missatgeria Interna Real-time**
+  - Implementació de Xat intern via Supabase Realtime per evitar fugides directes de clients a Whatsapp abans d'apuntar la petició/reserva.
+- [ ] **Cerca Geospatial Completa amb Dibuix de Mapes**
+  - Funcionalitat d'escollir àrees específiques al mapa dibuixant polígons i extraient tots els anuncis contigüs (queries geomètriques de PostGis).
+- [ ] **Publicitat Off-platform Google Ads (Landing Generatives)**
+  - Creació de Pàgines Landing automàtiques per injectar ràpidament a Google Ads i Facebook Ads segons inventaris específics d'àrees geogràfiques amb alta densitat residencial.
+
+---
 
 ### Pàgines SEO de ciutats
 

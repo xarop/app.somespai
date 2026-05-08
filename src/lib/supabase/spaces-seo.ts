@@ -56,10 +56,13 @@ export async function getCitiesWithStats(): Promise<CityStats[]> {
     .not('city', 'is', null);
 
   const cityMap = new Map<string, { count: number; neighborhoods: Map<string, number> }>();
+  const casingMap = buildCityMap(data ?? []);
+
   for (const row of data ?? []) {
     if (!row.city) continue;
-    if (!cityMap.has(row.city)) cityMap.set(row.city, { count: 0, neighborhoods: new Map() });
-    const entry = cityMap.get(row.city)!;
+    const properCity = casingMap.get(row.city.toLowerCase())!;
+    if (!cityMap.has(properCity)) cityMap.set(properCity, { count: 0, neighborhoods: new Map() });
+    const entry = cityMap.get(properCity)!;
     entry.count++;
     if (row.neighborhood) {
       entry.neighborhoods.set(row.neighborhood, (entry.neighborhoods.get(row.neighborhood) ?? 0) + 1);
@@ -77,6 +80,23 @@ export async function getCitiesWithStats(): Promise<CityStats[]> {
     .sort((a, b) => b.count - a.count);
 }
 
+// Helper to normalize city casings so "BARCELONA" and "Barcelona" group together
+function buildCityMap(rows: any[]) {
+  const map = new Map<string, string>();
+  for (const row of rows) {
+    if (!row.city) continue;
+    const lower = row.city.toLowerCase();
+    const existing = map.get(lower);
+    if (!existing) {
+      map.set(lower, row.city);
+    } else if (existing.toUpperCase() === existing && row.city.toUpperCase() !== row.city) {
+      // Prefer Title Case 'Barcelona' over UPPERCASE 'BARCELONA'
+      map.set(lower, row.city);
+    }
+  }
+  return map;
+}
+
 export async function getDistinctCities(): Promise<string[]> {
   const supabase = createSeoClient();
   const { data } = await supabase
@@ -84,11 +104,9 @@ export async function getDistinctCities(): Promise<string[]> {
     .select('city')
     .eq('status', 'active')
     .not('city', 'is', null);
-  const seen = new Set<string>();
-  for (const row of data ?? []) {
-    if (row.city) seen.add(row.city as string);
-  }
-  return [...seen].sort();
+  
+  const cityMap = buildCityMap(data ?? []);
+  return [...new Set(cityMap.values())].sort();
 }
 
 export async function getDistinctCityTypePairs(): Promise<Array<{ city: string; type: string }>> {
@@ -98,13 +116,19 @@ export async function getDistinctCityTypePairs(): Promise<Array<{ city: string; 
     .select('city, type')
     .eq('status', 'active')
     .not('city', 'is', null);
+  
+  const cityMap = buildCityMap(data ?? []);
   const seen = new Set<string>();
   const pairs: Array<{ city: string; type: string }> = [];
+  
   for (const row of data ?? []) {
-    const key = `${row.city}:${row.type}`;
-    if (!seen.has(key)) {
-      seen.add(key);
-      pairs.push({ city: row.city as string, type: row.type as string });
+    if (row.city && row.type) {
+      const properCity = cityMap.get(row.city.toLowerCase())!;
+      const key = `${properCity}:${row.type}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        pairs.push({ city: properCity, type: row.type as string });
+      }
     }
   }
   return pairs;
@@ -138,10 +162,11 @@ export async function getAllActiveSpacesSummary(): Promise<Array<{ slug: string;
     .select('slug, title, city, type')
     .eq('status', 'active')
     .order('city', { ascending: true });
+  const casingMap = buildCityMap(data ?? []);
   return (data ?? []).map((r) => ({
     slug: r.slug as string,
     title: r.title as string,
-    city: r.city as string | null,
+    city: r.city ? casingMap.get((r.city as string).toLowerCase()) ?? null : null,
     type: r.type as string,
   }));
 }

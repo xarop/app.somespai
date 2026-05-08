@@ -14,6 +14,9 @@ import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
 import { createClient } from '@/lib/supabase/client';
 import type { Space } from '@/lib/schemas/space';
 import { filterSpacesByQuery } from '@/lib/search/space-search';
+import { useRouter } from '@/lib/i18n/routing';
+import { getSlugFromType } from '@/lib/seo/type-slugs';
+import { slugify } from '@/lib/geo/index';
 
 const MapView = dynamic<MapViewProps>(
   () => import('@/components/map/map-view').then((m) => m.MapView),
@@ -38,6 +41,7 @@ interface HomeClientProps {
 export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilter, cityContext, typeContext }: HomeClientProps) {
   const t = useTranslations();
   const locale = useLocale();
+  const router = useRouter();
   const [filter, setFilter] = useState<FilterId>(initialFilter ?? 'all');
   const [query, setQuery] = useState('');
   const [sort, setSort] = useState<SortId>('distance');
@@ -48,6 +52,20 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number; key: number } | null>(null);
   const [view, setView] = useState<'map' | 'list'>('map');
   const [ratingPatch, setRatingPatch] = useState<Record<string, { rating: number; reviewsCount: number }>>({});
+
+  const handleFilterChange = useCallback((id: FilterId) => {
+    if (cityContext && id !== 'featured') {
+      const citySlug = slugify(cityContext);
+      if (id === 'all') {
+        router.push(`/${citySlug}`);
+      } else {
+        const typeSlug = getSlugFromType(id as import('@/lib/schemas/space').SpaceType, locale);
+        router.push(`/${citySlug}/${typeSlug}`);
+      }
+    } else {
+      setFilter(id);
+    }
+  }, [cityContext, locale, router]);
 
   const handleSelectSpace = useCallback((space: Space | null) => {
     if (space) {
@@ -162,7 +180,7 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
   return (
     <div className="app">
       <TopNav query={query} onQueryChange={setQuery} onLocationFound={handleLocationFound} onGeolocateClick={handleGeolocateClick} forcedPlaceholder={forcedPlaceholder}>
-        <FilterBar active={filter} onChange={setFilter} />
+        <FilterBar active={filter} onChange={handleFilterChange} />
       </TopNav>
       <div className="mapwrap" data-view={view}>
         <div className="mapwrap__canvas">
