@@ -10,7 +10,7 @@ import type { SpaceType } from '@/lib/schemas/space';
 const BASE = 'https://app.somespai.net';
 const LOCALES = ['ca', 'es', 'en'] as const;
 
-export const revalidate = 3600; // Refresh automatically every hour
+export const revalidate = 0; // Force generating fresh sitemap
 
 function u(path: string, locale: string): string {
   const prefix = locale === 'ca' ? '' : `/${locale}`;
@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     entries.push({ url: u('/', locale), changeFrequency: 'daily', priority: 1.0 });
     entries.push({ url: u('/espais', locale), changeFrequency: 'daily', priority: 0.8 });
     entries.push({ url: u('/ajuda', locale), changeFrequency: 'monthly', priority: 0.5 });
-    entries.push({ url: u('/mapa-web', locale), changeFrequency: 'weekly', priority: 0.4 });
+    entries.push({ url: u('/sitemap', locale), changeFrequency: 'weekly', priority: 0.4 });
   }
 
   // Space detail pages
