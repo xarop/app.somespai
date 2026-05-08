@@ -109,7 +109,7 @@ export default function DesignSystemPage() {
                       fill="var(--primary-ink)"
                     ></path>
                   </svg>
-                  <span>coslot</span>
+                  <span>{t("brand.name")}</span>
                   <em>beta</em>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function DesignSystemPage() {
                       fill="var(--primary-ink)"
                     ></path>
                   </svg>
-                  <span>coslot</span>
+                  <span>{t("brand.name")}</span>
                 </div>
               </div>
             </div>
