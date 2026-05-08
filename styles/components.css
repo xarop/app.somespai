@@ -4110,3 +4110,25 @@
     background: transparent;
     padding-bottom: 4rem;
   }
+
+  .detail__breadcrumbs {
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+    margin-bottom: var(--s-2);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1);
+    align-items: center;
+  }
+  .detail__breadcrumbs a {
+    color: var(--primary-ink);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .detail__breadcrumbs a:hover {
+    color: var(--ink);
+  }
+  .detail__breadcrumbs .separator {
+    opacity: 0.5;
+    user-select: none;
+  }

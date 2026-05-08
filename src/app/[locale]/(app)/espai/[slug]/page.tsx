@@ -26,9 +26,19 @@ export async function generateMetadata({ params }: PageProps) {
       ? space.description.substring(0, 155) + (space.description.length > 155 ? '...' : '')
       : undefined;
 
+    const canonicalPath = `/espai/${slug}`;
+
     return {
       title: pageTitle,
       description: desc,
+      alternates: {
+        canonical: `https://app.somespai.net${locale === 'ca' ? '' : `/${locale}`}${canonicalPath}`,
+        languages: {
+          'ca': `https://app.somespai.net${canonicalPath}`,
+          'es': `https://app.somespai.net/es${canonicalPath}`,
+          'en': `https://app.somespai.net/en${canonicalPath}`,
+        }
+      },
       openGraph: {
         title: pageTitle,
         description: desc,
