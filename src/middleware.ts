@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
   if (process.env.NODE_ENV === 'development' && !user) {
     user = {
       id: '00000000-0000-0000-0000-000000000001',
-      email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@BRAND_NAME_PLACEHOLDER.cat',
+      email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@coslot.cat',
       app_metadata: {},
       user_metadata: {},
       aud: 'authenticated',

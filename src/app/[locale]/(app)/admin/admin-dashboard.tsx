@@ -995,7 +995,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
           </p>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <a 
-              href="https://vercel.com/xarops-projects/app-BRAND_NAME_PLACEHOLDER/analytics" 
+              href="https://vercel.com/xarops-projects/app-coslot/analytics" 
               target="_blank" 
               rel="noopener noreferrer"
               className="button button--secondary"

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   setRequestLocale(locale);
   const t = await getTranslations('cities');
   return {
-    title: `${t('title')} — BRAND_NAME_PLACEHOLDER`,
+    title: `${t('title')} — coslot`,
     description: t('subtitle'),
   };
 }

@@ -7,7 +7,7 @@ import {
 import { TYPE_TO_SLUG_BY_LOCALE } from "@/lib/seo/type-slugs";
 import type { SpaceType } from "@/lib/schemas/space";
 
-const BASE = "https://APP_DOMAIN_PLACEHOLDER";
+const BASE = "https://coslot.space";
 const LOCALES = ["ca", "es", "en"] as const;
 
 export const revalidate = 0; // Force generating fresh sitemap

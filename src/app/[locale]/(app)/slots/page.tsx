@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
   return {
-    title: `${t('seo.allSpacesTitle')} — BRAND_NAME_PLACEHOLDER`,
+    title: `${t('seo.allSpacesTitle')} — coslot`,
     description: t('seo.allSpacesDesc'),
   };
 }
@@ -32,7 +32,7 @@ export default async function EspaisPage({ params }: Props) {
       <div className="seo-page">
         <div className="seo-page__inner seo-page__inner--wide">
           <nav className="seo-breadcrumb">
-            <a href={`/${locale}`}>BRAND_NAME_PLACEHOLDER</a>
+            <a href={`/${locale}`}>coslot</a>
             <span>›</span>
             <span>{t('allSpacesTitle')}</span>
           </nav>

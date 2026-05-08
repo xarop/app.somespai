@@ -16,7 +16,7 @@ interface Props {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'sitemap' });
-  return { title: `${t('title')} — BRAND_NAME_PLACEHOLDER`, description: t('desc') };
+  return { title: `${t('title')} — coslot`, description: t('desc') };
 }
 
 export default async function MapaWebPage({ params }: Props) {

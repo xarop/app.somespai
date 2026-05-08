@@ -18,18 +18,18 @@ export async function generateMetadata({
     title,
     description: desc,
     alternates: {
-      canonical: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}`,
+      canonical: `https://coslot.space${locale === "ca" ? "" : `/${locale}`}`,
       languages: {
-        ca: "https://APP_DOMAIN_PLACEHOLDER",
-        es: "https://APP_DOMAIN_PLACEHOLDER/es",
-        en: "https://APP_DOMAIN_PLACEHOLDER/en",
+        ca: "https://coslot.space",
+        es: "https://coslot.space/es",
+        en: "https://coslot.space/en",
       },
     },
     openGraph: {
-      title: `${title} · BRAND_NAME_CAP_PLACEHOLDER`,
+      title: `${title} · CoSlot`,
       description: desc,
       type: "website",
-      url: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}`,
+      url: `https://coslot.space${locale === "ca" ? "" : `/${locale}`}`,
     },
   };
 }
@@ -68,14 +68,14 @@ export default async function HomePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "BRAND_NAME_CAP_PLACEHOLDER",
-    url: "https://APP_DOMAIN_PLACEHOLDER",
+    name: "CoSlot",
+    url: "https://coslot.space",
     description: t("seo.homeDesc"),
     potentialAction: {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://APP_DOMAIN_PLACEHOLDER/slots?q={search_term_string}",
+        urlTemplate: "https://coslot.space/slots?q={search_term_string}",
       },
       "query-input": "required name=search_term_string",
     },

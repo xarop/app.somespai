@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const spaces = await getSpacesByCity(city);
   const cityLabel = spaces[0]?.city ?? city;
   return {
-    title: `${t("seo.cityTitle", { city: cityLabel })} — BRAND_NAME_PLACEHOLDER`,
+    title: `${t("seo.cityTitle", { city: cityLabel })} — coslot`,
     description: t("seo.cityDesc", { count: spaces.length, city: cityLabel }),
   };
 }

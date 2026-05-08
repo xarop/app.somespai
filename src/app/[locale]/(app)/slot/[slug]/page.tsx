@@ -33,11 +33,11 @@ export async function generateMetadata({ params }: PageProps) {
       title: pageTitle,
       description: desc,
       alternates: {
-        canonical: `https://APP_DOMAIN_PLACEHOLDER${locale === "ca" ? "" : `/${locale}`}${canonicalPath}`,
+        canonical: `https://coslot.space${locale === "ca" ? "" : `/${locale}`}${canonicalPath}`,
         languages: {
-          ca: `https://APP_DOMAIN_PLACEHOLDER${canonicalPath}`,
-          es: `https://APP_DOMAIN_PLACEHOLDER/es${canonicalPath}`,
-          en: `https://APP_DOMAIN_PLACEHOLDER/en${canonicalPath}`,
+          ca: `https://coslot.space${canonicalPath}`,
+          es: `https://coslot.space/es${canonicalPath}`,
+          en: `https://coslot.space/en${canonicalPath}`,
         },
       },
       openGraph: {
@@ -95,7 +95,7 @@ export default async function SpaceDetailPage({ params }: PageProps) {
       priceCurrency: "EUR",
       price: (space.priceCents / 100).toFixed(2),
       availability: "https://schema.org/InStock",
-      url: `https://APP_DOMAIN_PLACEHOLDER/${locale}/slot/${space.slug}`,
+      url: `https://coslot.space/${locale}/slot/${space.slug}`,
     },
     aggregateRating:
       space.reviewsCount > 0

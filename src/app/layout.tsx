@@ -2,21 +2,21 @@ import type { ReactNode } from 'react';
 import './globals.css';
 
 export const metadata = {
-  metadataBase: new URL('https://APP_DOMAIN_PLACEHOLDER'),
-  title: { default: 'BRAND_NAME_CAP_PLACEHOLDER - Marketplace P2P d\'espais', template: '%s · BRAND_NAME_CAP_PLACEHOLDER' },
+  metadataBase: new URL('https://coslot.space'),
+  title: { default: 'CoSlot - Marketplace P2P d\'espais', template: '%s · CoSlot' },
   description: 'Trasters, garatges, sales, estudis i jardins. Lloga i posa de lloguer els teus espais propers de forma fàcil i directa.',
   icons: { icon: '/favicon.svg' },
   openGraph: {
-    title: 'BRAND_NAME_CAP_PLACEHOLDER — Marketplace P2P d\'espais',
+    title: 'CoSlot — Marketplace P2P d\'espais',
     description: 'Troba els millors trasters, sales, jardins i estudis a prop teu per llogar.',
-    url: 'https://APP_DOMAIN_PLACEHOLDER',
-    siteName: 'BRAND_NAME_CAP_PLACEHOLDER',
+    url: 'https://coslot.space',
+    siteName: 'CoSlot',
     locale: 'ca_ES',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'BRAND_NAME_CAP_PLACEHOLDER',
+    title: 'CoSlot',
     description: 'Marketplace P2P d\'espais',
   }
 };

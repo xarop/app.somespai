@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale } = await params;
   const t = await getTranslations({ locale });
   return {
-    title: `${t('legal.termsTitle')} — BRAND_NAME_PLACEHOLDER`,
+    title: `${t('legal.termsTitle')} — coslot`,
     description: t('legal.termsTitle'),
   };
 }

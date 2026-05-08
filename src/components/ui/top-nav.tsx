@@ -410,7 +410,7 @@ export function TopNav({
           </a>
 
           <a
-            href="https://www.instagram.com/BRAND_NAME_PLACEHOLDER/"
+            href="https://www.instagram.com/coslot/"
             role="menuitem"
             target="_blank"
             rel="noopener noreferrer"
@@ -453,7 +453,7 @@ export function TopNav({
         {/* Copyright */}
         <div className="dropmenu__copyright">
           <span>
-            © {year} BRAND_NAME_PLACEHOLDER by{" "}
+            © {year} coslot by{" "}
             <a
               href="https://xarop.com"
               target="_blank"

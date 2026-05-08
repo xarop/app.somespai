@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/admin/',
     },
-    sitemap: 'https://APP_DOMAIN_PLACEHOLDER/sitemap.xml',
+    sitemap: 'https://coslot.space/sitemap.xml',
   };
 }
