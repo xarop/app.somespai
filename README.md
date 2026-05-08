@@ -97,13 +97,45 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 
 ---
 
-## Desplegament a producció
+## Desplegament a producció (Multi-marca)
 
-### Vercel
-URL develop: https://app-somespai.vercel.app 
-URL producció: https://app.somespai.net
-Dashboard: https://vercel.com/xarops-projects/app-somespai
-CNAME app cname.vercel-dns.com
+Aquest repositori manté dues marques diferents mitjançant branques separades que apunten al mateix backend Supabase:
+
+1. **Somespai** (`app.somespai.net`): Es desplega automàticament des de la branca `main`.
+   - Vercel: [app-somespai](https://vercel.com/xarops-projects/app-somespai)
+2. **CoSlot** (`coslot.space`): Es desplega automàticament des de la branca `coslot` (anglès forçat, termes "slot").
+   - Vercel: [app-coslot](https://vercel.com/xarops-projects/app-coslot)
+
+### Com treballar-hi i desplegar
+
+**Per actualitzar Somespai:**
+```bash
+git checkout main
+git add .
+git commit -m "canvis per somespai"
+git push origin main
+```
+
+**Per actualitzar CoSlot:**
+```bash
+git checkout coslot
+git add .
+git commit -m "canvis per coslot"
+git push origin coslot
+```
+
+**Per compartir funcionalitats noves (de Somespai a CoSlot):**
+Si respons uns errors o crees una eina nova a `main` i la vols per CoSlot, utilitza el merge:
+```bash
+git checkout coslot
+git merge main
+# Resol els conflictes (ull viu amb els canvis de la paraula espai -> slot)
+git push origin coslot
+```
+
+---
+
+### Primera configuració de les Apps (Vercel)
 
 **Primer desplegament (una sola vegada):**
 

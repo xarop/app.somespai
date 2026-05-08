@@ -27,7 +27,7 @@ const TYPE_SCALE = [
   { token: "3xl", size: "2.5rem", sample: "Vila de Gràcia espera" },
   { token: "2xl", size: "2rem", sample: "Trasters i jardins" },
   { token: "xl", size: "1.5rem", sample: "Sala del Diamant" },
-  { token: "lg", size: "1.1875rem", sample: "Lloga el teu espai en minuts" },
+  { token: "lg", size: "1.1875rem", sample: "Lloga el teu slot en minuts" },
   {
     token: "base",
     size: "1rem",
@@ -109,7 +109,7 @@ export default function DesignSystemPage() {
                       fill="var(--primary-ink)"
                     ></path>
                   </svg>
-                  <span>somespai</span>
+                  <span>coslot</span>
                   <em>beta</em>
                 </div>
               </div>
@@ -150,7 +150,7 @@ export default function DesignSystemPage() {
                       fill="var(--primary-ink)"
                     ></path>
                   </svg>
-                  <span>somespai</span>
+                  <span>coslot</span>
                 </div>
               </div>
             </div>

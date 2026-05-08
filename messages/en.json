@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "somespai"
+    "name": "cospace"
   },
   "nav": {
     "home": "Home",
@@ -69,7 +69,7 @@
     "titleSignIn": "Sign in",
     "titleSignUp": "Create an account",
     "titleReset": "Reset password",
-    "leadSignIn": "Welcome back to Somespai.",
+    "leadSignIn": "Welcome back to CoSpace.",
     "leadSignUp": "Sign up to publish and manage spaces.",
     "leadReset": "Enter your email and we will send you a link to reset your password.",
     "email": "Your email",
@@ -163,7 +163,7 @@
   },
   "publish": {
     "title": "Publish a space",
-    "subtitle": "Fill in the form to publish your space on Somespai.",
+    "subtitle": "Fill in the form to publish your space on CoSpace.",
     "sectionBasic": "Basic information",
     "sectionPricing": "Pricing",
     "sectionLocation": "Location",
@@ -200,7 +200,7 @@
     "submit": "Publish space",
     "submitting": "Publishing…",
     "successTitle": "Space published!",
-    "successDesc": "Your space is now visible on Somespai.",
+    "successDesc": "Your space is now visible on CoSpace.",
     "viewSpace": "View space",
     "loginRequired": "You must be signed in to publish a space."
   },
@@ -365,8 +365,8 @@
   },
   "help": {
     "back": "Home",
-    "title": "How somespai works",
-    "intro": "somespai connects owners of underused spaces with people who need them — directly, without intermediaries.",
+    "title": "How cospace works",
+    "intro": "cospace connects owners of underused spaces with people who need them — directly, without intermediaries.",
     "step1Title": "Explore the map",
     "step1Body": "Discover available spaces on the interactive map or switch to list view. Each pin is a real space in the neighbourhood.",
     "step2Title": "Filter and search",
@@ -392,7 +392,7 @@
   },
   "sitemap": {
     "title": "Site map",
-    "desc": "All pages on Somespai.",
+    "desc": "All pages on CoSpace.",
     "sectionMain": "Main pages",
     "sectionCities": "Spaces by city",
     "sectionSpaces": "All spaces",
@@ -403,9 +403,9 @@
   },
   "legal": {
     "privacyTitle": "Privacy Policy",
-    "privacyPlaceholder": "This is the privacy policy page. This text is a placeholder and will be soon replaced by the official legal document regarding the processing of your data at Somespai.",
+    "privacyPlaceholder": "This is the privacy policy page. This text is a placeholder and will be soon replaced by the official legal document regarding the processing of your data at CoSpace.",
     "termsTitle": "Terms of Use",
-    "termsPlaceholder": "These are the terms and conditions of use for Somespai. The complete legal document will be added shortly in this section."
+    "termsPlaceholder": "These are the terms and conditions of use for CoSpace. The complete legal document will be added shortly in this section."
   },
   "seo": {
     "homeTitle": "Rent storage, rooms, studios and gardens",
@@ -415,7 +415,7 @@
     "cityDesc": "{count} available spaces in {city}: studios, storage, rooms and outdoors.",
     "typeTitle": "{typeLabel} in {city}",
     "typeDesc": "{count} {typeLabel} available in {city}.",
-    "allSpacesTitle": "All spaces on Somespai",
+    "allSpacesTitle": "All spaces on CoSpace",
     "allSpacesDesc": "Complete listing of available spaces: studios, storage, rooms, outdoors and parkings.",
     "filterType": "Type",
     "filterCity": "City",
