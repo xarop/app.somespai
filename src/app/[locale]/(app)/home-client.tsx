@@ -1,29 +1,40 @@
-'use client';
+"use client";
 
-import { useState, useMemo, useCallback, useEffect } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import dynamic from 'next/dynamic';
-import type { MapViewProps } from '@/components/map/map-view';
-import { TopNav } from '@/components/ui/top-nav';
-import { FilterBar, type FilterId } from '@/components/space/filter-bar';
-import { SpaceSheet, type SortId } from '@/components/space/space-sheet';
-import { SpaceDetailModal } from '@/components/space/space-detail-modal';
-import { Icon } from '@/components/ui/icon';
-import { GRACIA_CENTER } from '@/lib/data/mock-spaces';
-import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
-import { createClient } from '@/lib/supabase/client';
-import type { Space } from '@/lib/schemas/space';
-import { filterSpacesByQuery } from '@/lib/search/space-search';
-import { useRouter } from '@/lib/i18n/routing';
-import { getSlugFromType } from '@/lib/seo/type-slugs';
-import { slugify } from '@/lib/geo/index';
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
+import type { MapViewProps } from "@/components/map/map-view";
+import { TopNav } from "@/components/ui/top-nav";
+import { FilterBar, type FilterId } from "@/components/space/filter-bar";
+import { SpaceSheet, type SortId } from "@/components/space/space-sheet";
+import { SpaceDetailModal } from "@/components/space/space-detail-modal";
+import { Icon } from "@/components/ui/icon";
+import { GRACIA_CENTER } from "@/lib/data/mock-spaces";
+import { getFavoriteIds, toggleFavorite } from "@/lib/supabase/favorites";
+import { createClient } from "@/lib/supabase/client";
+import type { Space } from "@/lib/schemas/space";
+import { filterSpacesByQuery } from "@/lib/search/space-search";
+import { useRouter } from "@/lib/i18n/routing";
+import { getSlugFromType } from "@/lib/seo/type-slugs";
+import { slugify } from "@/lib/geo/index";
 
 const MapView = dynamic<MapViewProps>(
-  () => import('@/components/map/map-view').then((m) => m.MapView),
-  { ssr: false, loading: () => <div className="mapwrap__canvas" style={{ background: 'var(--bg-soft)' }} /> },
+  () => import("@/components/map/map-view").then((m) => m.MapView),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="mapwrap__canvas"
+        style={{ background: "var(--bg-soft)" }}
+      />
+    ),
+  },
 );
 
-function distanceSq(a: { lat: number; lng: number }, b: { lat: number; lng: number }) {
+function distanceSq(
+  a: { lat: number; lng: number },
+  b: { lat: number; lng: number },
+) {
   const dlat = a.lat - b.lat;
   const dlng = a.lng - b.lng;
   return dlat * dlat + dlng * dlng;
@@ -38,51 +49,84 @@ interface HomeClientProps {
   typeContext?: string;
 }
 
-export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilter, cityContext, typeContext }: HomeClientProps) {
+export function HomeClient({
+  initialSpaces,
+  isAdmin,
+  currentUserId,
+  initialFilter,
+  cityContext,
+  typeContext,
+}: HomeClientProps) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
-  const [filter, setFilter] = useState<FilterId>(initialFilter ?? 'all');
-  const [query, setQuery] = useState('');
-  const [sort, setSort] = useState<SortId>('distance');
+  const [filter, setFilter] = useState<FilterId>(initialFilter ?? "all");
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<SortId>("distance");
   const [likedIds, setLikedIds] = useState<Set<string>>(new Set());
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
   const [hoveredSpaceId, setHoveredSpaceId] = useState<string | null>(null);
-  const [userCenter, setUserCenter] = useState<{ lat: number; lng: number } | null>(null);
-  const [flyTarget, setFlyTarget] = useState<{ lat: number; lng: number; key: number } | null>(null);
-  const [view, setView] = useState<'map' | 'list'>('map');
-  const [ratingPatch, setRatingPatch] = useState<Record<string, { rating: number; reviewsCount: number }>>({});
+  const [userCenter, setUserCenter] = useState<{
+    lat: number;
+    lng: number;
+  } | null>(null);
+  const [flyTarget, setFlyTarget] = useState<{
+    lat: number;
+    lng: number;
+    key: number;
+  } | null>(null);
+  const [view, setView] = useState<"map" | "list">("map");
+  const [ratingPatch, setRatingPatch] = useState<
+    Record<string, { rating: number; reviewsCount: number }>
+  >({});
 
-  const handleFilterChange = useCallback((id: FilterId) => {
-    if (cityContext && id !== 'featured') {
-      const citySlug = slugify(cityContext);
-      if (id === 'all') {
-        router.push(`/${citySlug}`);
+  const handleFilterChange = useCallback(
+    (id: FilterId) => {
+      if (cityContext && id !== "featured") {
+        const citySlug = slugify(cityContext);
+        if (id === "all") {
+          router.push(`/${citySlug}`);
+        } else {
+          const typeSlug = getSlugFromType(
+            id as import("@/lib/schemas/space").SpaceType,
+            locale,
+          );
+          router.push(`/${citySlug}/${typeSlug}`);
+        }
       } else {
-        const typeSlug = getSlugFromType(id as import('@/lib/schemas/space').SpaceType, locale);
-        router.push(`/${citySlug}/${typeSlug}`);
+        setFilter(id);
       }
-    } else {
-      setFilter(id);
-    }
-  }, [cityContext, locale, router]);
+    },
+    [cityContext, locale, router],
+  );
 
-  const handleSelectSpace = useCallback((space: Space | null) => {
-    if (space) {
-      const urlPrefix = locale === 'ca' ? '' : `/${locale}`;
-      if (selectedSpace) {
-        window.history.replaceState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+  const handleSelectSpace = useCallback(
+    (space: Space | null) => {
+      if (space) {
+        const urlPrefix = locale === "ca" ? "" : `/${locale}`;
+        if (selectedSpace) {
+          window.history.replaceState(
+            { modalSpaceId: space.id },
+            "",
+            `${urlPrefix}/espai/${space.slug}`,
+          );
+        } else {
+          window.history.pushState(
+            { modalSpaceId: space.id },
+            "",
+            `${urlPrefix}/espai/${space.slug}`,
+          );
+        }
+        setSelectedSpace(space);
       } else {
-        window.history.pushState({ modalSpaceId: space.id }, '', `${urlPrefix}/espai/${space.slug}`);
+        if (window.history.state?.modalSpaceId === selectedSpace?.id) {
+          window.history.back();
+        }
+        setSelectedSpace(null);
       }
-      setSelectedSpace(space);
-    } else {
-      if (window.history.state?.modalSpaceId === selectedSpace?.id) {
-        window.history.back();
-      }
-      setSelectedSpace(null);
-    }
-  }, [locale, selectedSpace]);
+    },
+    [locale, selectedSpace],
+  );
 
   useEffect(() => {
     const handlePopState = (e: PopStateEvent) => {
@@ -90,8 +134,8 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
         setSelectedSpace(null);
       }
     };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   // Load favorites when user logs in
@@ -102,22 +146,24 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
       setLikedIds(ids);
     };
     load();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => load());
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(() => load());
     return () => subscription.unsubscribe();
   }, []);
 
   const filteredSpaces = useMemo(() => {
-    let list = initialSpaces.map(s => {
+    let list = initialSpaces.map((s) => {
       const patch = ratingPatch[s.id];
       return patch ? { ...s, ...patch } : s;
     });
-    if (filter === 'featured') list = list.filter((s) => s.isFeatured);
-    else if (filter !== 'all') list = list.filter((s) => s.type === filter);
+    if (filter === "featured") list = list.filter((s) => s.isFeatured);
+    else if (filter !== "all") list = list.filter((s) => s.type === filter);
     if (query) list = filterSpacesByQuery(list, query, locale);
     const center = userCenter ?? GRACIA_CENTER;
-    if (sort === 'distance') {
+    if (sort === "distance") {
       list.sort((a, b) => distanceSq(a, center) - distanceSq(b, center));
-    } else if (sort === 'price') {
+    } else if (sort === "price") {
       list.sort((a, b) => a.priceCents - b.priceCents);
     } else {
       list.sort((a, b) => b.rating - a.rating);
@@ -125,16 +171,22 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
     return list;
   }, [initialSpaces, filter, locale, query, sort, userCenter, ratingPatch]);
 
-  const handleReviewAdded = useCallback((spaceId: string, rating: number, reviewsCount: number) => {
-    setRatingPatch(p => ({ ...p, [spaceId]: { rating, reviewsCount } }));
-  }, []);
+  const handleReviewAdded = useCallback(
+    (spaceId: string, rating: number, reviewsCount: number) => {
+      setRatingPatch((p) => ({ ...p, [spaceId]: { rating, reviewsCount } }));
+    },
+    [],
+  );
 
   const contextTypeLabel = typeContext ? t(`filter.${typeContext}`) : undefined;
 
   const forcedPlaceholder = cityContext
-    ? (typeContext
-        ? t('nav.searchContext', { typeLabel: contextTypeLabel, location: cityContext })
-        : t('nav.searchNear', { location: cityContext }))
+    ? typeContext
+      ? t("nav.searchContext", {
+          typeLabel: contextTypeLabel,
+          location: cityContext,
+        })
+      : t("nav.searchNear", { location: cityContext })
     : undefined;
 
   const locationLabel = useMemo<string | null>(() => {
@@ -145,10 +197,13 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
     return cityContext ?? null;
   }, [query, cityContext]);
 
-  const handleLocationFound = useCallback((lat: number, lng: number) => {
-    setUserCenter({ lat, lng });
-    if (!cityContext) setFlyTarget({ lat, lng, key: Date.now() });
-  }, [cityContext]);
+  const handleLocationFound = useCallback(
+    (lat: number, lng: number) => {
+      setUserCenter({ lat, lng });
+      if (!cityContext) setFlyTarget({ lat, lng, key: Date.now() });
+    },
+    [cityContext],
+  );
 
   const handleGeolocateClick = useCallback(() => {
     if (cityContext) {
@@ -158,7 +213,11 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
     navigator.geolocation?.getCurrentPosition(
       ({ coords }) => {
         setUserCenter({ lat: coords.latitude, lng: coords.longitude });
-        setFlyTarget({ lat: coords.latitude, lng: coords.longitude, key: Date.now() });
+        setFlyTarget({
+          lat: coords.latitude,
+          lng: coords.longitude,
+          key: Date.now(),
+        });
       },
       undefined,
       { timeout: 6000 },
@@ -179,7 +238,13 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
 
   return (
     <div className="app">
-      <TopNav query={query} onQueryChange={setQuery} onLocationFound={handleLocationFound} onGeolocateClick={handleGeolocateClick} forcedPlaceholder={forcedPlaceholder}>
+      <TopNav
+        query={query}
+        onQueryChange={setQuery}
+        onLocationFound={handleLocationFound}
+        onGeolocateClick={handleGeolocateClick}
+        forcedPlaceholder={forcedPlaceholder}
+      >
         <FilterBar active={filter} onChange={handleFilterChange} />
       </TopNav>
       <div className="mapwrap" data-view={view}>
@@ -217,11 +282,11 @@ export function HomeClient({ initialSpaces, isAdmin, currentUserId, initialFilte
       <button
         type="button"
         className="view-toggle"
-        onClick={() => setView(v => v === 'map' ? 'list' : 'map')}
-        aria-label={view === 'map' ? t('view.showList') : t('view.showMap')}
+        onClick={() => setView((v) => (v === "map" ? "list" : "map"))}
+        aria-label={view === "map" ? t("view.showList") : t("view.showMap")}
       >
-        <Icon name={view === 'map' ? 'list' : 'map'} size={16} />
-        {view === 'map' ? t('view.showList') : t('view.showMap')}
+        <Icon name={view === "map" ? "list" : "map"} size={16} />
+        {view === "map" ? t("view.showList") : t("view.showMap")}
       </button>
     </div>
   );

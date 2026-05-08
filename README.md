@@ -40,7 +40,7 @@ I la ruta interactiva: `/design-system`.
 
 - Node.js 20+ / Bun
 - [Supabase CLI](https://supabase.com/docs/guides/cli) (`npm i -g supabase`)
-- Docker (per al Supabase local)
+- [Docker](https://www.docker.com/) (per al Supabase local)
 
 ### 2. Instal·la dependències
 
@@ -101,7 +101,7 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 
 ### Vercel
 URL develop: https://app-somespai.vercel.app 
-URL producció: https://app-somespai.vercel.app
+URL producció: https://app.somespai.net
 Dashboard: https://vercel.com/xarops-projects/app-somespai
 CNAME app cname.vercel-dns.com
 
