@@ -3,6 +3,7 @@
     "name": "somespai"
   },
   "nav": {
+    "home": "Home",
     "searchPlaceholder": "Search spaces near you…",
     "searchLocating": "Locating…",
     "searchNear": "Search spaces in {location}…",
