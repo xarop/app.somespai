@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import type { Space } from '@/lib/schemas/space';
-import { Icon, type IconName } from '@/components/ui/icon';
-import { getReviews, addReview, type Review } from '@/lib/supabase/reviews';
-import { createClient } from '@/lib/supabase/client';
-import { getSlugFromType } from '@/lib/seo/type-slugs';
+import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import type { Space } from "@/lib/schemas/space";
+import { Icon, type IconName } from "@/components/ui/icon";
+import { getReviews, addReview, type Review } from "@/lib/supabase/reviews";
+import { createClient } from "@/lib/supabase/client";
+import { getSlugFromType } from "@/lib/seo/type-slugs";
 
-const TYPE_ICON: Record<Space['type'], IconName> = {
-  storage: 'storage',
-  workspace: 'workspace',
-  garden: 'garden',
-  room: 'room',
-  parking: 'parking',
+const TYPE_ICON: Record<Space["type"], IconName> = {
+  storage: "storage",
+  workspace: "workspace",
+  garden: "garden",
+  room: "room",
+  parking: "parking",
 };
 
 interface SpaceDetailModalProps {
@@ -21,21 +21,31 @@ interface SpaceDetailModalProps {
   onClose: () => void;
   isAdmin?: boolean;
   currentUserId?: string;
-  onReviewAdded?: (spaceId: string, rating: number, reviewsCount: number) => void;
+  onReviewAdded?: (
+    spaceId: string,
+    rating: number,
+    reviewsCount: number,
+  ) => void;
   standalone?: boolean;
 }
 
-function StarRating({ value, onChange }: { value: number; onChange?: (v: number) => void }) {
+function StarRating({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange?: (v: number) => void;
+}) {
   return (
     <div className="star-rating" role="group" aria-label="Puntuació">
-      {[1, 2, 3, 4, 5].map(n => (
+      {[1, 2, 3, 4, 5].map((n) => (
         <button
           key={n}
           type="button"
           className="star-btn"
           aria-pressed={value >= n}
           onClick={() => onChange?.(n)}
-          style={{ color: value >= n ? 'var(--gold)' : 'var(--ink-mute)' }}
+          style={{ color: value >= n ? "var(--gold)" : "var(--ink-mute)" }}
         >
           <Icon name="star" size={20} />
         </button>
@@ -44,7 +54,14 @@ function StarRating({ value, onChange }: { value: number; onChange?: (v: number)
   );
 }
 
-export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onReviewAdded, standalone }: SpaceDetailModalProps) {
+export function SpaceDetailModal({
+  space,
+  onClose,
+  isAdmin,
+  currentUserId,
+  onReviewAdded,
+  standalone,
+}: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -52,7 +69,7 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userRating, setUserRating] = useState<number | null>(null);
   const [newRating, setNewRating] = useState(5);
-  const [newBody, setNewBody] = useState('');
+  const [newBody, setNewBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -71,19 +88,26 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
-    const handleClick = (e: MouseEvent) => { if (e.target === dialog) onClose(); };
+    const handleClick = (e: MouseEvent) => {
+      if (e.target === dialog) onClose();
+    };
     const handleClose = () => onClose();
-    dialog.addEventListener('click', handleClick);
-    dialog.addEventListener('close', handleClose);
+    dialog.addEventListener("click", handleClick);
+    dialog.addEventListener("close", handleClose);
     return () => {
-      dialog.removeEventListener('click', handleClick);
-      dialog.removeEventListener('close', handleClose);
+      dialog.removeEventListener("click", handleClick);
+      dialog.removeEventListener("close", handleClose);
     };
   }, [onClose]);
 
   // Load reviews + auth state when space opens
   useEffect(() => {
-    if (!space) { setReviews([]); setUserRating(null); setReviewsLoaded(false); return; }
+    if (!space) {
+      setReviews([]);
+      setUserRating(null);
+      setReviewsLoaded(false);
+      return;
+    }
     const supabase = createClient();
     supabase.auth.getUser().then(async ({ data }) => {
       const loggedIn = !!data.user;
@@ -92,7 +116,7 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       setReviews(r);
       setReviewsLoaded(true);
       if (loggedIn && data.user) {
-        const mine = r.find(rev => rev.authorId === data.user!.id);
+        const mine = r.find((rev) => rev.authorId === data.user!.id);
         setUserRating(mine?.rating ?? null);
       }
     });
@@ -102,8 +126,15 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
     if (!space) return;
     const url = `${window.location.origin}/${locale}/espai/${space.slug}`;
     if (navigator.share) {
-      try { await navigator.share({ title: space.title, text: space.description ?? '', url }); }
-      catch { /* cancelled */ }
+      try {
+        await navigator.share({
+          title: space.title,
+          text: space.description ?? "",
+          url,
+        });
+      } catch {
+        /* cancelled */
+      }
     } else {
       await navigator.clipboard.writeText(url);
     }
@@ -119,47 +150,82 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       const updated = await getReviews(space.id);
       setReviews(updated);
       setUserRating(newRating);
-      setNewBody('');
+      setNewBody("");
       const newAvg = updated.reduce((s, r) => s + r.rating, 0) / updated.length;
       onReviewAdded?.(space.id, newAvg, updated.length);
     } catch (err) {
-      setReviewError(err instanceof Error ? err.message : 'Error desconegut');
+      setReviewError(err instanceof Error ? err.message : "Error desconegut");
     }
     setSubmitting(false);
   }
 
   if (!space) return null;
 
-  const localeMap: Record<string, string> = { ca: 'ca-ES', es: 'es-ES', en: 'en-GB' };
-  const formattedPrice = space.priceCents > 0
-    ? new Intl.NumberFormat(localeMap[locale] ?? 'ca-ES', {
-        style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
-      }).format(space.priceCents / 100)
-    : '?';
+  const localeMap: Record<string, string> = {
+    ca: "ca-ES",
+    es: "es-ES",
+    en: "en-GB",
+  };
+  const formattedPrice =
+    space.priceCents > 0
+      ? new Intl.NumberFormat(localeMap[locale] ?? "ca-ES", {
+          style: "currency",
+          currency: "EUR",
+          maximumFractionDigits: 0,
+        }).format(space.priceCents / 100)
+      : "?";
 
-  const isVerified = (space as Space & { ownerVerified?: boolean }).ownerVerified;
+  const isVerified = (space as Space & { ownerVerified?: boolean })
+    .ownerVerified;
 
   const whatsappHref = space.whatsapp
-    ? `https://wa.me/${space.whatsapp.replace(/[^\d]/g, '')}`
+    ? `https://wa.me/${space.whatsapp.replace(/[^\d]/g, "")}`
     : null;
 
   const contactOptions = {
-    web:      space.web          ? { href: space.web,                    label: t('detail.web'),      external: true  } : null,
-    phone:    space.phone        ? { href: `tel:${space.phone}`,         label: t('detail.phone'),    external: false } : null,
-    email:    space.emailContact ? { href: `mailto:${space.emailContact}`,label: t('detail.email'),   external: false } : null,
-    whatsapp: whatsappHref       ? { href: whatsappHref,                  label: t('detail.whatsapp'),external: true  } : null,
+    web: space.web
+      ? { href: space.web, label: t("detail.web"), external: true }
+      : null,
+    phone: space.phone
+      ? {
+          href: `tel:${space.phone}`,
+          label: t("detail.phone"),
+          external: false,
+        }
+      : null,
+    email: space.emailContact
+      ? {
+          href: `mailto:${space.emailContact}`,
+          label: t("detail.email"),
+          external: false,
+        }
+      : null,
+    whatsapp: whatsappHref
+      ? { href: whatsappHref, label: t("detail.whatsapp"), external: true }
+      : null,
   } as const;
-  const primaryContact = contactOptions[space.contactDefault] ?? Object.values(contactOptions).find(Boolean);
+  const primaryContact =
+    contactOptions[space.contactDefault] ??
+    Object.values(contactOptions).find(Boolean);
 
-  const Wrapper = standalone ? 'div' : 'dialog';
-  const wrapperProps = standalone 
-    ? { className: "space-standalone", 'aria-labelledby': "space-title" } 
-    : { ref: dialogRef as any, 'data-modal': true, 'aria-labelledby': "space-title" };
+  const Wrapper = standalone ? "div" : "dialog";
+  const wrapperProps = standalone
+    ? { className: "space-standalone", "aria-labelledby": "space-title" }
+    : {
+        ref: dialogRef as any,
+        "data-modal": true,
+        "aria-labelledby": "space-title",
+      };
 
   return (
     <Wrapper {...wrapperProps}>
       {!standalone && (
-        <button type="button" className="modal__close" aria-label="Close" onClick={onClose}>
+        <button
+          type="button"
+          className="modal__close"
+          aria-label="Close"
+          onClick={onClose}
+        >
           <Icon name="close" size={18} />
         </button>
       )}
@@ -182,16 +248,24 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       ) : null}
 
       {standalone && (
-        <nav className="detail__breadcrumbs" aria-label="Breadcrumb" style={{ paddingBottom: 'var(--s-3)' }}>
-          <a href={locale === 'ca' ? '/' : `/${locale}`}>{t('nav.home')}</a>
+        <nav
+          className="detail__breadcrumbs"
+          aria-label="Breadcrumb"
+          style={{ paddingBottom: "var(--s-3)" }}
+        >
+          <a href={locale === "ca" ? "/" : `/${locale}`}>{t("nav.home")}</a>
           <span className="separator"> / </span>
           {space.city && (
             <>
-              <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}`}>
+              <a
+                href={`${locale === "ca" ? "" : `/${locale}`}/${space.city.toLowerCase()}`}
+              >
                 {space.city}
               </a>
               <span className="separator"> / </span>
-              <a href={`${locale === 'ca' ? '' : `/${locale}`}/${space.city.toLowerCase()}/${getSlugFromType(space.type, locale)}`}>
+              <a
+                href={`${locale === "ca" ? "" : `/${locale}`}/${space.city.toLowerCase()}/${getSlugFromType(space.type, locale)}`}
+              >
                 {t(`filter.${space.type as any}`)}
               </a>
               <span className="separator"> / </span>
@@ -203,7 +277,11 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
       <div className="detail__hero" data-type={space.type}>
         {space.photos[0] ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={space.photos[0]} alt={space.title} className="detail__hero-img" />
+          <img
+            src={space.photos[0]}
+            alt={space.title}
+            className="detail__hero-img"
+          />
         ) : (
           <Icon name={TYPE_ICON[space.type]} size={88} className="glyph" />
         )}
@@ -217,21 +295,37 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
           <div>
             <h1 id="space-title" className="detail__title">
               {space.title}
-              {isVerified && <span className="badge-verified" title="Verificat">✓</span>}
+              {isVerified && (
+                <span className="badge-verified" title="Verificat">
+                  ✓
+                </span>
+              )}
             </h1>
             <p className="detail__meta">
-              <span><Icon name="pin" size={14} />{[space.address, space.city].filter(Boolean).join(', ')}</span>
+              <span>
+                <Icon name="pin" size={14} />
+                {[space.address, space.city].filter(Boolean).join(", ")}
+              </span>
               {space.sizeM2 != null && (
-                <span><Icon name="ruler" size={14} />{t('detail.size', { n: space.sizeM2 })}</span>
+                <span>
+                  <Icon name="ruler" size={14} />
+                  {t("detail.size", { n: space.sizeM2 })}
+                </span>
               )}
               <span>
                 <Icon name="star" size={14} />
                 {reviewsLoaded
-                  ? (reviews.length > 0
-                      ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
-                      : space.rating.toFixed(1))
-                  : space.rating.toFixed(1)
-                } · {t('detail.reviews', { n: reviewsLoaded ? reviews.length : space.reviewsCount })}
+                  ? reviews.length > 0
+                    ? (
+                        reviews.reduce((s, r) => s + r.rating, 0) /
+                        reviews.length
+                      ).toFixed(1)
+                    : space.rating.toFixed(1)
+                  : space.rating.toFixed(1)}{" "}
+                ·{" "}
+                {t("detail.reviews", {
+                  n: reviewsLoaded ? reviews.length : space.reviewsCount,
+                })}
               </span>
             </p>
           </div>
@@ -241,16 +335,30 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
           </p>
         </header>
 
-        {space.description && <p className="detail__desc">{space.description}</p>}
+        {space.description && (
+          <p className="detail__desc">{space.description}</p>
+        )}
 
         {space.amenities.length > 0 && (
           <div>
-            <small style={{ color: 'var(--ink-mute)', textTransform: 'uppercase', letterSpacing: '0.08em', fontSize: '11px' }}>
-              {t('detail.amenities')}
+            <small
+              style={{
+                color: "var(--ink-mute)",
+                textTransform: "uppercase",
+                letterSpacing: "0.08em",
+                fontSize: "11px",
+              }}
+            >
+              {t("detail.amenities")}
             </small>
-            <div className="detail__amenities" style={{ marginTop: 'var(--s-2)' }}>
+            <div
+              className="detail__amenities"
+              style={{ marginTop: "var(--s-2)" }}
+            >
               {space.amenities.map((a) => (
-                <span key={a} className="amenity">{t(`amenity.${a}` as Parameters<typeof t>[0])}</span>
+                <span key={a} className="amenity">
+                  {t(`amenity.${a}` as Parameters<typeof t>[0])}
+                </span>
               ))}
             </div>
           </div>
@@ -260,13 +368,21 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
           {primaryContact && (
             <a
               href={primaryContact.href}
-              {...(primaryContact.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              {...(primaryContact.external
+                ? { target: "_blank", rel: "noopener noreferrer" }
+                : {})}
               data-variant="primary"
             >
-              {space.contactDefault === 'whatsapp' && <Icon name="share" size={16} />}
-              {space.contactDefault === 'phone'    && <Icon name="phone" size={16} />}
-              {space.contactDefault === 'email'    && <Icon name="mail"  size={16} />}
-              {t('detail.contact')}
+              {space.contactDefault === "whatsapp" && (
+                <Icon name="share" size={16} />
+              )}
+              {space.contactDefault === "phone" && (
+                <Icon name="phone" size={16} />
+              )}
+              {space.contactDefault === "email" && (
+                <Icon name="mail" size={16} />
+              )}
+              {t("detail.contact")}
             </a>
           )}
 
@@ -279,25 +395,27 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
               className="detail__action-link"
             >
               <Icon name="pin" size={16} />
-              <span className="detail__action-label">{t('detail.location')}</span>
+              <span className="detail__action-label">
+                {t("detail.location")}
+              </span>
             </a>
           )}
 
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />
-            <span className="detail__action-label">{t('detail.share')}</span>
+            <span className="detail__action-label">{t("detail.share")}</span>
           </button>
         </div>
 
         {/* ── Reviews ── */}
         <section className="reviews">
-          <h3 className="reviews__title">{t('review.title')}</h3>
+          <h3 className="reviews__title">{t("review.title")}</h3>
 
           {reviewsLoaded && reviews.length === 0 && (
-            <p className="reviews__empty">{t('review.noReviews')}</p>
+            <p className="reviews__empty">{t("review.noReviews")}</p>
           )}
 
-          {reviews.map(r => (
+          {reviews.map((r) => (
             <div key={r.id} className="review-item">
               <div className="review-item__head">
                 <span className="review-item__author">{r.authorEmail}</span>
@@ -310,32 +428,40 @@ export function SpaceDetailModal({ space, onClose, isAdmin, currentUserId, onRev
           {/* Review form */}
           {isLoggedIn && userRating === null && (
             <form onSubmit={handleReviewSubmit} className="review-form">
-              <p className="reviews__title" style={{ fontSize: 'var(--t-sm)' }}>{t('review.add')}</p>
+              <p className="reviews__title" style={{ fontSize: "var(--t-sm)" }}>
+                {t("review.add")}
+              </p>
               <StarRating value={newRating} onChange={setNewRating} />
               <textarea
                 className="field__input field__textarea"
                 rows={3}
                 value={newBody}
-                onChange={e => setNewBody(e.target.value)}
-                placeholder={t('review.bodyPlaceholder')}
+                onChange={(e) => setNewBody(e.target.value)}
+                placeholder={t("review.bodyPlaceholder")}
               />
-              {reviewError && (
-                <p className="reviews__error">{reviewError}</p>
-              )}
-              <button type="submit" data-variant="primary" disabled={submitting} style={{ alignSelf: 'flex-start' }}>
-                {submitting ? t('review.submitting') : t('review.submit')}
+              {reviewError && <p className="reviews__error">{reviewError}</p>}
+              <button
+                type="submit"
+                data-variant="primary"
+                disabled={submitting}
+                style={{ alignSelf: "flex-start" }}
+              >
+                {submitting ? t("review.submitting") : t("review.submit")}
               </button>
             </form>
           )}
 
           {isLoggedIn && userRating !== null && (
-            <p className="reviews__empty" style={{ color: 'var(--primary-ink)' }}>
-              {t('review.alreadyReviewed')} <StarRating value={userRating} />
+            <p
+              className="reviews__empty"
+              style={{ color: "var(--primary-ink)" }}
+            >
+              {t("review.alreadyReviewed")} <StarRating value={userRating} />
             </p>
           )}
 
           {!isLoggedIn && (
-            <p className="reviews__empty">{t('review.loginRequired')}</p>
+            <p className="reviews__empty">{t("review.loginRequired")}</p>
           )}
         </section>
       </div>
