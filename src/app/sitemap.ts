@@ -10,7 +10,7 @@ import type { SpaceType } from "@/lib/schemas/space";
 const BASE = "https://coslot.space";
 const LOCALES = ["ca", "es", "en"] as const;
 
-export const revalidate = 0; // Force generating fresh sitemap
+export const dynamic = 'force-dynamic'; // Force generating fresh sitemap
 
 function u(path: string, locale: string): string {
   const prefix = locale === "ca" ? "" : `/${locale}`;
