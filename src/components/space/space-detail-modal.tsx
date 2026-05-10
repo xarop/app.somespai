@@ -7,6 +7,7 @@ import { Icon, type IconName } from "@/components/ui/icon";
 import { getReviews, addReview, type Review } from "@/lib/supabase/reviews";
 import { createClient } from "@/lib/supabase/client";
 import { getSlugFromType } from "@/lib/seo/type-slugs";
+import { formatLocation } from "@/lib/geo";
 
 const TYPE_ICON: Record<Space["type"], IconName> = {
   storage: "storage",
@@ -304,7 +305,7 @@ export function SpaceDetailModal({
             <p className="detail__meta">
               <span>
                 <Icon name="pin" size={14} />
-                {[space.address, space.city].filter(Boolean).join(", ")}
+                {formatLocation(space.address, space.city)}
               </span>
               {space.sizeM2 != null && (
                 <span>

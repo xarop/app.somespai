@@ -1783,10 +1783,60 @@
     color: var(--danger);
   }
 
+  .geo-autofill {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .geo-autofill__button {
+    width: 100%;
+    padding: var(--s-3) var(--s-4);
+    border: 1.5px dashed var(--primary);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: var(--ink);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .geo-autofill__button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+  }
+
+  .geo-autofill__button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .geo-autofill__hint {
+    font-size: var(--text-sm);
+    color: var(--ink-mute);
+    margin: 0;
+  }
+
+  .geo-autofill[data-status="error"] .geo-autofill__hint {
+    color: var(--danger);
+  }
+
+  .field__input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .field__input-group .field__input {
+    flex: 1;
+  }
+
   .field__geo-btn {
-    align-self: flex-end;
     height: 44px;
-    padding: 0 var(--s-4);
+    padding: 0 var(--s-3);
     border: 1.5px solid var(--glass-border);
     border-radius: var(--r-md);
     background: var(--glass-strong);

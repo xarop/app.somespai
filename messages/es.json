@@ -202,7 +202,13 @@
     "successTitle": "¡Espacio publicado!",
     "successDesc": "Tu espacio ya es visible en Somespai.",
     "viewSpace": "Ver el espacio",
-    "loginRequired": "Debes estar identificado para publicar un espacio."
+    "loginRequired": "Debes estar identificado para publicar un espacio.",
+    "autofillButton": "Rellenar desde mi ubicación",
+    "autofillLocating": "Obteniendo ubicación…",
+    "autofillGeocoding": "Buscando dirección…",
+    "autofillSuccess": "Campos rellenados con tu ubicación actual.",
+    "autofillError": "No hemos podido obtener tu ubicación. Comprueba los permisos del navegador.",
+    "amenitiesSelectType": "Selecciona primero el tipo de espacio para ver los equipamientos disponibles."
   },
   "review": {
     "title": "Reseñas",
