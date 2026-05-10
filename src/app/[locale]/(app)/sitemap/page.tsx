@@ -24,23 +24,24 @@ export default async function MapaWebPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const [cities, pairs, spaces, t, ts] = await Promise.all([
+  const [cities, pairs, spaces, t, ts, tType] = await Promise.all([
     getDistinctCities(),
     getDistinctCityTypePairs(),
     getAllActiveSpacesSummary(),
     getTranslations('sitemap'),
     getTranslations('seo'),
+    getTranslations('spaceType'),
   ]);
 
   const localePrefix = locale === 'ca' ? '' : `/${locale}`;
 
-  // Group city+type pairs by city
-  const pairsByCity = new Map<string, string[]>();
+  // Group city+type pairs by city, storing both slug and original type
+  const pairsByCity = new Map<string, { slug: string; type: SpaceType }[]>();
   for (const { city, type } of pairs) {
     const typeSlug = TYPE_TO_SLUG_BY_LOCALE[locale]?.[type as SpaceType];
     if (!typeSlug) continue;
     const list = pairsByCity.get(city) ?? [];
-    list.push(typeSlug);
+    list.push({ slug: typeSlug, type: type as SpaceType });
     pairsByCity.set(city, list);
   }
 
@@ -79,10 +80,10 @@ export default async function MapaWebPage({ params }: Props) {
                     </a>
                     {types.length > 0 && (
                       <ul className="sitemap-city__types">
-                        {types.map((typeSlug) => (
-                          <li key={typeSlug}>
-                            <a href={`${localePrefix}/${citySlug}/${typeSlug}`}>
-                              {ts(`typeSlugs.${typeSlug}`)}
+                        {types.map(({ slug, type }) => (
+                          <li key={slug}>
+                            <a href={`${localePrefix}/${citySlug}/${slug}`}>
+                              {tType(type)}
                             </a>
                           </li>
                         ))}

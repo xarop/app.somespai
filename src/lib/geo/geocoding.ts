@@ -83,7 +83,7 @@ const NOMINATIM_ENDPOINT = 'https://nominatim.openstreetmap.org/reverse';
  */
 const USER_AGENT =
   process.env.NOMINATIM_USER_AGENT ??
-  'somespai/1.0 (https://app.somespai.net; contact: hola@somespai.net)';
+  'somespai/1.0 (https://app.somespai.net; contact: somespai@xarop.com)';
 
 const NOMINATIM_BASE_URL =
   process.env.NOMINATIM_BASE_URL ?? NOMINATIM_ENDPOINT;

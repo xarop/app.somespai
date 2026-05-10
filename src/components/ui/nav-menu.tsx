@@ -219,7 +219,7 @@ export function NavMenu() {
           <nav>
             <a href={`/${locale}/privacitat`} onClick={() => setMenuOpen(false)}>{t("nav.privacy")}</a>
             <a href={`/${locale}/termes`} onClick={() => setMenuOpen(false)}>{t("nav.terms")}</a>
-            <a href={`/${locale}/mapa-web`} onClick={() => setMenuOpen(false)}>Mapa</a>
+            <a href={`/${locale}/sitemap`} onClick={() => setMenuOpen(false)}>Mapa web</a>
           </nav>
         </div>
       </div>
