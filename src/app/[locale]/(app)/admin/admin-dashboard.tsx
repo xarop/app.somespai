@@ -943,53 +943,62 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
     });
   }
 
+  const SB = 'http://127.0.0.1:54323/project/default';
+
   return (
     <div className="admin-dashboard">
       {/* Tabs */}
-      <div className="admin-tabs">
-        <button
-          type="button"
-          className={`admin-tab${activeTab === 'spaces' ? ' admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('spaces')}
-        >
-          <Icon name="list" size={15} />
-          {t('tabSpaces')}
-          <span className="admin-tab__count">{initialSpaces.length}</span>
-        </button>
-        <button
-          type="button"
-          className={`admin-tab${activeTab === 'users' ? ' admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('users')}
-        >
-          <Icon name="user" size={15} />
-          {t('tabUsers')}
-          <span className="admin-tab__count">{usersCount ?? '…'}</span>
-        </button>
-        <button
-          type="button"
-          className={`admin-tab${activeTab === 'messages' ? ' admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('messages')}
-        >
-          <Icon name="mail" size={15} />
-          {t('tabMessages')}
-          {msgCounts && (
-            <span className="admin-tab__count">
-              {msgCounts.unread > 0 ? `${msgCounts.unread}/${msgCounts.total}` : msgCounts.total}
-            </span>
-          )}
-        </button>
-        <button
-          type="button"
-          className={`admin-tab${activeTab === 'analytics' ? ' admin-tab--active' : ''}`}
-          onClick={() => setActiveTab('analytics')}
-        >
-          <Icon name="globe" size={15} />
-          {t('tabAnalytics')}
-        </button>
+      <div className="admin-tabs-row">
+        <div className="admin-tabs">
+          <button
+            type="button"
+            className={`admin-tab${activeTab === 'spaces' ? ' admin-tab--active' : ''}`}
+            onClick={() => setActiveTab('spaces')}
+          >
+            <Icon name="list" size={15} />
+            {t('tabSpaces')}
+            <span className="admin-tab__count">{initialSpaces.length}</span>
+          </button>
+          <button
+            type="button"
+            className={`admin-tab${activeTab === 'users' ? ' admin-tab--active' : ''}`}
+            onClick={() => setActiveTab('users')}
+          >
+            <Icon name="user" size={15} />
+            {t('tabUsers')}
+            <span className="admin-tab__count">{usersCount ?? '…'}</span>
+          </button>
+          <button
+            type="button"
+            className={`admin-tab${activeTab === 'messages' ? ' admin-tab--active' : ''}`}
+            onClick={() => setActiveTab('messages')}
+          >
+            <Icon name="mail" size={15} />
+            {t('tabMessages')}
+            {msgCounts && (
+              <span className="admin-tab__count">
+                {msgCounts.unread > 0 ? `${msgCounts.unread}/${msgCounts.total}` : msgCounts.total}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            className={`admin-tab${activeTab === 'analytics' ? ' admin-tab--active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
+            <Icon name="globe" size={15} />
+            {t('tabAnalytics')}
+          </button>
+        </div>
       </div>
 
       {activeTab === 'analytics' && (
         <div style={{ padding: '2rem 0', maxWidth: 600 }}>
+          {process.env.NODE_ENV === 'development' && (
+            <a href={`${SB}/logs/explorer`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+              ↗ Supabase Logs
+            </a>
+          )}
           <p style={{ marginBottom: '1.5rem', color: 'var(--text-secondary)' }}>
             {t('analyticsDescription')}
           </p>
@@ -1015,18 +1024,39 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
       )}
 
       {activeTab === 'users' && (
-        <UsersTab 
-          onCountChange={setUsersCount} 
-          mainAdminEmail={mainAdminEmail} 
-          onViewUserSpaces={(userId) => {
-            setOwnerFilter(userId);
-            setActiveTab('spaces');
-          }}
-        />
+        <>
+          {process.env.NODE_ENV === 'development' && (
+            <a href={`${SB}/auth/users`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+              ↗ Supabase Auth → Users
+            </a>
+          )}
+          <UsersTab
+            onCountChange={setUsersCount}
+            mainAdminEmail={mainAdminEmail}
+            onViewUserSpaces={(userId) => {
+              setOwnerFilter(userId);
+              setActiveTab('spaces');
+            }}
+          />
+        </>
       )}
-      {activeTab === 'messages' && <MessagesTab onCountChange={setMsgCounts} />}
+      {activeTab === 'messages' && (
+        <>
+          {process.env.NODE_ENV === 'development' && (
+            <a href={`${SB}/editor?schema=public&table=messages`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+              ↗ Supabase → messages
+            </a>
+          )}
+          <MessagesTab onCountChange={setMsgCounts} />
+        </>
+      )}
 
       {activeTab === 'spaces' && <>
+      {process.env.NODE_ENV === 'development' && (
+        <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+          ↗ Supabase → spaces
+        </a>
+      )}
       {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat">

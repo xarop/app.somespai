@@ -52,26 +52,28 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     };
   }, [onClose]);
 
+  const isDevAdmin =
+    process.env.NODE_ENV === 'development' &&
+    !!email &&
+    email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email || loading) return;
-    if (mode !== 'resetPassword' && !password) return;
-    
-    setLoading(true);
-    setError(null);
-    setSuccessMsg(null);
 
-    // DEV BYPASS: intercept local admin sign-in
-    if (process.env.NODE_ENV === 'development' && email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+    // DEV BYPASS: skip password entirely for the local admin email
+    if (isDevAdmin) {
       document.cookie = 'dev_admin_bypass=true; path=/';
-      if (typeof window !== 'undefined') {
-        try {
-          window.localStorage.setItem('dev_admin_bypass', 'true');
-        } catch { /* ignore */ }
-      }
+      try { window.localStorage.setItem('dev_admin_bypass', 'true'); } catch { /* ignore */ }
       window.location.reload();
       return;
     }
+
+    if (mode !== 'resetPassword' && !password) return;
+
+    setLoading(true);
+    setError(null);
+    setSuccessMsg(null);
 
     const supabase = createClient();
     
@@ -155,7 +157,7 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
             />
           </label>
           
-          {mode !== 'resetPassword' && (
+          {mode !== 'resetPassword' && !isDevAdmin && (
             <label className="field">
               <span className="field__label">{t('auth.password')}</span>
               <input
@@ -168,6 +170,12 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
                 minLength={6}
               />
             </label>
+          )}
+
+          {isDevAdmin && (
+            <p style={{ fontSize: 'var(--t-sm)', color: 'var(--ink-mute)', margin: 0 }}>
+              🛠 Dev mode — entra directament sense contrasenya
+            </p>
           )}
           
           {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
