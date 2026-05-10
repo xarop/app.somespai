@@ -195,6 +195,28 @@ All public queries go through `src/lib/supabase/spaces.ts`. Admin operations use
 
 ---
 
+## Geo-autofill on the publish form
+
+The `/publica` (publish) form includes a **"Fill location"** button that automates address and coordinate entry:
+
+1. Requests geolocation permission from the browser (`navigator.geolocation`).
+2. Obtains GPS coordinates (`lat`/`lng`) from the device.
+3. Calls Nominatim (OpenStreetMap) for reverse geocoding to get a human-readable address.
+4. Automatically fills the `address`, `city`, `lat` and `lng` form fields.
+
+**Key files:**
+
+| File | Role |
+|------|------|
+| `src/components/space/geo-autofill-button.tsx` | Button component (state, UI, feedback) |
+| `src/hooks/use-geolocation.ts` | Hook wrapping `navigator.geolocation` |
+| `src/lib/geo/geocoding.ts` | Nominatim API call + response transformation |
+| `src/app/api/geo/route.ts` | Next.js route handler proxy to avoid CORS and set a proper User-Agent |
+
+The Nominatim call is proxied through a Next.js route handler (`/api/geo`) to avoid browser CORS restrictions and to include a valid User-Agent (`somespai/1.0`). No API key required.
+
+---
+
 ## SEO City Pages
 
 Statically generated for all cities with active spaces and for each city + type combination:

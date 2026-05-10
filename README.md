@@ -254,6 +254,7 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Sistema de Ressenyes (lectura, llistat i component visual de rating d'estrelles)
 - [x] Web Share API per compartir la fitxa d'espai
 - [x] Creació i suport de script d'importació d'anuncis automatitzat associat a l'API `admin/import`
+- [x] Auto-geolocalització al formulari de publicació: botó que omple adreça i coordenades automàticament via GPS + geocodificació inversa (Nominatim)
 
 ### Phase 3 — Panell d'Administració complet i Gestió d'Usuaris (Fet) ✅
 
@@ -308,6 +309,28 @@ Generades estàticament per a totes les ciutats amb espais actius i per a cada c
 | `/[city]/parking/` | Pàrquings a la ciutat |
 
 Les URLs de tipus estan localitzades: `/barcelona/parking` (CA/EN) · `/es/barcelona/parking` (ES). El component de cada pàgina és el mateix `HomeClient` que la home (mapa + llista), amb filtre i context preestablerts.
+
+### Auto-geolocalització al formulari de publicació
+
+El formulari `/publica` inclou un botó **"Omple ubicació"** que automatitza l'entrada d'adreça i coordenades:
+
+1. Demana permís de geolocalització al navegador (`navigator.geolocation`).
+2. Obté les coordenades GPS (`lat`/`lng`) del dispositiu.
+3. Crida Nominatim (OpenStreetMap) per obtenir l'adreça completa (geocodificació inversa).
+4. Omple automàticament els camps `address`, `city`, `lat` i `lng` del formulari.
+
+**Fitxers clau:**
+
+| Fitxer | Rol |
+|--------|-----|
+| `src/components/space/geo-autofill-button.tsx` | Component botó (estat, UI, feedback) |
+| `src/hooks/use-geolocation.ts` | Hook que encapsula `navigator.geolocation` |
+| `src/lib/geo/geocoding.ts` | Crida a l'API Nominatim + transformació de resposta |
+| `src/app/api/geo/route.ts` | Route handler proxy per evitar CORS i amagar l'User-Agent |
+
+La crida a Nominatim es fa des d'un route handler de Next.js (`/api/geo`) per tal d'evitar problemes de CORS i per poder incloure un User-Agent correcte (`somespai/1.0`). Requereix connexió a internet però no cap API key.
+
+---
 
 ### Llistat complet d'espais (`/espais/`)
 
