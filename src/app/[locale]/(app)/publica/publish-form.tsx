@@ -1,11 +1,13 @@
 'use client';
 
 import { useActionState, useState, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { createSpaceAction } from './actions';
+import type { ReverseGeocodeResponse } from '@/lib/schemas/geo';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
+type SpaceType = (typeof SPACE_TYPES)[number];
 
 const AMENITY_GROUPS: Record<string, string[]> = {
   'Connectivitat': ['wifi', 'fiber', 'hot_desk', 'fixed_desk', 'monitor', 'locker'],
@@ -19,6 +21,43 @@ const AMENITY_GROUPS: Record<string, string[]> = {
   'Altres': ['community', 'reception', 'sustainable', 'campus', 'cellar', 'soundproofed'],
 };
 
+const AMENITIES_BY_TYPE: Record<SpaceType, Set<string>> = {
+  storage: new Set([
+    'access_24h', 'cameras',
+    'electricity', 'water',
+    'cellar', 'sustainable',
+  ]),
+  workspace: new Set([
+    'wifi', 'fiber', 'hot_desk', 'fixed_desk', 'monitor', 'locker',
+    'meeting_room', 'event_space', 'whiteboard', 'podcast_studio',
+    'ac', 'heating', 'dimmable_light', 'hardwood_floor',
+    'coffee', 'kitchen', 'printer', 'printer_3d',
+    'access_24h', 'cameras', 'parking', 'bike_parking',
+    'terrace',
+    'projector', 'audio', 'tables', 'chairs', 'electricity',
+    'community', 'reception', 'sustainable', 'campus', 'soundproofed',
+  ]),
+  garden: new Set([
+    'terrace', 'bbq', 'pool', 'shade', 'sea_view', 'mountain_view',
+    'tables', 'chairs', 'electricity', 'water',
+    'access_24h', 'cameras',
+    'sustainable',
+  ]),
+  room: new Set([
+    'wifi', 'locker',
+    'ac', 'heating', 'dimmable_light', 'hardwood_floor',
+    'coffee', 'kitchen',
+    'access_24h', 'cameras', 'parking', 'bike_parking',
+    'projector', 'audio', 'tables', 'chairs', 'electricity',
+    'community', 'reception', 'sustainable', 'soundproofed',
+  ]),
+  parking: new Set([
+    'covered', 'ev_charger', 'auto_gate', 'motorbike_ok', 'van_access',
+    'access_24h', 'cameras',
+    'sustainable',
+  ]),
+};
+
 interface PublishFormProps {
   isLoggedIn?: boolean;
 }
@@ -27,14 +66,19 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
   const t = useTranslations('publish');
   const tAmenity = useTranslations('amenity');
   const tSpaceType = useTranslations('spaceType');
+  const locale = useLocale();
 
   const [state, formAction, isPending] = useActionState(createSpaceAction, null);
 
+  const [selectedType, setSelectedType] = useState<SpaceType | null>(null);
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
+  const [autofillState, setAutofillState] = useState<'idle' | 'locating' | 'geocoding' | 'done' | 'error'>('idle');
   const [lat, setLat] = useState('41.4047');
   const [lng, setLng] = useState('2.1567');
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
   const addressRef = useRef<HTMLInputElement>(null);
+  const neighborhoodRef = useRef<HTMLInputElement>(null);
+  const cityRef = useRef<HTMLInputElement>(null);
 
   async function geocodeAddress() {
     const addr = addressRef.current?.value;
@@ -56,6 +100,49 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
     } catch {
       setGeoState('error');
     }
+  }
+
+  async function autofillFromLocation() {
+    if (!navigator.geolocation) {
+      setAutofillState('error');
+      return;
+    }
+    setAutofillState('locating');
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        setAutofillState('geocoding');
+        try {
+          const res = await fetch('/api/geo/reverse', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+              language: locale,
+            }),
+          });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = (await res.json()) as ReverseGeocodeResponse;
+
+          if (addressRef.current && !addressRef.current.value) {
+            addressRef.current.value = data.formatted;
+          }
+          if (neighborhoodRef.current && !neighborhoodRef.current.value) {
+            neighborhoodRef.current.value = data.neighborhood;
+          }
+          if (cityRef.current && !cityRef.current.value) {
+            cityRef.current.value = data.city;
+          }
+          setLat(String(data.lat));
+          setLng(String(data.lng));
+          setAutofillState('done');
+        } catch {
+          setAutofillState('error');
+        }
+      },
+      () => setAutofillState('error'),
+      { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 },
+    );
   }
 
   function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
@@ -126,7 +213,14 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           <div className="espais-filter-chips">
             {SPACE_TYPES.map(type => (
               <label key={type} className="chip" data-type={type}>
-                <input type="radio" name="type" value={type} required className="visually-hidden" />
+                <input
+                  type="radio"
+                  name="type"
+                  value={type}
+                  required
+                  className="visually-hidden"
+                  onChange={() => setSelectedType(type)}
+                />
                 <span className="chip__icon">
                   <Icon name={type} size={16} />
                 </span>
@@ -175,16 +269,31 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionLocation')}</legend>
 
-        <div className="field-row field-row--address">
-          <label className="field field--grow">
-            <span className="field__label">{t('fieldAddress')}</span>
-            <input ref={addressRef} name="address" type="text" className="field__input"
-              placeholder={t('fieldAddressPlaceholder')} onBlur={geocodeAddress} />
-          </label>
-          <button type="button" className="field__geo-btn" onClick={geocodeAddress} disabled={geoState === 'loading'}>
-            <Icon name="pin" size={16} />
+        <div className="geo-autofill" data-status={autofillState}>
+          <button
+            type="button"
+            onClick={autofillFromLocation}
+            disabled={autofillState === 'locating' || autofillState === 'geocoding'}
+            className="geo-autofill__button"
+          >
+            <span className="geo-autofill__icon" aria-hidden="true">📍</span>
+            {autofillState === 'locating' && t('autofillLocating')}
+            {autofillState === 'geocoding' && t('autofillGeocoding')}
+            {(autofillState === 'idle' || autofillState === 'done' || autofillState === 'error') && t('autofillButton')}
           </button>
+          {autofillState === 'done' && (
+            <p className="geo-autofill__hint" role="status">{t('autofillSuccess')}</p>
+          )}
+          {autofillState === 'error' && (
+            <p className="geo-autofill__hint" role="alert">{t('autofillError')}</p>
+          )}
         </div>
+
+        <label className="field">
+          <span className="field__label">{t('fieldAddress')}</span>
+          <input ref={addressRef} name="address" type="text" className="field__input"
+            placeholder={t('fieldAddressPlaceholder')} onBlur={geocodeAddress} />
+        </label>
         {geoState === 'loading' && <p className="field__hint">{t('geolocating')}</p>}
         {geoState === 'error' && <p className="field__hint field__hint--error">{t('geoError')}</p>}
         {lat && lng && geoState !== 'error' && (
@@ -197,11 +306,11 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
         <div className="field-row">
           <label className="field field--grow">
             <span className="field__label">{t('fieldNeighborhood')}</span>
-            <input name="neighborhood" type="text" className="field__input" />
+            <input ref={neighborhoodRef} name="neighborhood" type="text" className="field__input" />
           </label>
           <label className="field field--grow">
             <span className="field__label">{t('fieldCity')}</span>
-            <input name="city" type="text" className="field__input" />
+            <input ref={cityRef} name="city" type="text" className="field__input" />
           </label>
         </div>
       </fieldset>
@@ -209,19 +318,27 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       {/* ── Amenities ── */}
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionAmenities')}</legend>
-        {Object.entries(AMENITY_GROUPS).map(([group, items]) => (
-          <div key={group} className="amenity-group">
-            <p className="amenity-group__label">{group}</p>
-            <div className="checkbox-grid">
-              {items.map(id => (
-                <label key={id} className="checkbox-item">
-                  <input type="checkbox" name="amenities" value={id} />
-                  <span>{tAmenity(id as Parameters<typeof tAmenity>[0])}</span>
-                </label>
-              ))}
+        {!selectedType && (
+          <p className="field__hint">{t('amenitiesSelectType')}</p>
+        )}
+        {selectedType && Object.entries(AMENITY_GROUPS).map(([group, items]) => {
+          const allowed = AMENITIES_BY_TYPE[selectedType];
+          const visible = items.filter(id => allowed.has(id));
+          if (visible.length === 0) return null;
+          return (
+            <div key={group} className="amenity-group">
+              <p className="amenity-group__label">{group}</p>
+              <div className="checkbox-grid">
+                {visible.map(id => (
+                  <label key={id} className="checkbox-item">
+                    <input type="checkbox" name="amenities" value={id} />
+                    <span>{tAmenity(id as Parameters<typeof tAmenity>[0])}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </fieldset>
 
       {/* ── Photos ── */}

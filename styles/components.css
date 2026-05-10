@@ -385,16 +385,14 @@
   /* ── Copyright strip ─────────────────────────────────────────────────── */
   .dropmenu__copyright {
     display: flex;
+    flex-direction: column-reverse;
     align-items: center;
-    justify-content: space-between;
-    flex-wrap: nowrap;
     gap: var(--s-2);
     padding: var(--s-3) var(--s-4);
     border-top: 1px solid var(--glass-border);
     font-size: var(--t-xs);
     color: var(--ink-mute);
     padding-bottom: calc(var(--s-3) + env(safe-area-inset-bottom, 0px));
-    white-space: nowrap;
   }
 
   .dropmenu__copyright span a {
@@ -415,7 +413,6 @@
   .dropmenu__copyright nav {
     display: flex;
     gap: var(--s-3);
-    flex-shrink: 0;
   }
 
   .dropmenu__copyright nav a {
@@ -1783,10 +1780,60 @@
     color: var(--danger);
   }
 
+  .geo-autofill {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .geo-autofill__button {
+    width: 100%;
+    padding: var(--s-3) var(--s-4);
+    border: 1.5px dashed var(--primary);
+    border-radius: var(--r-md);
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    color: var(--ink);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-2);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .geo-autofill__button:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+  }
+
+  .geo-autofill__button:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .geo-autofill__hint {
+    font-size: var(--text-sm);
+    color: var(--ink-mute);
+    margin: 0;
+  }
+
+  .geo-autofill[data-status="error"] .geo-autofill__hint {
+    color: var(--danger);
+  }
+
+  .field__input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+
+  .field__input-group .field__input {
+    flex: 1;
+  }
+
   .field__geo-btn {
-    align-self: flex-end;
     height: 44px;
-    padding: 0 var(--s-4);
+    padding: 0 var(--s-3);
     border: 1.5px solid var(--glass-border);
     border-radius: var(--r-md);
     background: var(--glass-strong);
@@ -2075,11 +2122,40 @@
     gap: var(--s-4);
   }
 
+  .admin-tabs-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-3);
+    margin-bottom: var(--s-2);
+  }
+
+  .admin-supabase-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--ink-mute);
+    text-decoration: none;
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-bottom: 2px;
+  }
+
+  .admin-supabase-link:hover {
+    color: var(--ink);
+    border-color: var(--ink-mute);
+  }
+
   .admin-tabs {
     display: flex;
     gap: var(--s-1);
     border-bottom: 2px solid var(--border);
-    margin-bottom: var(--s-2);
+    flex: 1;
   }
 
   .admin-tab {
@@ -2096,6 +2172,7 @@
     color: var(--ink-mute);
     cursor: pointer;
     transition: color var(--t-fast), border-color var(--t-fast);
+    white-space: nowrap;
   }
 
   .admin-tab:hover {
@@ -2120,6 +2197,36 @@
   .admin-tab--active .admin-tab__count {
     background: var(--primary-tint);
     color: var(--primary);
+  }
+
+  @media (max-width: 600px) {
+    .admin-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: none;
+      gap: var(--s-2);
+      margin-bottom: var(--s-4);
+    }
+
+    .admin-tab {
+      justify-content: center;
+      border: 1.5px solid var(--border);
+      border-bottom: 1.5px solid var(--border);
+      border-radius: var(--r-md);
+      margin-bottom: 0;
+      padding: var(--s-3);
+      background: var(--glass-strong);
+    }
+
+    .admin-tab--active {
+      border-color: var(--primary);
+      background: var(--primary-tint);
+      color: var(--ink);
+    }
+
+    .admin-tab--active .admin-tab__count {
+      background: color-mix(in srgb, var(--primary) 20%, transparent);
+    }
   }
 
   .admin-stats {
@@ -3357,6 +3464,67 @@
   .seo-page__desc {
     color: var(--ink-mute);
     font-size: var(--t-sm);
+  }
+
+  /* Legal pages */
+  .legal-body {
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 780px;
+  }
+
+  .legal-body h2 {
+    font-size: var(--t-lg);
+    font-weight: 600;
+    margin: var(--s-7) 0 var(--s-3);
+  }
+
+  .legal-body p {
+    margin-bottom: var(--s-3);
+  }
+
+  .legal-body ul {
+    margin: var(--s-2) 0 var(--s-3) var(--s-5);
+  }
+
+  .legal-body li {
+    margin-bottom: var(--s-2);
+  }
+
+  .legal-body section {
+    margin-bottom: var(--s-4);
+  }
+
+  .legal-updated {
+    font-size: var(--t-sm);
+    color: var(--ink-mute);
+    margin-bottom: var(--s-6);
+  }
+
+  .legal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--s-3) 0 var(--s-4);
+    font-size: var(--t-sm);
+  }
+
+  .legal-table th,
+  .legal-table td {
+    text-align: left;
+    padding: var(--s-2) var(--s-3);
+    border: 1px solid var(--border);
+  }
+
+  .legal-table th {
+    background: var(--surface);
+    font-weight: 600;
+  }
+
+  @media (max-width: 600px) {
+    .legal-table {
+      display: block;
+      overflow-x: auto;
+    }
   }
 
   /* Type nav chips */

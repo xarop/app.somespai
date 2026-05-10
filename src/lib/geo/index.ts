@@ -28,6 +28,21 @@ export function formatDistance(meters: number, locale = 'ca'): string {
   }).format(km) + ' km';
 }
 
+/**
+ * Format address + city for display, omitting the city if it already appears
+ * in the address string (e.g. full Nominatim `formatted` addresses include it).
+ */
+export function formatLocation(
+  address: string | null | undefined,
+  city: string | null | undefined,
+): string {
+  const a = address?.trim() ?? '';
+  const c = city?.trim() ?? '';
+  if (!a) return c;
+  if (!c || a.toLowerCase().includes(c.toLowerCase())) return a;
+  return `${a}, ${c}`;
+}
+
 /** Slugify a string for URLs. Diacritic-aware. */
 export function slugify(input: string): string {
   return input
