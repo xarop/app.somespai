@@ -376,3 +376,19 @@ bun run db:pull     # Baixa els anuncis creats pels usuaris reals al teu PC
 ## License
 
 Proprietary. © Somespai.
+
+---
+
+## Integració i comprovació
+
+Abans de desplegar o fer canvis importants, comprova:
+
+- [x] Connexió Supabase (local i producció)
+- [x] Variables d'entorn carregades
+- [x] Sitemap dinàmic
+- [x] Nom de marca dinàmic al design system
+- [x] Desplegament multibranca (Somespai / CoSlot)
+- [x] Traduccions EN/CA correctes
+- [x] Instruccions README actualitzades
+
+Consulta `INTEGRATION.md` per la checklist detallada i passos de validació.
