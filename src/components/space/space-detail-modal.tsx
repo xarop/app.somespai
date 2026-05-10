@@ -366,7 +366,7 @@ export function SpaceDetailModal({
         )}
 
         <div className="detail__actions">
-          {primaryContact && (
+          {primaryContact ? (
             <a
               href={primaryContact.href}
               {...(primaryContact.external
@@ -374,15 +374,18 @@ export function SpaceDetailModal({
                 : {})}
               data-variant="primary"
             >
-              {space.contactDefault === "whatsapp" && (
-                <Icon name="share" size={16} />
-              )}
-              {space.contactDefault === "phone" && (
-                <Icon name="phone" size={16} />
-              )}
-              {space.contactDefault === "email" && (
-                <Icon name="mail" size={16} />
-              )}
+              {space.contactDefault === "whatsapp" && <Icon name="whatsapp" size={16} />}
+              {space.contactDefault === "phone" && <Icon name="phone" size={16} />}
+              {space.contactDefault === "email" && <Icon name="mail" size={16} />}
+              {space.contactDefault === "web" && <Icon name="globe" size={16} />}
+              {t("detail.contact")}
+            </a>
+          ) : (
+            <a
+              href={`/${locale}/contacte?title=${encodeURIComponent(space.title)}&address=${encodeURIComponent(space.address ?? space.city ?? '')}`}
+              data-variant="primary"
+            >
+              <Icon name="mail" size={16} />
               {t("detail.contact")}
             </a>
           )}

@@ -22,6 +22,10 @@ export type GeocodeAddress = {
   formatted: string;
   /** Street name + number (e.g. "Carrer Gran de Gràcia, 132"). */
   street: string;
+  /** Raw road name without house number (e.g. "Carrer Gran de Gràcia"). */
+  road: string;
+  /** House / building number (e.g. "132"). */
+  houseNumber: string;
   /** Neighborhood / suburb (e.g. "Vila de Gràcia"). */
   neighborhood: string;
   /** City / locality (e.g. "Barcelona"). */
@@ -109,6 +113,8 @@ function parseNominatim(data: NominatimResponse): GeocodeAddress {
   return {
     formatted: data.display_name ?? '',
     street,
+    road: route,
+    houseNumber: number,
     neighborhood: pick(
       a.suburb,
       a.neighbourhood,

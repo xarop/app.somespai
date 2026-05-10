@@ -1,19 +1,59 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
+import { createClient } from '@/lib/supabase/client';
 import { submitContactAction } from './actions';
 import type { ContactState } from './actions';
 
-const TYPES = ['bug', 'suggestion', 'question', 'other'] as const;
+const TYPES = ['space', 'bug', 'suggestion', 'question', 'other'] as const;
 
-export function ContactForm() {
+interface ContactFormProps {
+  spaceTitle?: string;
+  spaceAddress?: string;
+}
+
+export function ContactForm({ spaceTitle, spaceAddress }: ContactFormProps) {
   const t = useTranslations('contact');
   const [state, formAction, isPending] = useActionState<ContactState, FormData>(
     submitContactAction,
     null,
   );
+
+  const isSpaceContact = !!(spaceTitle);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+  const [userLoaded, setUserLoaded] = useState(false);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      const user = data.user;
+      if (user) {
+        if (nameRef.current && !nameRef.current.value) {
+          nameRef.current.value =
+            user.user_metadata?.full_name ?? user.user_metadata?.name ?? '';
+        }
+        if (emailRef.current && !emailRef.current.value) {
+          emailRef.current.value = user.email ?? '';
+        }
+      }
+      setUserLoaded(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isSpaceContact || !messageRef.current) return;
+    const template = t('spaceMessageTemplate', {
+      title: spaceTitle ?? '',
+      address: spaceAddress ?? spaceTitle ?? '',
+    });
+    if (!messageRef.current.value) {
+      messageRef.current.value = template;
+    }
+  }, [isSpaceContact, spaceTitle, spaceAddress, t]);
 
   if (state?.ok) {
     return (
@@ -34,6 +74,7 @@ export function ContactForm() {
       <label className="field">
         <span className="field__label">{t('fieldName')} *</span>
         <input
+          ref={nameRef}
           name="name"
           type="text"
           className="field__input"
@@ -46,6 +87,7 @@ export function ContactForm() {
       <label className="field">
         <span className="field__label">{t('fieldEmail')} *</span>
         <input
+          ref={emailRef}
           name="email"
           type="email"
           className="field__input"
@@ -60,7 +102,13 @@ export function ContactForm() {
         <div className="contact-type-picker">
           {TYPES.map((type) => (
             <label key={type} className="contact-type-option">
-              <input type="radio" name="type" value={type} required defaultChecked={type === 'question'} />
+              <input
+                type="radio"
+                name="type"
+                value={type}
+                required
+                defaultChecked={isSpaceContact ? type === 'space' : type === 'question'}
+              />
               <span>{t(`type${type.charAt(0).toUpperCase() + type.slice(1)}` as Parameters<typeof t>[0])}</span>
             </label>
           ))}
@@ -70,6 +118,7 @@ export function ContactForm() {
       <label className="field">
         <span className="field__label">{t('fieldMessage')} *</span>
         <textarea
+          ref={messageRef}
           name="message"
           className="field__input field__textarea"
           required
@@ -80,7 +129,7 @@ export function ContactForm() {
         />
       </label>
 
-      <button type="submit" className="btn-primary contact-submit" disabled={isPending}>
+      <button type="submit" className="btn-primary contact-submit" disabled={isPending || !userLoaded}>
         {isPending ? t('submitting') : t('submit')}
       </button>
     </form>

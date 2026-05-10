@@ -19,6 +19,8 @@ export type ReverseGeocodeRequest = z.infer<typeof reverseGeocodeRequestSchema>;
 export const reverseGeocodeResponseSchema = z.object({
   formatted: z.string(),
   street: z.string(),
+  road: z.string(),
+  houseNumber: z.string(),
   neighborhood: z.string(),
   city: z.string(),
   province: z.string(),

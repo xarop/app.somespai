@@ -1,12 +1,15 @@
 'use client';
 
-import { useActionState, useState, useRef } from 'react';
+import { useActionState, useState, useRef, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
+import { createClient } from '@/lib/supabase/client';
 import { createSpaceAction } from './actions';
 import type { ReverseGeocodeResponse } from '@/lib/schemas/geo';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
+
+const STREET_PREFIX_RE = /^(carrer|avinguda|passeig|plaça|ronda|via|rambla|travessera|gran via|calle|avenida|paseo|plaza|cami|camí|pg\.|av\.|c\.)\s+(de\s+les?|dels?|d'|de\s+l'|de\s+)?/i;
 type SpaceType = (typeof SPACE_TYPES)[number];
 
 const AMENITY_GROUPS: Record<string, string[]> = {
@@ -71,14 +74,26 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
   const [state, formAction, isPending] = useActionState(createSpaceAction, null);
 
   const [selectedType, setSelectedType] = useState<SpaceType | null>(null);
+  const [titleAutofilled, setTitleAutofilled] = useState(false);
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [autofillState, setAutofillState] = useState<'idle' | 'locating' | 'geocoding' | 'done' | 'error'>('idle');
   const [lat, setLat] = useState('41.4047');
   const [lng, setLng] = useState('2.1567');
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const titleRef = useRef<HTMLInputElement>(null);
+  const titleLocationRef = useRef('');
   const addressRef = useRef<HTMLInputElement>(null);
   const neighborhoodRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
+  const emailContactRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    createClient().auth.getUser().then(({ data }) => {
+      if (data.user?.email && emailContactRef.current && !emailContactRef.current.value) {
+        emailContactRef.current.value = data.user.email;
+      }
+    });
+  }, []);
 
   async function geocodeAddress() {
     const addr = addressRef.current?.value;
@@ -124,14 +139,23 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
           const data = (await res.json()) as ReverseGeocodeResponse;
 
-          if (addressRef.current && !addressRef.current.value) {
-            addressRef.current.value = data.formatted;
+          if (addressRef.current) {
+            addressRef.current.value = data.street;
           }
-          if (neighborhoodRef.current && !neighborhoodRef.current.value) {
+          if (neighborhoodRef.current) {
             neighborhoodRef.current.value = data.neighborhood;
           }
-          if (cityRef.current && !cityRef.current.value) {
+          if (cityRef.current) {
             cityRef.current.value = data.city;
+          }
+          if (titleRef.current && !titleRef.current.value) {
+            const shortRoad = data.road.replace(STREET_PREFIX_RE, '').trim();
+            const streetPart = [shortRoad, data.houseNumber].filter(Boolean).join(' ');
+            const location = [streetPart, data.neighborhood || data.city].filter(Boolean).join(', ');
+            titleLocationRef.current = location;
+            const typeLabel = selectedType ? tSpaceType(selectedType) : null;
+            titleRef.current.value = typeLabel ? `${typeLabel} ${location}` : location;
+            setTitleAutofilled(true);
           }
           setLat(String(data.lat));
           setLng(String(data.lng));
@@ -143,6 +167,14 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       () => setAutofillState('error'),
       { enableHighAccuracy: true, timeout: 10_000, maximumAge: 60_000 },
     );
+  }
+
+  function handleTypeChange(type: SpaceType) {
+    setSelectedType(type);
+    if (titleAutofilled && titleRef.current) {
+      const location = titleLocationRef.current;
+      titleRef.current.value = location ? `${tSpaceType(type)} ${location}` : tSpaceType(type);
+    }
   }
 
   function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
@@ -192,76 +224,32 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           <legend className="fieldset__legend">Les teves dades</legend>
           <label className="field">
             <span className="field__label">{t('fieldEmail')} <span style={{ color: 'var(--danger)', marginLeft: 4 }}>*</span></span>
-            <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" required />
+            <input name="guest_email" type="email" className="field__input" placeholder="info@exemple.cat" required />
             <p className="field__help">Necessitem el teu email per crear l'usuari i vincular-hi aquest espai.</p>
           </label>
         </fieldset>
       )}
 
-      {/* ── Basic info ── */}
+      {/* ── Type ── */}
       <fieldset className="fieldset">
-        <legend className="fieldset__legend">{t('sectionBasic')}</legend>
-
-        <label className="field">
-          <span className="field__label">{t('fieldTitle')} *</span>
-          <input name="title" type="text" className="field__input" required maxLength={120}
-            placeholder={t('fieldTitlePlaceholder')} />
-        </label>
-
-        <div className="field">
-          <span className="field__label">{t('fieldType')} *</span>
-          <div className="espais-filter-chips">
-            {SPACE_TYPES.map(type => (
-              <label key={type} className="chip" data-type={type}>
-                <input
-                  type="radio"
-                  name="type"
-                  value={type}
-                  required
-                  className="visually-hidden"
-                  onChange={() => setSelectedType(type)}
-                />
-                <span className="chip__icon">
-                  <Icon name={type} size={16} />
-                </span>
-                <span>{tSpaceType(type)}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <label className="field">
-          <span className="field__label">{t('fieldDescription')}</span>
-          <textarea name="description" className="field__input field__textarea"
-            rows={4} maxLength={2000} placeholder={t('fieldDescriptionPlaceholder')} />
-        </label>
-
-        <label className="field">
-            <span className="field__label">{t('fieldSize')}</span>
-            <input name="size_m2" type="number" className="field__input" min="0" step="0.1"
-              placeholder="25" />
-          </label>
-      </fieldset>
-
-      {/* ── Pricing ── */}
-      <fieldset className="fieldset">
-        <legend className="fieldset__legend">{t('sectionPricing')}</legend>
-
-        <div className="field-row">
-          <label className="field field--grow">
-            <span className="field__label">{t('fieldPrice')}</span>
-            <input name="price" type="number" className="field__input" min="0" step="0.01"
-               />
-          </label>
-          <label className="field">
-            <span className="field__label">{t('fieldPriceUnit')}</span>
-            <select name="price_unit" className="field__input field__select">
-              <option value="month">{t('unitMonth')}</option>
-              <option value="day">{t('unitDay')}</option>
-              <option value="hour">{t('unitHour')}</option>
-            </select>
-          </label>
-          
+        <legend className="fieldset__legend">{t('fieldType')}</legend>
+        <div className="espais-filter-chips">
+          {SPACE_TYPES.map(type => (
+            <label key={type} className="chip" data-type={type}>
+              <input
+                type="radio"
+                name="type"
+                value={type}
+                required
+                className="visually-hidden"
+                onChange={() => handleTypeChange(type)}
+              />
+              <span className="chip__icon">
+                <Icon name={type} size={16} />
+              </span>
+              <span>{tSpaceType(type)}</span>
+            </label>
+          ))}
         </div>
       </fieldset>
 
@@ -315,6 +303,50 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
         </div>
       </fieldset>
 
+      {/* ── Basic info ── */}
+      <fieldset className="fieldset">
+        <legend className="fieldset__legend">{t('sectionBasic')}</legend>
+
+        <label className="field">
+          <span className="field__label">{t('fieldTitle')} *</span>
+          <input ref={titleRef} name="title" type="text" className="field__input" required maxLength={120}
+            placeholder={t('fieldTitlePlaceholder')}
+            onInput={() => setTitleAutofilled(false)} />
+        </label>
+
+        <label className="field">
+          <span className="field__label">{t('fieldDescription')}</span>
+          <textarea name="description" className="field__input field__textarea"
+            rows={4} maxLength={2000} placeholder={t('fieldDescriptionPlaceholder')} />
+        </label>
+
+        <label className="field">
+          <span className="field__label">{t('fieldSize')}</span>
+          <input name="size_m2" type="number" className="field__input" min="0" step="0.1"
+            placeholder="25" />
+        </label>
+      </fieldset>
+
+      {/* ── Pricing ── */}
+      <fieldset className="fieldset">
+        <legend className="fieldset__legend">{t('sectionPricing')}</legend>
+
+        <div className="field-row">
+          <label className="field field--grow">
+            <span className="field__label">{t('fieldPrice')}</span>
+            <input name="price" type="number" className="field__input" min="0" step="0.01" />
+          </label>
+          <label className="field">
+            <span className="field__label">{t('fieldPriceUnit')}</span>
+            <select name="price_unit" className="field__input field__select">
+              <option value="month">{t('unitMonth')}</option>
+              <option value="day">{t('unitDay')}</option>
+              <option value="hour">{t('unitHour')}</option>
+            </select>
+          </label>
+        </div>
+      </fieldset>
+
       {/* ── Amenities ── */}
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionAmenities')}</legend>
@@ -364,25 +396,24 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
         <legend className="fieldset__legend">{t('sectionContact')}</legend>
 
         <label className="field">
+          <span className="field__label">{t('fieldContactName')}</span>
+          <input name="contact_name" type="text" className="field__input" maxLength={100} autoComplete="name" />
+        </label>
+
+        <label className="field">
           <span className="field__label">{t('fieldWeb')}</span>
           <input name="web" type="url" className="field__input" placeholder="https://" />
         </label>
 
         <label className="field">
           <span className="field__label">{t('fieldPhone')}</span>
-          <input name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" />
+          <input name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" autoComplete="tel" />
+          <span className="field__help">{t('fieldPhoneHelp')}</span>
         </label>
 
-        {isLoggedIn && (
-          <label className="field">
-            <span className="field__label">{t('fieldEmail')}</span>
-            <input name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
-          </label>
-        )}
-
         <label className="field">
-          <span className="field__label">{t('fieldWhatsapp')}</span>
-          <input name="whatsapp" type="tel" className="field__input" placeholder="+34 600 000 000" />
+          <span className="field__label">{t('fieldEmail')}</span>
+          <input ref={emailContactRef} name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
         </label>
 
         <div className="field">
@@ -390,7 +421,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           <div className="type-picker">
             {(['web', 'phone', 'email', 'whatsapp'] as const).map(opt => (
               <label key={opt} className="type-option">
-                <input type="radio" name="contact_default" value={opt} defaultChecked={opt === 'web'} />
+                <input type="radio" name="contact_default" value={opt} defaultChecked={opt === 'email'} />
                 <span>{t(`contact_${opt}` as Parameters<typeof t>[0])}</span>
               </label>
             ))}

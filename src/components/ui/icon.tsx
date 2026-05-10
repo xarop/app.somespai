@@ -132,6 +132,12 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <circle cx="4.5" cy="18" r="1.5" fill="currentColor" stroke="none" />
     </>
   ),
+  whatsapp: (
+    <>
+      <path d="M4 22l1.6-5.7A9 9 0 1 1 9.7 20.4z" />
+      <path d="M9 11c0-.5.4-1 1-1 .4 0 .7.3 1 .8l.4 1c.1.3 0 .5-.2.7l-.3.4c.4.7 1 1.4 1.8 1.8l.4-.3c.2-.2.5-.3.7-.2l1 .4c.5.3.8.6.8 1 0 1.1-1.2 2-2.2 2-2.8 0-6.4-3.6-6.4-6.6z" />
+    </>
+  ),
   instagram: (
     <>
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />

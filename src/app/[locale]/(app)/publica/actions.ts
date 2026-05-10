@@ -17,7 +17,9 @@ export async function createSpaceAction(
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
 
-  const emailContact = (formData.get('email_contact') as string)?.trim() || null;
+  const emailContact = (formData.get('email_contact') as string)?.trim()
+    || (formData.get('guest_email') as string)?.trim()
+    || null;
   if (!user && !emailContact) return 'Es requereix un correu electrònic per usuaris no registrats';
 
   const title = (formData.get('title') as string).trim();
@@ -33,8 +35,8 @@ export async function createSpaceAction(
   const city = (formData.get('city') as string)?.trim() || 'Barcelona';
   const lat = parseFloat(formData.get('lat') as string);
   const lng = parseFloat(formData.get('lng') as string);
+  const contactName = (formData.get('contact_name') as string)?.trim() || null;
   const phone = (formData.get('phone') as string)?.trim() || null;
-  const whatsapp = (formData.get('whatsapp') as string)?.trim() || null;
   const web = (formData.get('web') as string)?.trim() || null;
   const contactDefault = (formData.get('contact_default') as string) || 'web';
   const amenities = formData.getAll('amenities') as string[];
@@ -88,9 +90,10 @@ export async function createSpaceAction(
       location: `SRID=4326;POINT(${lng} ${lat})`,
       amenities,
       photos,
+      contact_name: contactName,
       phone,
       email_contact: emailContact,
-      whatsapp,
+      whatsapp: phone,
       web,
       contact_default: contactDefault,
     })

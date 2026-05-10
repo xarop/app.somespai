@@ -19,7 +19,7 @@ export async function submitContactAction(
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return { ok: false, error: 'invalid_email' };
   }
-  if (!['bug', 'suggestion', 'question', 'other'].includes(type)) {
+  if (!['space', 'bug', 'suggestion', 'question', 'other'].includes(type)) {
     return { ok: false, error: 'invalid_type' };
   }
   if (message.length > 5000) {
@@ -44,6 +44,7 @@ export async function submitContactAction(
 
   if (resendKey && adminEmail) {
     const typeLabels: Record<string, string> = {
+      space: 'Contactar espai',
       bug: 'Error / Incidència',
       suggestion: 'Suggeriment',
       question: 'Pregunta',
