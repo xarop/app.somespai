@@ -202,7 +202,13 @@
     "successTitle": "Espai publicat!",
     "successDesc": "El teu espai ja és visible a Somespai.",
     "viewSpace": "Veure l'espai",
-    "loginRequired": "Has d'estar identificat per publicar un espai."
+    "loginRequired": "Has d'estar identificat per publicar un espai.",
+    "autofillButton": "Omple des de la meva ubicació",
+    "autofillLocating": "Obtenint ubicació…",
+    "autofillGeocoding": "Cercant adreça…",
+    "autofillSuccess": "Camps omplerts amb la ubicació actual.",
+    "autofillError": "No hem pogut obtenir la teva ubicació. Comprova els permisos del navegador.",
+    "amenitiesSelectType": "Selecciona primer el tipus d'espai per veure els equipaments disponibles."
   },
   "review": {
     "title": "Ressenyes",

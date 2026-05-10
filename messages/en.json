@@ -202,7 +202,13 @@
     "successTitle": "Space published!",
     "successDesc": "Your space is now visible on CoSpace.",
     "viewSpace": "View space",
-    "loginRequired": "You must be signed in to publish a space."
+    "loginRequired": "You must be signed in to publish a space.",
+    "autofillButton": "Fill from my location",
+    "autofillLocating": "Getting location…",
+    "autofillGeocoding": "Looking up address…",
+    "autofillSuccess": "Fields filled with your current location.",
+    "autofillError": "Could not get your location. Check your browser permissions.",
+    "amenitiesSelectType": "Select a space type first to see the available amenities."
   },
   "review": {
     "title": "Reviews",
