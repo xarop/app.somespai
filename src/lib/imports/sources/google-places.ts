@@ -12,11 +12,13 @@ export type PlaceCandidate = {
   map_url: string;
 };
 
-const PARKING_TYPES = ['parking_lot', 'parking_garage', 'parking'];
-const STORAGE_TYPES = ['storage', 'moving_and_storage_service', 'self_storage_facility'];
-const WORKSPACE_TYPES = ['coworking_space', 'library', 'university', 'corporate_office'];
-const ROOM_TYPES = ['apartment_building', 'guest_house', 'hostel', 'lodging', 'motel', 'hotel'];
-const GARDEN_TYPES = ['park', 'garden', 'botanical_garden', 'national_park'];
+// Types as returned by the Google Places API (New / v1)
+const PARKING_TYPES = ['parking', 'parking_lot'];
+const STORAGE_TYPES = ['storage', 'self_storage_facility', 'moving_and_storage_service'];
+const WORKSPACE_TYPES = ['coworking_space'];
+const GARDEN_TYPES = ['park', 'botanical_garden', 'nature_reserve', 'garden'];
+// Google Places has no good "room to rent" type; apartment_building is the closest hint
+const ROOM_TYPES = ['apartment_building', 'apartment_complex'];
 
 function mapGoogleType(types: string[]): PlaceCandidate['type'] {
   if (types.some((t) => PARKING_TYPES.includes(t))) return 'parking';
