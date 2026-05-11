@@ -358,13 +358,13 @@ Pàgina sense mapa amb tots els espais actius. Inclou:
 
 ## API v1 (REST pública)
 
-Endpoint públic per a integradors externs. Documentació completa: [`docs/api-v1.md`](./docs/api-v1.md).
+Endpoint públic per a integradors externs. Referència completa: [`docs/api-v1.md`](./docs/api-v1.md).
 
 **Base URL:** `https://app.somespai.net/api/v1`
 
 ### Autenticació
 
-Totes les crides requereixen la capçalera `X-API-Key`. Les claus es gestionen via SQL:
+Totes les crides requereixen la capçalera `X-API-Key`. Les claus es creen via SQL al Supabase (panell SQL Editor):
 
 ```sql
 do $$
@@ -379,18 +379,49 @@ begin
 end $$;
 ```
 
-Guarda la clau a les variables d'entorn de la teva app com `SOMESPAI_API_KEY`.
+Guarda la clau resultant a les variables d'entorn de la teva app com `SOMESPAI_API_KEY`. **No es pot recuperar un cop tancada la consola.**
 
-### Prova ràpida
+### `GET /api/v1/spaces`
+
+Retorna espais actius amb els filtres indicats. Paginació per cursor (20 per pàgina per defecte, màx 100).
+
+| Paràmetre | Tipus | Descripció |
+|---|---|---|
+| `limit` | int | Mida de pàgina (1–100, per defecte 20) |
+| `cursor` | string | Cursor de paginació (de `pagination.next_cursor`) |
+| `type` | string | Tipus separats per comes: `storage`, `workspace`, `garden`, `room`, `parking` |
+| `near` | string | Centre geogràfic `lat,lng` (exclusiu amb `bbox`) |
+| `radius` | int (m) | Radi en metres (per defecte 5000, requereix `near`) |
+| `bbox` | string | Bounding box `lng_min,lat_min,lng_max,lat_max` (exclusiu amb `near`) |
+| `price_min` | int | Preu mínim en cèntims |
+| `price_max` | int | Preu màxim en cèntims |
+| `price_unit` | string | `month`, `day` o `hour` |
+| `size_min_m2` | number | Mida mínima en m² |
+| `size_max_m2` | number | Mida màxima en m² |
+| `city` | string | Ciutat exacta (insensible a majúscules) |
+| `neighborhood` | string | Barri (coincidència parcial) |
+| `amenities` | string | Amenitats requerides separades per comes |
+| `q` | string | Cerca de text lliure (títol, descripció, ciutat, barri) |
+| `sort` | string | `featured` (per defecte), `newest`, `price_asc`, `price_desc`, `distance` |
+
+### Exemples ràpids
 
 ```bash
-# Llistar espais (paginat, 20 per pàgina)
+# Llistar espais (20 per pàgina)
 curl -H "X-API-Key: $SOMESPAI_API_KEY" \
   'https://app.somespai.net/api/v1/spaces?limit=5'
 
-# Pàrquings dins 1 km de Plaça Catalunya
+# Trasters a menys d'1 km de Plaça Catalunya
 curl -H "X-API-Key: $SOMESPAI_API_KEY" \
-  'https://app.somespai.net/api/v1/spaces?type=parking&near=41.3879,2.1699&radius=1000&sort=distance'
+  'https://app.somespai.net/api/v1/spaces?type=storage&near=41.3879,2.1699&radius=1000&sort=distance'
+
+# Pàrquings a l'Eixample, més barats primer
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?type=parking&neighborhood=Eixample&sort=price_asc'
+
+# Paginar (usar next_cursor de la resposta anterior)
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?limit=100&cursor=<next_cursor>'
 ```
 
 En local (dev): substitueix el domini per `http://localhost:3000`.
