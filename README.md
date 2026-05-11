@@ -94,6 +94,11 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0008_contact_messages.sql` | Taula `contact_messages` per emmagatzemar missatges enviats des dels espais |
 | `0009_admin_list_users_rpc.sql` | RPC (funció) per llistar els usuaris per al panell d'administrador |
 | `0010_profiles_is_admin.sql` | Afegeix camp `is_admin` als perfils en comptes de dependre només d'email |
+| `0011_add_parking_space_type.sql` | Afegeix `parking` a l'enum `space_type` |
+| `0012_add_contact_name.sql` | Afegeix `contact_name` a la taula `spaces` |
+| `0013_add_pending_status.sql` | Afegeix l'estat `pending` a la constraint de `status` |
+| `0014_api_v1.sql` | API v1: columnes de procedència (`source`, `external_id`, `verified`…), taula `api_keys`, RPC `v1_search_spaces` (PostGIS, paginació per cursor) |
+| `0015_import_jobs.sql` | Taula `import_jobs` per traçar importacions massives; FK `import_job_id` a `spaces` |
 
 ---
 
@@ -222,6 +227,10 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Settings → API (secret) |
 | `ADMIN_EMAIL` | Correu de l'administrador (accés al dashboard `/admin`) |
 | `NEXT_PUBLIC_ADMIN_EMAIL` | Igual que `ADMIN_EMAIL` però accessible al client (fallback per a dev local) |
+| `NEXT_PUBLIC_MAP_TILES_URL` | URL de l'estil MapTiler o Protomaps per als mapes |
+| `NOMINATIM_USER_AGENT` | User-Agent per a Nominatim (ex: `somespai/1.0 (correu@exemple.com)`) |
+| `NOMINATIM_BASE_URL` | Base URL Nominatim (per defecte `https://nominatim.openstreetmap.org`) |
+| `GOOGLE_PLACES_API_KEY` | Clau de l'API de Google Places (necessari per a la importació de Google) |
 
 ---
 
@@ -264,6 +273,9 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Edició autònoma de la fitxa d'espais per propietat (formulari restringit a `/editar/[slug]`)
 - [x] Secció centralitzada al perfil per veure "Els Meus Espais" (`/perfil`)
 - [x] Afegit badge de Verificat / Garantitzat
+- [x] **API REST v1** pública amb autenticació per clau, filtres espacials (PostGIS), paginació per cursor (`/api/v1/spaces`)
+- [x] **Importació des de Google Places**: cerca, selecció i importació massiva d'espais des del panell admin (`/admin/imports/new`)
+- [x] Refresc individual d'espais importats i actualitzacions massives de verificació/estat
 
 ### Phase 4 — SEO Avançat, SSR i Indexabilitat (Fet) ✅
 
@@ -341,6 +353,71 @@ Pàgina sense mapa amb tots els espais actius. Inclou:
 - Pensada per a la indexació SEO de totes les URLs individuals
 
 **Ruta:** `https://app.somespai.net/espais`
+
+---
+
+## API v1 (REST pública)
+
+Endpoint públic per a integradors externs. Documentació completa: [`docs/api-v1.md`](./docs/api-v1.md).
+
+**Base URL:** `https://app.somespai.net/api/v1`
+
+### Autenticació
+
+Totes les crides requereixen la capçalera `X-API-Key`. Les claus es gestionen via SQL:
+
+```sql
+do $$
+declare
+  v_secret text := encode(gen_random_bytes(32), 'hex');
+  v_prefix text := left(v_secret, 8);
+  v_hash   text := encode(digest(v_secret, 'sha256'), 'hex');
+begin
+  insert into api_keys (name, key_prefix, key_hash, scopes, created_by)
+  values ('La meva app', v_prefix, v_hash, '{spaces:read}', auth.uid());
+  raise notice 'API key: %', v_secret;
+end $$;
+```
+
+Guarda la clau a les variables d'entorn de la teva app com `SOMESPAI_API_KEY`.
+
+### Prova ràpida
+
+```bash
+# Llistar espais (paginat, 20 per pàgina)
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?limit=5'
+
+# Pàrquings dins 1 km de Plaça Catalunya
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?type=parking&near=41.3879,2.1699&radius=1000&sort=distance'
+```
+
+En local (dev): substitueix el domini per `http://localhost:3000`.
+
+---
+
+## Importació de Google Places (admin)
+
+Els admins poden importar espais directament des de Google Places a través del panell:
+
+1. Ves a `/ca/admin` → fes clic a **+ Importar espais**
+2. Escriu una cerca (ex: *pàrquings Eixample Barcelona*)
+3. Opcionalment, afina per coordenades + radi
+4. Revisa els candidats: els ja importats estan marcats en gris
+5. Selecciona els que vols i fes clic a **Importar N espais**
+6. S'abriran com a `pending` (no visibles al públic) i podràs revisar-los i activar-los des del panell admin
+
+**Requereix:** `GOOGLE_PLACES_API_KEY` configurat a `.env.local` o a les variables del projecte Vercel.
+
+### Endpoints d'admin (requereix sessió d'admin)
+
+| Mètode | Ruta | Funció |
+|--------|------|--------|
+| `POST` | `/api/admin/imports/search` | Cerca a Google Places i marca els ja importats |
+| `POST` | `/api/admin/imports/commit` | Importa els candidats seleccionats |
+| `POST` | `/api/admin/spaces/[id]/refresh` | Re-feteja les dades d'un espai des de Google Places |
+| `PATCH` | `/api/admin/spaces/bulk` | Canvi massiu d'estat o verificació |
 
 ---
 
