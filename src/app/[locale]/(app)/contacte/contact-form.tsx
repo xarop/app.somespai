@@ -9,15 +9,17 @@ import type { ContactState } from './actions';
 
 const TYPES = ['space', 'bug', 'suggestion', 'question', 'other'] as const;
 
-type ReportReason = 'unavailable' | 'wrongdata' | 'report';
+type ReportReason = 'contact' | 'unavailable' | 'wrongdata' | 'report';
 
 const REASON_TYPE: Record<ReportReason, string> = {
+  contact: 'space',
   unavailable: 'bug',
   wrongdata: 'bug',
   report: 'other',
 };
 
 const REASON_TEMPLATE_KEY: Record<ReportReason, Parameters<ReturnType<typeof useTranslations<'contact'>>>[0]> = {
+  contact: 'spaceMessageTemplate',
   unavailable: 'reportUnavailableTemplate',
   wrongdata: 'reportWrongDataTemplate',
   report: 'reportAbuseTemplate',

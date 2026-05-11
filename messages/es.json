@@ -65,6 +65,7 @@
     "email": "Email",
     "whatsapp": "WhatsApp",
     "reportMenu": "Informar sobre el espacio",
+    "reportContact": "Otros / Contactar con el espacio",
     "reportUnavailable": "El espacio no está disponible",
     "reportWrongData": "El espacio tiene datos incorrectos",
     "reportAbuse": "Denunciar el espacio"
