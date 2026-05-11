@@ -1,21 +1,14 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { PlaceCandidate } from '@/lib/imports/sources/google-places';
 
 type Candidate = PlaceCandidate & { already_imported: boolean };
 
-const TYPE_LABELS: Record<string, string> = {
-  storage: 'Emmagatzematge',
-  workspace: 'Oficina / Coworking',
-  garden: 'Jardí / Exterior',
-  room: 'Habitació',
-  parking: 'Pàrquing',
-};
-
 export function ImportSearch() {
   const locale = useLocale();
+  const tFilter = useTranslations('filter');
   const [query, setQuery] = useState('');
   const [lat, setLat] = useState('');
   const [lng, setLng] = useState('');
@@ -227,7 +220,7 @@ export function ImportSearch() {
                     )}
                     {c.type && (
                       <span className={`type-badge type-badge--${c.type}`}>
-                        {TYPE_LABELS[c.type] ?? c.type}
+                        {tFilter(c.type)}
                       </span>
                     )}
                     {c.rating != null && (
