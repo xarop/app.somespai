@@ -94,6 +94,11 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0008_contact_messages.sql` | Taula `contact_messages` per emmagatzemar missatges enviats des dels espais |
 | `0009_admin_list_users_rpc.sql` | RPC (funció) per llistar els usuaris per al panell d'administrador |
 | `0010_profiles_is_admin.sql` | Afegeix camp `is_admin` als perfils en comptes de dependre només d'email |
+| `0011_add_parking_space_type.sql` | Afegeix `parking` a l'enum `space_type` |
+| `0012_add_contact_name.sql` | Afegeix `contact_name` a la taula `spaces` |
+| `0013_add_pending_status.sql` | Afegeix l'estat `pending` a la constraint de `status` |
+| `0014_api_v1.sql` | API v1: columnes de procedència (`source`, `external_id`, `verified`…), taula `api_keys`, RPC `v1_search_spaces` (PostGIS, paginació per cursor) |
+| `0015_import_jobs.sql` | Taula `import_jobs` per traçar importacions massives; FK `import_job_id` a `spaces` |
 
 ---
 
@@ -222,6 +227,10 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase dashboard → Settings → API (secret) |
 | `ADMIN_EMAIL` | Correu de l'administrador (accés al dashboard `/admin`) |
 | `NEXT_PUBLIC_ADMIN_EMAIL` | Igual que `ADMIN_EMAIL` però accessible al client (fallback per a dev local) |
+| `NEXT_PUBLIC_MAP_TILES_URL` | URL de l'estil MapTiler o Protomaps per als mapes |
+| `NOMINATIM_USER_AGENT` | User-Agent per a Nominatim (ex: `somespai/1.0 (correu@exemple.com)`) |
+| `NOMINATIM_BASE_URL` | Base URL Nominatim (per defecte `https://nominatim.openstreetmap.org`) |
+| `GOOGLE_PLACES_API_KEY` | Clau de l'API de Google Places (necessari per a la importació de Google) |
 
 ---
 
@@ -254,6 +263,7 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Sistema de Ressenyes (lectura, llistat i component visual de rating d'estrelles)
 - [x] Web Share API per compartir la fitxa d'espai
 - [x] Creació i suport de script d'importació d'anuncis automatitzat associat a l'API `admin/import`
+- [x] Auto-geolocalització al formulari de publicació: botó que omple adreça i coordenades automàticament via GPS + geocodificació inversa (Nominatim)
 
 ### Phase 3 — Panell d'Administració complet i Gestió d'Usuaris (Fet) ✅
 
@@ -263,6 +273,9 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Edició autònoma de la fitxa d'espais per propietat (formulari restringit a `/editar/[slug]`)
 - [x] Secció centralitzada al perfil per veure "Els Meus Espais" (`/perfil`)
 - [x] Afegit badge de Verificat / Garantitzat
+- [x] **API REST v1** pública amb autenticació per clau, filtres espacials (PostGIS), paginació per cursor (`/api/v1/spaces`)
+- [x] **Importació des de Google Places**: cerca, selecció i importació massiva d'espais des del panell admin (`/admin/imports/new`)
+- [x] Refresc individual d'espais importats i actualitzacions massives de verificació/estat
 
 ### Phase 4 — SEO Avançat, SSR i Indexabilitat (Fet) ✅
 
@@ -309,6 +322,28 @@ Generades estàticament per a totes les ciutats amb espais actius i per a cada c
 
 Les URLs de tipus estan localitzades: `/barcelona/parking` (CA/EN) · `/es/barcelona/parking` (ES). El component de cada pàgina és el mateix `HomeClient` que la home (mapa + llista), amb filtre i context preestablerts.
 
+### Auto-geolocalització al formulari de publicació
+
+El formulari `/publica` inclou un botó **"Omple ubicació"** que automatitza l'entrada d'adreça i coordenades:
+
+1. Demana permís de geolocalització al navegador (`navigator.geolocation`).
+2. Obté les coordenades GPS (`lat`/`lng`) del dispositiu.
+3. Crida Nominatim (OpenStreetMap) per obtenir l'adreça completa (geocodificació inversa).
+4. Omple automàticament els camps `address`, `city`, `lat` i `lng` del formulari.
+
+**Fitxers clau:**
+
+| Fitxer | Rol |
+|--------|-----|
+| `src/components/space/geo-autofill-button.tsx` | Component botó (estat, UI, feedback) |
+| `src/hooks/use-geolocation.ts` | Hook que encapsula `navigator.geolocation` |
+| `src/lib/geo/geocoding.ts` | Crida a l'API Nominatim + transformació de resposta |
+| `src/app/api/geo/route.ts` | Route handler proxy per evitar CORS i amagar l'User-Agent |
+
+La crida a Nominatim es fa des d'un route handler de Next.js (`/api/geo`) per tal d'evitar problemes de CORS i per poder incloure un User-Agent correcte (`somespai/1.0`). Requereix connexió a internet però no cap API key.
+
+---
+
 ### Llistat complet d'espais (`/espais/`)
 
 Pàgina sense mapa amb tots els espais actius. Inclou:
@@ -318,6 +353,102 @@ Pàgina sense mapa amb tots els espais actius. Inclou:
 - Pensada per a la indexació SEO de totes les URLs individuals
 
 **Ruta:** `https://app.somespai.net/espais`
+
+---
+
+## API v1 (REST pública)
+
+Endpoint públic per a integradors externs. Referència completa: [`docs/api-v1.md`](./docs/api-v1.md).
+
+**Base URL:** `https://app.somespai.net/api/v1`
+
+### Autenticació
+
+Totes les crides requereixen la capçalera `X-API-Key`. Les claus es creen via SQL al Supabase (panell SQL Editor):
+
+```sql
+do $$
+declare
+  v_secret text := encode(gen_random_bytes(32), 'hex');
+  v_prefix text := left(v_secret, 8);
+  v_hash   text := encode(digest(v_secret, 'sha256'), 'hex');
+begin
+  insert into api_keys (name, key_prefix, key_hash, scopes, created_by)
+  values ('La meva app', v_prefix, v_hash, '{spaces:read}', auth.uid());
+  raise notice 'API key: %', v_secret;
+end $$;
+```
+
+Guarda la clau resultant a les variables d'entorn de la teva app com `SOMESPAI_API_KEY`. **No es pot recuperar un cop tancada la consola.**
+
+### `GET /api/v1/spaces`
+
+Retorna espais actius amb els filtres indicats. Paginació per cursor (20 per pàgina per defecte, màx 100).
+
+| Paràmetre | Tipus | Descripció |
+|---|---|---|
+| `limit` | int | Mida de pàgina (1–100, per defecte 20) |
+| `cursor` | string | Cursor de paginació (de `pagination.next_cursor`) |
+| `type` | string | Tipus separats per comes: `storage`, `workspace`, `garden`, `room`, `parking` |
+| `near` | string | Centre geogràfic `lat,lng` (exclusiu amb `bbox`) |
+| `radius` | int (m) | Radi en metres (per defecte 5000, requereix `near`) |
+| `bbox` | string | Bounding box `lng_min,lat_min,lng_max,lat_max` (exclusiu amb `near`) |
+| `price_min` | int | Preu mínim en cèntims |
+| `price_max` | int | Preu màxim en cèntims |
+| `price_unit` | string | `month`, `day` o `hour` |
+| `size_min_m2` | number | Mida mínima en m² |
+| `size_max_m2` | number | Mida màxima en m² |
+| `city` | string | Ciutat exacta (insensible a majúscules) |
+| `neighborhood` | string | Barri (coincidència parcial) |
+| `amenities` | string | Amenitats requerides separades per comes |
+| `q` | string | Cerca de text lliure (títol, descripció, ciutat, barri) |
+| `sort` | string | `featured` (per defecte), `newest`, `price_asc`, `price_desc`, `distance` |
+
+### Exemples ràpids
+
+```bash
+# Llistar espais (20 per pàgina)
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?limit=5'
+
+# Trasters a menys d'1 km de Plaça Catalunya
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?type=storage&near=41.3879,2.1699&radius=1000&sort=distance'
+
+# Pàrquings a l'Eixample, més barats primer
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?type=parking&neighborhood=Eixample&sort=price_asc'
+
+# Paginar (usar next_cursor de la resposta anterior)
+curl -H "X-API-Key: $SOMESPAI_API_KEY" \
+  'https://app.somespai.net/api/v1/spaces?limit=100&cursor=<next_cursor>'
+```
+
+En local (dev): substitueix el domini per `http://localhost:3000`.
+
+---
+
+## Importació de Google Places (admin)
+
+Els admins poden importar espais directament des de Google Places a través del panell:
+
+1. Ves a `/ca/admin` → fes clic a **+ Importar espais**
+2. Escriu una cerca (ex: *pàrquings Eixample Barcelona*)
+3. Opcionalment, afina per coordenades + radi
+4. Revisa els candidats: els ja importats estan marcats en gris
+5. Selecciona els que vols i fes clic a **Importar N espais**
+6. S'abriran com a `pending` (no visibles al públic) i podràs revisar-los i activar-los des del panell admin
+
+**Requereix:** `GOOGLE_PLACES_API_KEY` configurat a `.env.local` o a les variables del projecte Vercel.
+
+### Endpoints d'admin (requereix sessió d'admin)
+
+| Mètode | Ruta | Funció |
+|--------|------|--------|
+| `POST` | `/api/admin/imports/search` | Cerca a Google Places i marca els ja importats |
+| `POST` | `/api/admin/imports/commit` | Importa els candidats seleccionats |
+| `POST` | `/api/admin/spaces/[id]/refresh` | Re-feteja les dades d'un espai des de Google Places |
+| `PATCH` | `/api/admin/spaces/bulk` | Canvi massiu d'estat o verificació |
 
 ---
 

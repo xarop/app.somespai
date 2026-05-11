@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition, useOptimistic, useActionState, useEffect, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import type { Space } from '@/lib/schemas/space';
 import { Icon } from '@/components/ui/icon';
@@ -25,7 +25,7 @@ import {
 import type { Review } from '@/lib/supabase/reviews';
 import type { AdminUser, ContactMessage } from '@/lib/supabase/admin';
 
-type StatusFilter = 'all' | 'active' | 'paused' | 'removed';
+type StatusFilter = 'all' | 'active' | 'paused' | 'removed' | 'pending';
 type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room' | 'parking';
 type OwnerFilter = 'all' | 'none' | string;
 
@@ -48,14 +48,18 @@ function formatPrice(priceCents: number, unit: string): string {  if (priceCents
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return <span className={`status-badge status-badge--${status}`}>{status}</span>;
+  const t = useTranslations('admin');
+  const label = (t as (k: string) => string)(`filter_${status}`) ?? status;
+  return <span className={`status-badge status-badge--${status}`}>{label}</span>;
 }
 
 function TypeBadge({ type }: { type: string }) {
+  const t = useTranslations('filter');
+  const label = (t as (k: string) => string)(type) ?? type;
   return (
     <span className={`type-badge type-badge--${type}`}>
       <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room' | 'parking'} size={12} />
-      {type}
+      {label}
     </span>
   );
 }
@@ -820,6 +824,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
 export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdminEmail }: { spaces: Space[]; initialEditId?: string; mainAdminEmail?: string }) {
   const t = useTranslations('admin');
   const tFilter = useTranslations('filter');
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [spaces, setSpacesOptimistic] = useOptimistic(
@@ -857,6 +862,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
     active: initialSpaces.filter(s => s.status === 'active').length,
     paused: initialSpaces.filter(s => s.status === 'paused').length,
     removed: initialSpaces.filter(s => s.status === 'removed').length,
+    pending: initialSpaces.filter(s => s.status === 'pending').length,
   };
 
   const featured = initialSpaces.filter(s => s.isFeatured).length;
@@ -1052,11 +1058,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
       )}
 
       {activeTab === 'spaces' && <>
-      {process.env.NODE_ENV === 'development' && (
-        <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
-          ↗ Supabase → spaces
+      <div className="admin-spaces-header">
+        {process.env.NODE_ENV === 'development' && (
+          <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+            ↗ Supabase → spaces
+          </a>
+        )}
+        <a href={`/${locale}/admin/imports/new`} className="admin-action-btn admin-action-btn--import">
+          + Importar espais
         </a>
-      )}
+      </div>
       {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat">
@@ -1075,6 +1086,12 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
           <span className="admin-stat__value">{counts.removed}</span>
           <span className="admin-stat__label">{t('statsRemoved')}</span>
         </div>
+        {counts.pending > 0 && (
+          <div className="admin-stat admin-stat--pending">
+            <span className="admin-stat__value">{counts.pending}</span>
+            <span className="admin-stat__label">{t('statsPending')}</span>
+          </div>
+        )}
         <div className="admin-stat admin-stat--featured">
           <span className="admin-stat__value">{featured}</span>
           <span className="admin-stat__label">{t('statsFeatured')}</span>
@@ -1108,7 +1125,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
 
       {/* Filter tabs — status */}
       <div className="admin-filter-bar">
-        {(['all', 'active', 'paused', 'removed'] as StatusFilter[]).map(f => (
+        {(['all', 'active', 'paused', 'removed', 'pending'] as StatusFilter[]).map(f => (
           <button key={f} type="button"
             className={`admin-filter-tab${statusFilter === f ? ' admin-filter-tab--active' : ''}`}
             onClick={() => setStatusFilter(f)}>

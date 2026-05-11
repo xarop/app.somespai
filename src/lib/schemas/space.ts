@@ -24,7 +24,7 @@ export const spaceSchema = z.object({
   isFeatured: z.boolean().default(false),
   rating: z.number().min(0).max(5).default(0),
   reviewsCount: z.number().int().nonnegative().default(0),
-  status: z.enum(['active', 'paused', 'removed']).default('active'),
+  status: z.enum(['active', 'paused', 'removed', 'pending']).default('active'),
   priceUnit: z.enum(['month', 'day', 'hour']).default('month'),
   phone: z.string().nullable().default(null),
   emailContact: z.string().nullable().default(null),

@@ -21,7 +21,7 @@ export function useNavCities(): string[] {
           .not('city', 'is', null);
 
         if (error) {
-          console.error("Cities fetch error:", error);
+          console.error("Cities fetch error:", error.message, error.code, error.details);
           return;
         }
 
