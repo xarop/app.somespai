@@ -9,12 +9,28 @@ import type { ContactState } from './actions';
 
 const TYPES = ['space', 'bug', 'suggestion', 'question', 'other'] as const;
 
+type ReportReason = 'unavailable' | 'wrongdata' | 'report';
+
+const REASON_TYPE: Record<ReportReason, string> = {
+  unavailable: 'bug',
+  wrongdata: 'bug',
+  report: 'other',
+};
+
+const REASON_TEMPLATE_KEY: Record<ReportReason, Parameters<ReturnType<typeof useTranslations<'contact'>>>[0]> = {
+  unavailable: 'reportUnavailableTemplate',
+  wrongdata: 'reportWrongDataTemplate',
+  report: 'reportAbuseTemplate',
+};
+
 interface ContactFormProps {
   spaceTitle?: string;
   spaceAddress?: string;
+  spaceUrl?: string;
+  reason?: string;
 }
 
-export function ContactForm({ spaceTitle, spaceAddress }: ContactFormProps) {
+export function ContactForm({ spaceTitle, spaceAddress, spaceUrl, reason }: ContactFormProps) {
   const t = useTranslations('contact');
   const [state, formAction, isPending] = useActionState<ContactState, FormData>(
     submitContactAction,
@@ -22,6 +38,7 @@ export function ContactForm({ spaceTitle, spaceAddress }: ContactFormProps) {
   );
 
   const isSpaceContact = !!(spaceTitle);
+  const reportReason = (reason && reason in REASON_TYPE) ? reason as ReportReason : null;
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -46,14 +63,23 @@ export function ContactForm({ spaceTitle, spaceAddress }: ContactFormProps) {
 
   useEffect(() => {
     if (!isSpaceContact || !messageRef.current) return;
-    const template = t('spaceMessageTemplate', {
-      title: spaceTitle ?? '',
-      address: spaceAddress ?? spaceTitle ?? '',
-    });
+    let template: string;
+    if (reportReason) {
+      template = t(REASON_TEMPLATE_KEY[reportReason], {
+        title: spaceTitle ?? '',
+        address: spaceAddress ?? spaceTitle ?? '',
+        url: spaceUrl ?? '',
+      });
+    } else {
+      template = t('spaceMessageTemplate', {
+        title: spaceTitle ?? '',
+        address: spaceAddress ?? spaceTitle ?? '',
+      });
+    }
     if (!messageRef.current.value) {
       messageRef.current.value = template;
     }
-  }, [isSpaceContact, spaceTitle, spaceAddress, t]);
+  }, [isSpaceContact, reportReason, spaceTitle, spaceAddress, spaceUrl, t]);
 
   if (state?.ok) {
     return (
@@ -107,7 +133,13 @@ export function ContactForm({ spaceTitle, spaceAddress }: ContactFormProps) {
                 name="type"
                 value={type}
                 required
-                defaultChecked={isSpaceContact ? type === 'space' : type === 'question'}
+                defaultChecked={
+                reportReason
+                  ? type === REASON_TYPE[reportReason]
+                  : isSpaceContact
+                  ? type === 'space'
+                  : type === 'question'
+              }
               />
               <span>{t(`type${type.charAt(0).toUpperCase() + type.slice(1)}` as Parameters<typeof t>[0])}</span>
             </label>

@@ -63,7 +63,11 @@
     "web": "Web",
     "phone": "Phone",
     "email": "Email",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "reportMenu": "Report this space",
+    "reportUnavailable": "Space is not available",
+    "reportWrongData": "Space has incorrect data",
+    "reportAbuse": "Report this space"
   },
   "auth": {
     "titleSignIn": "Sign in",
@@ -222,6 +226,7 @@
     "submit": "Post review",
     "submitting": "Posting…",
     "loginRequired": "Sign in to write a review.",
+    "loginLink": "Sign in →",
     "alreadyReviewed": "You have already reviewed this space."
   },
   "user": {
@@ -357,6 +362,9 @@
     "fieldMessage": "Message",
     "fieldMessagePlaceholder": "Write your message here…",
     "spaceMessageTemplate": "Hi, I'm interested in the space \"{title}\" located at {address}.\n\n",
+    "reportUnavailableTemplate": "The space \"{title}\" at {address} does not seem to be available.\n\nSpace URL: {url}\n\n",
+    "reportWrongDataTemplate": "The space \"{title}\" at {address} has incorrect data.\n\nSpace URL: {url}\n\nWhat data:\n",
+    "reportAbuseTemplate": "I want to report the space \"{title}\" at {address}.\n\nSpace URL: {url}\n\nReason:\n",
     "submit": "Send message",
     "submitting": "Sending…",
     "successTitle": "Message sent!",

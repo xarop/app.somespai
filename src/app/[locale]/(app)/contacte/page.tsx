@@ -12,12 +12,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 interface ContactePageProps {
-  searchParams: Promise<{ title?: string; address?: string }>;
+  searchParams: Promise<{ title?: string; address?: string; url?: string; reason?: string }>;
 }
 
 export default async function ContactePage({ searchParams }: ContactePageProps) {
   const t = await getTranslations('contact');
-  const { title, address } = await searchParams;
+  const { title, address, url, reason } = await searchParams;
   return (
     <>
       <PageNav />
@@ -27,7 +27,7 @@ export default async function ContactePage({ searchParams }: ContactePageProps) 
             <h1>{t('title')}</h1>
             <p className="contact-header__sub">{t('subtitle')}</p>
           </header>
-          <ContactForm spaceTitle={title} spaceAddress={address} />
+          <ContactForm spaceTitle={title} spaceAddress={address} spaceUrl={url} reason={reason} />
         </div>
       </main>
     </>

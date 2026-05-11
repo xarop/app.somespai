@@ -4564,3 +4564,97 @@
   .import-job-meta strong {
     color: var(--ink);
   }
+
+  /* ── Space report (kebab) menu ───────────────────────────────────────── */
+  .detail__report-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .detail__report-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: var(--r-full);
+    background: transparent;
+    color: var(--ink-mute);
+    cursor: pointer;
+    transition: background var(--t-fast), color var(--t-fast);
+    flex-shrink: 0;
+  }
+
+  .detail__report-btn:hover {
+    background: var(--bg-soft);
+    color: var(--ink);
+  }
+
+  .detail__report-menu {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    right: 0;
+    min-width: 220px;
+    background: var(--bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    box-shadow: 0 8px 24px -4px rgba(0,0,0,0.12);
+    z-index: 50;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .detail__report-label {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--ink-mute);
+    padding: var(--s-2) var(--s-3) var(--s-1);
+    margin: 0;
+    pointer-events: none;
+  }
+
+  .detail__report-item {
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: var(--s-2) var(--s-3);
+    font-size: var(--t-sm);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background var(--t-fast);
+  }
+
+  .detail__report-item:hover {
+    background: var(--bg-soft);
+  }
+
+  .detail__report-item--danger {
+    color: var(--danger);
+    border-top: 1px solid var(--glass-border);
+    margin-top: var(--s-1);
+  }
+
+  .detail__report-item--danger:hover {
+    background: rgba(239, 68, 68, 0.06);
+  }
+
+  /* ── Reviews login link ──────────────────────────────────────────────── */
+  .reviews__login-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--primary);
+    font-size: inherit;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .reviews__login-link:hover {
+    color: var(--ink);
+  }
