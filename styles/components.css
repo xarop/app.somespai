@@ -2281,6 +2281,10 @@
     color: var(--gold);
   }
 
+  .admin-stat--pending .admin-stat__value {
+    color: var(--ink-mute);
+  }
+
   .admin-search-wrap {
     display: flex;
     align-items: center;
