@@ -329,15 +329,6 @@ export function SpaceDetailModal({
             <div className="detail__report-menu" role="menu">
               <p className="detail__report-label">{t("detail.reportMenu")}</p>
               <a
-                href={reportHref("contact")}
-                className="detail__report-item"
-                role="menuitem"
-                onClick={() => setReportMenuOpen(false)}
-              >
-                <Icon name="mail" size={13} />
-                {t("detail.reportContact")}
-              </a>
-              <a
                 href={reportHref("unavailable")}
                 className="detail__report-item"
                 role="menuitem"
@@ -352,6 +343,14 @@ export function SpaceDetailModal({
                 onClick={() => setReportMenuOpen(false)}
               >
                 {t("detail.reportWrongData")}
+              </a>
+              <a
+                href={reportHref("contact")}
+                className="detail__report-item"
+                role="menuitem"
+                onClick={() => setReportMenuOpen(false)}
+              >
+                {t("detail.reportContact")}
               </a>
               <a
                 href={reportHref("report")}
