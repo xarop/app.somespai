@@ -315,6 +315,47 @@ export function SpaceDetailModal({
         <span className="detail__type-badge">
           <Icon name={TYPE_ICON[space.type]} size={16} />
         </span>
+        <div className="detail__report-wrap detail__report-wrap--hero" ref={reportMenuRef}>
+          <button
+            type="button"
+            className="detail__report-btn"
+            aria-label={t("detail.reportMenu")}
+            aria-expanded={reportMenuOpen}
+            onClick={() => setReportMenuOpen((v) => !v)}
+          >
+            <Icon name="more" size={18} />
+          </button>
+          {reportMenuOpen && (
+            <div className="detail__report-menu" role="menu">
+              <p className="detail__report-label">{t("detail.reportMenu")}</p>
+              <a
+                href={reportHref("unavailable")}
+                className="detail__report-item"
+                role="menuitem"
+                onClick={() => setReportMenuOpen(false)}
+              >
+                {t("detail.reportUnavailable")}
+              </a>
+              <a
+                href={reportHref("wrongdata")}
+                className="detail__report-item"
+                role="menuitem"
+                onClick={() => setReportMenuOpen(false)}
+              >
+                {t("detail.reportWrongData")}
+              </a>
+              <a
+                href={reportHref("report")}
+                className="detail__report-item detail__report-item--danger"
+                role="menuitem"
+                onClick={() => setReportMenuOpen(false)}
+              >
+                <Icon name="flag" size={13} />
+                {t("detail.reportAbuse")}
+              </a>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="detail__body">
@@ -435,48 +476,6 @@ export function SpaceDetailModal({
             <Icon name="share" size={16} />
             <span className="detail__action-label">{t("detail.share")}</span>
           </button>
-
-          <div className="detail__report-wrap" ref={reportMenuRef}>
-            <button
-              type="button"
-              className="detail__report-btn"
-              aria-label={t("detail.reportMenu")}
-              aria-expanded={reportMenuOpen}
-              onClick={() => setReportMenuOpen((v) => !v)}
-            >
-              <Icon name="more" size={18} />
-            </button>
-            {reportMenuOpen && (
-              <div className="detail__report-menu" role="menu">
-                <p className="detail__report-label">{t("detail.reportMenu")}</p>
-                <a
-                  href={reportHref("unavailable")}
-                  className="detail__report-item"
-                  role="menuitem"
-                  onClick={() => setReportMenuOpen(false)}
-                >
-                  {t("detail.reportUnavailable")}
-                </a>
-                <a
-                  href={reportHref("wrongdata")}
-                  className="detail__report-item"
-                  role="menuitem"
-                  onClick={() => setReportMenuOpen(false)}
-                >
-                  {t("detail.reportWrongData")}
-                </a>
-                <a
-                  href={reportHref("report")}
-                  className="detail__report-item detail__report-item--danger"
-                  role="menuitem"
-                  onClick={() => setReportMenuOpen(false)}
-                >
-                  <Icon name="flag" size={13} />
-                  {t("detail.reportAbuse")}
-                </a>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* ── Reviews ── */}
