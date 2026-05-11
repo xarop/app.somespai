@@ -22,8 +22,14 @@ function iconSvg(type: Space["type"]): string {
   return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TYPE_SVG[type]}</svg>`;
 }
 
-function priceLabel(cents: number) {
-  return `${Math.round(cents / 100)}€/mes`;
+const PRICE_UNIT_LABEL: Record<Space["priceUnit"], string> = {
+  month: "/mes",
+  day: "/dia",
+  hour: "/h",
+};
+
+function priceLabel(cents: number, unit: Space["priceUnit"]) {
+  return `${Math.round(cents / 100)}€${PRICE_UNIT_LABEL[unit]}`;
 }
 
 export interface MapViewProps {
@@ -184,7 +190,7 @@ export function MapView({
           el.setAttribute("data-active", String(space.id === activeSpaceId));
           el.setAttribute("data-featured", String(!!space.isFeatured));
           el.setAttribute("data-type", space.type);
-          el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${space.priceCents > 0 ? priceLabel(space.priceCents) : "?"}</span></div>`;
+          el.innerHTML = `<div class="marker__pin"><span class="marker__icon">${iconSvg(space.type)}</span><span>${space.priceCents > 0 ? priceLabel(space.priceCents, space.priceUnit) : "?"}</span></div>`;
           el.addEventListener("click", (e) => {
             e.stopPropagation();
             onSelect?.(space);
