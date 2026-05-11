@@ -4317,6 +4317,17 @@
     margin-bottom: var(--s-3);
   }
 
+  @media (max-width: 600px) {
+    .admin-spaces-header {
+      justify-content: stretch;
+    }
+    .admin-action-btn--import {
+      flex: 1;
+      text-align: center;
+      justify-content: center;
+    }
+  }
+
   .admin-action-btn--import {
     padding: var(--s-2) var(--s-4);
     font-size: var(--t-sm);

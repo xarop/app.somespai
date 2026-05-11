@@ -48,14 +48,18 @@ function formatPrice(priceCents: number, unit: string): string {  if (priceCents
 }
 
 function StatusBadge({ status }: { status: string }) {
-  return <span className={`status-badge status-badge--${status}`}>{status}</span>;
+  const t = useTranslations('admin');
+  const label = (t as (k: string) => string)(`filter_${status}`) ?? status;
+  return <span className={`status-badge status-badge--${status}`}>{label}</span>;
 }
 
 function TypeBadge({ type }: { type: string }) {
+  const t = useTranslations('filter');
+  const label = (t as (k: string) => string)(type) ?? type;
   return (
     <span className={`type-badge type-badge--${type}`}>
       <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room' | 'parking'} size={12} />
-      {type}
+      {label}
     </span>
   );
 }
@@ -992,9 +996,6 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
             {t('tabAnalytics')}
           </button>
         </div>
-        <a href={`/${locale}/admin/imports/new`} className="admin-action-btn admin-action-btn--import">
-          + Importar espais
-        </a>
       </div>
 
       {activeTab === 'analytics' && (
@@ -1057,11 +1058,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
       )}
 
       {activeTab === 'spaces' && <>
-      {process.env.NODE_ENV === 'development' && (
-        <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
-          ↗ Supabase → spaces
+      <div className="admin-spaces-header">
+        {process.env.NODE_ENV === 'development' && (
+          <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+            ↗ Supabase → spaces
+          </a>
+        )}
+        <a href={`/${locale}/admin/imports/new`} className="admin-action-btn admin-action-btn--import">
+          + Importar espais
         </a>
-      )}
+      </div>
       {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat">
