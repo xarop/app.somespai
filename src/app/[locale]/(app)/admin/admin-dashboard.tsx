@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition, useOptimistic, useActionState, useEffect, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import type { Space } from '@/lib/schemas/space';
 import { Icon } from '@/components/ui/icon';
@@ -820,6 +820,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
 export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdminEmail }: { spaces: Space[]; initialEditId?: string; mainAdminEmail?: string }) {
   const t = useTranslations('admin');
   const tFilter = useTranslations('filter');
+  const locale = useLocale();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [spaces, setSpacesOptimistic] = useOptimistic(
@@ -1052,11 +1053,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
       )}
 
       {activeTab === 'spaces' && <>
-      {process.env.NODE_ENV === 'development' && (
-        <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
-          ↗ Supabase → spaces
+      <div className="admin-spaces-header">
+        {process.env.NODE_ENV === 'development' && (
+          <a href={`${SB}/editor?schema=public&table=spaces`} target="_blank" rel="noopener noreferrer" className="admin-supabase-link">
+            ↗ Supabase → spaces
+          </a>
+        )}
+        <a href={`/${locale}/admin/imports/new`} className="admin-action-btn admin-action-btn--import">
+          + Importar espais
         </a>
-      )}
+      </div>
       {/* Stats */}
       <div className="admin-stats">
         <div className="admin-stat">
