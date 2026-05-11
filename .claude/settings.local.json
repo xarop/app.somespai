@@ -8,7 +8,13 @@
       "Bash(git commit -m ' *)",
       "Bash(vercel build *)",
       "Bash(vercel logs *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(mkdir -p /tmp/vercel-link-test/.vercel)",
+      "Read(//tmp/**)",
+      "Bash(vercel env *)",
+      "Bash(mkdir -p /tmp/vspa)",
+      "Bash(vercel link *)",
+      "Bash(vercel --prod --yes)"
     ]
   }
 }
