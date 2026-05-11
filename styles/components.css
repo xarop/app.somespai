@@ -4303,3 +4303,249 @@
     opacity: 0.5;
     user-select: none;
   }
+
+  /* ── Admin import button ─────────────────────────────────────────────── */
+  .admin-spaces-header {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    justify-content: flex-end;
+    margin-bottom: var(--s-3);
+  }
+
+  .admin-action-btn--import {
+    padding: var(--s-2) var(--s-4);
+    font-size: var(--t-sm);
+    font-weight: 600;
+    border-radius: var(--r-md);
+    border: 1px solid var(--primary);
+    background: var(--primary-tint);
+    color: var(--primary);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--t-fast), color var(--t-fast);
+    white-space: nowrap;
+  }
+
+  .admin-action-btn--import:hover {
+    background: var(--primary);
+    color: var(--primary-ink);
+  }
+
+  /* ── Import search page ──────────────────────────────────────────────── */
+  .import-search {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-5);
+  }
+
+  .import-search__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .import-search__query-row {
+    display: flex;
+    gap: var(--s-2);
+  }
+
+  .import-search__query-row .field__input {
+    flex: 1;
+  }
+
+  .import-search__location summary {
+    font-size: var(--t-sm);
+    color: var(--ink-mute);
+    cursor: pointer;
+    user-select: none;
+    margin-bottom: var(--s-2);
+  }
+
+  .import-search__location-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--s-3);
+    padding-top: var(--s-2);
+  }
+
+  @media (max-width: 600px) {
+    .import-search__location-fields {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .import-search__empty {
+    color: var(--ink-mute);
+    font-size: var(--t-sm);
+    text-align: center;
+    padding: var(--s-6) 0;
+  }
+
+  /* ── Import candidates list ──────────────────────────────────────────── */
+  .import-candidates {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .import-candidates__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--t-sm);
+    color: var(--ink-mute);
+  }
+
+  .import-candidates__select-actions {
+    display: flex;
+    gap: var(--s-2);
+  }
+
+  .import-candidates__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-2);
+  }
+
+  .import-candidate {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    background: var(--bg);
+    transition: border-color var(--t-fast);
+  }
+
+  .import-candidate--selected {
+    border-color: var(--primary);
+    background: var(--primary-tint);
+  }
+
+  .import-candidate--existing {
+    opacity: 0.55;
+  }
+
+  .import-candidate__check-label {
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .import-candidate__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-1);
+  }
+
+  .import-candidate__name {
+    font-weight: 600;
+    font-size: var(--t-sm);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .import-candidate__badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: var(--r-full);
+  }
+
+  .import-candidate__badge--existing {
+    background: var(--bg-deep);
+    color: var(--ink-mute);
+    border: 1px solid var(--border);
+  }
+
+  .import-candidate__rating {
+    font-size: 11px;
+    color: var(--gold, #c8a400);
+    font-weight: 500;
+  }
+
+  .import-candidate__address {
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+  }
+
+  .import-candidate__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--s-3);
+    font-size: var(--t-xs);
+    color: var(--ink-mute);
+  }
+
+  .import-candidate__coords {
+    font-family: var(--font-mono, monospace);
+  }
+
+  .import-candidate__map-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .import-candidate__map-link:hover {
+    text-decoration: underline;
+  }
+
+  .import-commit-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--s-3) var(--s-4);
+    background: var(--bg-soft);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--ink-mute);
+  }
+
+  /* ── Import result banner ────────────────────────────────────────────── */
+  .import-result {
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    font-size: var(--t-sm);
+    border: 1px solid;
+  }
+
+  .import-result--ok {
+    background: rgba(34, 197, 94, 0.08);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: #166534;
+  }
+
+  .import-result--error {
+    background: rgba(239, 68, 68, 0.08);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+  }
+
+  /* ── Import job detail page ──────────────────────────────────────────── */
+  .import-job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    padding: var(--s-4);
+    background: var(--bg-soft);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    margin-bottom: var(--s-5);
+    font-size: var(--t-sm);
+    color: var(--ink-mute);
+  }
+
+  .import-job-meta strong {
+    color: var(--ink);
+  }
