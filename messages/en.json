@@ -221,8 +221,8 @@
     "amenitiesSelectType": "Select a space type first to see the available amenities.",
     "guestNotice": "You are not signed in.",
     "guestDesc": "Sign in or create a free account to publish and manage your spaces directly. Or if you prefer, you can publish as a guest by leaving your email address below.",
-    "guestSignIn": "Sign in",
-    "guestSignUp": "Sign up",
+    "guestSignIn": "I have an account",
+    "guestSignUp": "Create a free account",
     "guestDataTitle": "Your details",
     "guestEmailPlaceholder": "info@example.com",
     "guestEmailHelp": "We need your email to create your account and link this space to it."

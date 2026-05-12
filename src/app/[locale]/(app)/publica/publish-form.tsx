@@ -241,10 +241,10 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
           </div>
           <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
             <button type="button" data-variant="primary" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
-              {t('guestSignIn')}
-            </button>
-            <button type="button" data-variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
               {t('guestSignUp')}
+            </button>
+            <button type="button" data-variant="ghost" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
+              {t('guestSignIn')}
             </button>
           </div>
         </div>
