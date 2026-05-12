@@ -227,6 +227,7 @@
     "rating": "Puntuació",
     "body": "Comentari",
     "bodyPlaceholder": "Com va ser l'experiència?",
+    "namePlaceholder": "El teu nom (públic)",
     "submit": "Publicar ressenya",
     "submitting": "Publicant…",
     "loginRequired": "Identifica't per escriure una ressenya.",
@@ -235,13 +236,20 @@
   },
   "user": {
     "signOut": "Tancar sessió",
-    "mySpaces": "Els meus espais",
+    "mySpaces": "Perfil",
     "noSpaces": "Encara no has publicat cap espai.",
     "statusActive": "Publicat",
     "statusPaused": "Pausat",
     "editSpace": "Editar",
     "myFavorites": "Els meus favorits",
-    "noFavorites": "Encara no has marcat cap espai com a favorit."
+    "noFavorites": "Encara no has marcat cap espai com a favorit.",
+    "profileTitle": "El meu perfil",
+    "profileName": "Nom",
+    "profilePhone": "Telèfon",
+    "profileSave": "Desar canvis",
+    "profileSaving": "Desant…",
+    "profileSaved": "Canvis desats correctament.",
+    "mySpacesTitle": "Els meus espais"
   },
   "edit": {
     "title": "Edita el teu espai",

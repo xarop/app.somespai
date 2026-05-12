@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import { getSpacesByOwner } from '@/lib/supabase/spaces';
 import { PageNav } from '@/components/ui/page-nav';
 import { FavoritesSection } from './favorites-section';
+import { ProfileForm } from './profile-form';
+import { getProfileAction } from './profile-actions';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -27,7 +29,10 @@ export default async function PerfilPage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
-  const spaces = await getSpacesByOwner(user.id);
+  const [spaces, profile] = await Promise.all([
+    getSpacesByOwner(user.id),
+    getProfileAction(),
+  ]);
   const t = await getTranslations('user');
 
   return (
@@ -41,6 +46,16 @@ export default async function PerfilPage({ params }: PageProps) {
           <p className="page-form__subtitle">{user.email}</p>
         </header>
 
+        {/* Profile data */}
+        <h2 style={{ marginTop: 'var(--s-4)', marginBottom: 'var(--s-3)', fontSize: 'var(--t-lg)', fontWeight: 600 }}>
+          {t('profileTitle')}
+        </h2>
+        <ProfileForm displayName={profile.displayName} phone={profile.phone} />
+
+        {/* Spaces */}
+        <h2 style={{ marginTop: 'var(--s-7)', marginBottom: 'var(--s-2)', fontSize: 'var(--t-lg)', fontWeight: 600 }}>
+          {t('mySpacesTitle')}
+        </h2>
         {spaces.length === 0 ? (
           <p style={{ color: 'var(--ink-mute)', padding: 'var(--s-4) 0' }}>{t('noSpaces')}</p>
         ) : (

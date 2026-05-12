@@ -32,15 +32,35 @@ export async function getReviews(spaceId: string): Promise<Review[]> {
   }));
 }
 
-export async function addReview(spaceId: string, rating: number, body: string): Promise<void> {
+export async function getUserDisplayName(): Promise<string | null> {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return null;
+  const { data } = await supabase.from('profiles').select('display_name').eq('id', user.id).maybeSingle();
+  return data?.display_name ?? null;
+}
+
+export async function addReview(spaceId: string, rating: number, body: string, authorName?: string): Promise<void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) throw new Error('Not authenticated');
 
-  await supabase.from('profiles').upsert(
-    { id: user.id, display_name: user.email },
-    { onConflict: 'id', ignoreDuplicates: true },
+  // Use service role to bypass RLS for profile upsert
+  const adminClient = createSupabaseClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
   );
+  if (authorName?.trim()) {
+    await adminClient.from('profiles').upsert(
+      { id: user.id, display_name: authorName.trim() },
+      { onConflict: 'id' },
+    );
+  } else {
+    await adminClient.from('profiles').upsert(
+      { id: user.id },
+      { onConflict: 'id', ignoreDuplicates: true },
+    );
+  }
 
   const { error } = await supabase.from('reviews').insert({
     space_id: spaceId,

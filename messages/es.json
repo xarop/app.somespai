@@ -227,6 +227,7 @@
     "rating": "Puntuación",
     "body": "Comentario",
     "bodyPlaceholder": "¿Cómo fue la experiencia?",
+    "namePlaceholder": "Tu nombre (público)",
     "submit": "Publicar reseña",
     "submitting": "Publicando…",
     "loginRequired": "Identifícate para escribir una reseña.",
@@ -235,13 +236,20 @@
   },
   "user": {
     "signOut": "Cerrar sesión",
-    "mySpaces": "Mis espacios",
+    "mySpaces": "Perfil",
     "noSpaces": "Todavía no has publicado ningún espacio.",
     "statusActive": "Publicado",
     "statusPaused": "Pausado",
     "editSpace": "Editar",
     "myFavorites": "Mis favoritos",
-    "noFavorites": "Todavía no has marcado ningún espacio como favorito."
+    "noFavorites": "Todavía no has marcado ningún espacio como favorito.",
+    "profileTitle": "Mi perfil",
+    "profileName": "Nombre",
+    "profilePhone": "Teléfono",
+    "profileSave": "Guardar cambios",
+    "profileSaving": "Guardando…",
+    "profileSaved": "Cambios guardados correctamente.",
+    "mySpacesTitle": "Mis espacios"
   },
   "edit": {
     "title": "Edita tu espacio",
