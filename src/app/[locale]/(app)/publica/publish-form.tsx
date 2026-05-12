@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useRef, useEffect } from 'react';
+import { useActionState, useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { createClient } from '@/lib/supabase/client';
@@ -79,7 +79,10 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
   const [autofillState, setAutofillState] = useState<'idle' | 'locating' | 'geocoding' | 'done' | 'error'>('idle');
   const [lat, setLat] = useState('41.4047');
   const [lng, setLng] = useState('2.1567');
-  const [photoPreviews, setPhotoPreviews] = useState<string[]>([]);
+  const [photoFiles, setPhotoFiles] = useState<File[]>([]);
+  const photoInputRef = useRef<HTMLInputElement>(null);
+  const galleryInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
   const titleRef = useRef<HTMLInputElement>(null);
   const titleLocationRef = useRef('');
   const addressRef = useRef<HTMLInputElement>(null);
@@ -177,9 +180,37 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
     }
   }
 
-  function handlePhotos(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []).slice(0, 6);
-    setPhotoPreviews(files.map(f => URL.createObjectURL(f)));
+  const photoPreviews = useMemo(
+    () => photoFiles.map(f => URL.createObjectURL(f)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [photoFiles],
+  );
+
+  useEffect(() => {
+    if (!photoInputRef.current) return;
+    try {
+      const dt = new DataTransfer();
+      photoFiles.forEach(f => dt.items.add(f));
+      photoInputRef.current.files = dt.files;
+    } catch { /* DataTransfer not supported (rare) */ }
+  }, [photoFiles]);
+
+  function addPhotos(incoming: File[]) {
+    setPhotoFiles(prev => [...prev, ...incoming].slice(0, 6));
+  }
+
+  function removePhoto(index: number) {
+    setPhotoFiles(prev => prev.filter((_, i) => i !== index));
+  }
+
+  function handleGallery(e: React.ChangeEvent<HTMLInputElement>) {
+    addPhotos(Array.from(e.target.files ?? []));
+    e.target.value = '';
+  }
+
+  function handleCamera(e: React.ChangeEvent<HTMLInputElement>) {
+    addPhotos(Array.from(e.target.files ?? []));
+    e.target.value = '';
   }
 
   if (state === 'SUCCESS_GUEST') {
@@ -376,16 +407,28 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       {/* ── Photos ── */}
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionPhotos')}</legend>
-        <label className="field">
-          <span className="field__label field__hint">{t('photosHelp')}</span>
-          <input name="photos" type="file" className="field__input" multiple accept="image/*"
-            onChange={handlePhotos} />
-        </label>
+        <input ref={photoInputRef} name="photos" type="file" multiple style={{ display: 'none' }} />
+        <p className="field__hint">{t('photosHelp')}</p>
+        <div className="photo-upload-row">
+          <label className="photo-upload-btn">
+            <input ref={galleryInputRef} type="file" accept="image/*" multiple onChange={handleGallery} style={{ display: 'none' }} />
+            <Icon name="image" size={16} />
+            {t('photosGallery')}
+          </label>
+          <label className="photo-upload-btn photo-upload-btn--camera">
+            <input ref={cameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleCamera} style={{ display: 'none' }} />
+            <Icon name="camera" size={16} />
+            {t('photosCamera')}
+          </label>
+        </div>
         {photoPreviews.length > 0 && (
           <div className="photo-previews">
             {photoPreviews.map((src, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={src} alt="" className="photo-preview" />
+              <div key={i} className="photo-preview-wrap">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt="" className="photo-preview" />
+                <button type="button" className="photo-preview-remove" onClick={() => removePhoto(i)} aria-label="Eliminar foto">×</button>
+              </div>
             ))}
           </div>
         )}

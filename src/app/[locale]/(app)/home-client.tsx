@@ -225,15 +225,26 @@ export function HomeClient({
   }, [cityContext, locale]);
 
   const toggleLike = useCallback(async (id: string) => {
-    // Optimistic update
     setLikedIds((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
       return next;
     });
-    // Persist to DB (no-op if not authenticated)
-    await toggleFavorite(id);
+    try {
+      await toggleFavorite(id);
+    } catch (err) {
+      // Revert optimistic update on failure
+      setLikedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
+      if ((err as Error)?.message !== 'not-authenticated') {
+        console.error('[like] toggleFavorite failed:', err);
+      }
+    }
   }, []);
 
   return (

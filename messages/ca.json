@@ -203,6 +203,8 @@
     "contact_email": "Email",
     "contact_whatsapp": "WhatsApp",
     "photosHelp": "Fins a 6 fotos · JPG, PNG, WebP · màx. 5 MB cadascuna",
+    "photosGallery": "Galeria",
+    "photosCamera": "Fer foto",
     "geolocating": "Cercant coordenades…",
     "geoError": "No hem trobat l'adreça. Comprova-la i torna-ho a provar.",
     "submit": "Publicar espai",
