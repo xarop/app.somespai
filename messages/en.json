@@ -218,7 +218,14 @@
     "autofillGeocoding": "Looking up address…",
     "autofillSuccess": "Fields filled with your current location.",
     "autofillError": "Could not get your location. Check your browser permissions.",
-    "amenitiesSelectType": "Select a space type first to see the available amenities."
+    "amenitiesSelectType": "Select a space type first to see the available amenities.",
+    "guestNotice": "You are not signed in.",
+    "guestDesc": "Sign in or create a free account to publish and manage your spaces directly. Or if you prefer, you can publish as a guest by leaving your email address below.",
+    "guestSignIn": "Sign in",
+    "guestSignUp": "Sign up",
+    "guestDataTitle": "Your details",
+    "guestEmailPlaceholder": "info@example.com",
+    "guestEmailHelp": "We need your email to create your account and link this space to it."
   },
   "review": {
     "title": "Reviews",

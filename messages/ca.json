@@ -218,7 +218,14 @@
     "autofillGeocoding": "Cercant adreça…",
     "autofillSuccess": "Camps omplerts amb la ubicació actual.",
     "autofillError": "No hem pogut obtenir la teva ubicació. Comprova els permisos del navegador.",
-    "amenitiesSelectType": "Selecciona primer el tipus d'espai per veure els equipaments disponibles."
+    "amenitiesSelectType": "Selecciona primer el tipus d'espai per veure els equipaments disponibles.",
+    "guestNotice": "No has iniciat sessió.",
+    "guestDesc": "Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus espais. O si ho prefereixes, pots publicar l'espai com a convidat deixant el teu correu electrònic a continuació.",
+    "guestSignIn": "Inicia sessió",
+    "guestSignUp": "Registra't",
+    "guestDataTitle": "Les teves dades",
+    "guestEmailPlaceholder": "info@exemple.cat",
+    "guestEmailHelp": "Necessitem el teu email per crear l'usuari i vincular-hi aquest espai."
   },
   "review": {
     "title": "Ressenyes",
