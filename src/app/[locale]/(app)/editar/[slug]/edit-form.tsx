@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useState, useRef, useEffect } from 'react';
+import { useActionState, useState, useRef, useEffect, useMemo } from 'react';
 import { useTranslations } from 'next-intl';
 import { useLocale } from 'next-intl';
 import { useRouter } from '@/lib/i18n/routing';
@@ -50,7 +50,10 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
   const addressRef = useRef<HTMLInputElement>(null);
 
   const [keptPhotos, setKeptPhotos] = useState<string[]>(space.photos);
-  const [newPreviews, setNewPreviews] = useState<string[]>([]);
+  const [newPhotoFiles, setNewPhotoFiles] = useState<File[]>([]);
+  const newPhotoInputRef = useRef<HTMLInputElement>(null);
+  const newGalleryInputRef = useRef<HTMLInputElement>(null);
+  const newCameraInputRef = useRef<HTMLInputElement>(null);
 
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -78,9 +81,37 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
     }
   }
 
-  function handleNewPhotos(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []);
-    setNewPreviews(files.map((f) => URL.createObjectURL(f)));
+  const newPreviews = useMemo(
+    () => newPhotoFiles.map(f => URL.createObjectURL(f)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [newPhotoFiles],
+  );
+
+  useEffect(() => {
+    if (!newPhotoInputRef.current) return;
+    try {
+      const dt = new DataTransfer();
+      newPhotoFiles.forEach(f => dt.items.add(f));
+      newPhotoInputRef.current.files = dt.files;
+    } catch { /* DataTransfer not supported */ }
+  }, [newPhotoFiles]);
+
+  function addNewPhotos(incoming: File[]) {
+    setNewPhotoFiles(prev => [...prev, ...incoming].slice(0, 6));
+  }
+
+  function removeNewPhoto(index: number) {
+    setNewPhotoFiles(prev => prev.filter((_, i) => i !== index));
+  }
+
+  function handleNewGallery(e: React.ChangeEvent<HTMLInputElement>) {
+    addNewPhotos(Array.from(e.target.files ?? []));
+    e.target.value = '';
+  }
+
+  function handleNewCamera(e: React.ChangeEvent<HTMLInputElement>) {
+    addNewPhotos(Array.from(e.target.files ?? []));
+    e.target.value = '';
   }
 
   async function handleDelete() {
@@ -256,19 +287,33 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
           </div>
         )}
 
-        <label className="field" style={{ marginTop: keptPhotos.length > 0 ? 'var(--s-3)' : undefined }}>
-          <span className="field__label field__hint">{tEdit('photosAdd')}</span>
-          <input name="new_photos" type="file" className="field__input" multiple accept="image/*"
-            onChange={handleNewPhotos} />
-        </label>
-        {newPreviews.length > 0 && (
-          <div className="photo-previews">
-            {newPreviews.map((src, i) => (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img key={i} src={src} alt="" className="photo-preview" />
-            ))}
+        <div style={{ marginTop: keptPhotos.length > 0 ? 'var(--s-3)' : undefined }}>
+          <input ref={newPhotoInputRef} name="new_photos" type="file" multiple style={{ display: 'none' }} />
+          <p className="field__hint">{tEdit('photosAdd')}</p>
+          <div className="photo-upload-row">
+            <label className="photo-upload-btn">
+              <input ref={newGalleryInputRef} type="file" accept="image/*" multiple onChange={handleNewGallery} style={{ display: 'none' }} />
+              <Icon name="image" size={16} />
+              {t('photosGallery')}
+            </label>
+            <label className="photo-upload-btn photo-upload-btn--camera">
+              <input ref={newCameraInputRef} type="file" accept="image/*" capture="environment" onChange={handleNewCamera} style={{ display: 'none' }} />
+              <Icon name="camera" size={16} />
+              {t('photosCamera')}
+            </label>
           </div>
-        )}
+          {newPreviews.length > 0 && (
+            <div className="photo-previews">
+              {newPreviews.map((src, i) => (
+                <div key={i} className="photo-preview-wrap">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" className="photo-preview" />
+                  <button type="button" className="photo-preview-remove" onClick={() => removeNewPhoto(i)} aria-label="Eliminar foto">×</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </fieldset>
 
       {/* ── Contact ── */}
