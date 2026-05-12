@@ -63,7 +63,13 @@
     "web": "Web",
     "phone": "Teléfono",
     "email": "Email",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "reportMenu": "Informar sobre el espacio",
+    "reportContact": "Otros",
+    "reportUnavailable": "El espacio no está disponible",
+    "reportWrongData": "El espacio tiene datos incorrectos",
+    "reportClaim": "Este espacio es mío / Reclamar propiedad",
+    "reportAbuse": "Denunciar el espacio"
   },
   "auth": {
     "titleSignIn": "Iniciar sesión",
@@ -216,7 +222,12 @@
     "submit": "Publicar reseña",
     "submitting": "Publicando…",
     "loginRequired": "Identifícate para escribir una reseña.",
+<<<<<<< HEAD
     "alreadyReviewed": "Ya has reseñado este elot."
+=======
+    "loginLink": "Iniciar sesión →",
+    "alreadyReviewed": "Ya has reseñado este espacio."
+>>>>>>> develop
   },
   "user": {
     "signOut": "Cerrar sesión",
@@ -351,6 +362,10 @@
     "fieldMessage": "Mensaje",
     "fieldMessagePlaceholder": "Escribe aquí tu mensaje…",
     "spaceMessageTemplate": "Hola, me interesa el espacio \"{title}\" ubicado en {address}.\n\n",
+    "reportUnavailableTemplate": "El espacio \"{title}\" en {address} no parece estar disponible.\n\nURL del espacio: {url}\n\n",
+    "reportWrongDataTemplate": "El espacio \"{title}\" en {address} tiene datos incorrectos.\n\nURL del espacio: {url}\n\nQué datos:\n",
+    "reportClaimTemplate": "Hola, soy el propietario/gestor del espacio \"{title}\" en {address} y me gustaría reclamar su propiedad.\n\nURL del espacio: {url}\n\n",
+    "reportAbuseTemplate": "Quiero denunciar el espacio \"{title}\" en {address}.\n\nURL del espacio: {url}\n\nMotivo:\n",
     "submit": "Enviar mensaje",
     "submitting": "Enviando…",
     "successTitle": "¡Mensaje enviado!",

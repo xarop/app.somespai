@@ -63,7 +63,13 @@
     "web": "Web",
     "phone": "Phone",
     "email": "Email",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "reportMenu": "Report this space",
+    "reportContact": "Other",
+    "reportUnavailable": "Space is not available",
+    "reportWrongData": "Space has incorrect data",
+    "reportClaim": "This space is mine / Claim ownership",
+    "reportAbuse": "Report this space"
   },
   "auth": {
     "titleSignIn": "Sign in",
@@ -351,6 +357,10 @@
     "fieldMessage": "Message",
     "fieldMessagePlaceholder": "Write your message here…",
     "spaceMessageTemplate": "Hi, I'm interested in the space \"{title}\" located at {address}.\n\n",
+    "reportUnavailableTemplate": "The space \"{title}\" at {address} does not seem to be available.\n\nSpace URL: {url}\n\n",
+    "reportWrongDataTemplate": "The space \"{title}\" at {address} has incorrect data.\n\nSpace URL: {url}\n\nWhat data:\n",
+    "reportClaimTemplate": "Hi, I am the owner/manager of the space \"{title}\" at {address} and I would like to claim ownership.\n\nSpace URL: {url}\n\n",
+    "reportAbuseTemplate": "I want to report the space \"{title}\" at {address}.\n\nSpace URL: {url}\n\nReason:\n",
     "submit": "Send message",
     "submitting": "Sending…",
     "successTitle": "Message sent!",
