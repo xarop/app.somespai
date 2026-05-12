@@ -2460,6 +2460,18 @@
     border-color: var(--ink);
   }
 
+  .admin-filter-tab[data-type="storage"] { color: var(--type-storage); border-color: var(--type-storage-tint); }
+  .admin-filter-tab[data-type="workspace"] { color: var(--type-workspace); border-color: var(--type-workspace-tint); }
+  .admin-filter-tab[data-type="garden"] { color: var(--type-garden); border-color: var(--type-garden-tint); }
+  .admin-filter-tab[data-type="room"] { color: var(--type-room); border-color: var(--type-room-tint); }
+  .admin-filter-tab[data-type="parking"] { color: var(--type-parking); border-color: var(--type-parking-tint); }
+
+  .admin-filter-tab[data-type="storage"].admin-filter-tab--active { background: var(--type-storage); border-color: var(--type-storage); color: #fff; }
+  .admin-filter-tab[data-type="workspace"].admin-filter-tab--active { background: var(--type-workspace); border-color: var(--type-workspace); color: #fff; }
+  .admin-filter-tab[data-type="garden"].admin-filter-tab--active { background: var(--type-garden); border-color: var(--type-garden); color: #fff; }
+  .admin-filter-tab[data-type="room"].admin-filter-tab--active { background: var(--type-room); border-color: var(--type-room); color: #fff; }
+  .admin-filter-tab[data-type="parking"].admin-filter-tab--active { background: var(--type-parking); border-color: var(--type-parking); color: #fff; }
+
   .admin-filter-tab__count {
     font-size: var(--t-xs);
     opacity: 0.7;
@@ -2705,6 +2717,7 @@
     display: flex;
     gap: 4px;
     flex-wrap: nowrap;
+    justify-content: flex-end;
   }
 
   .admin-action-btn {
