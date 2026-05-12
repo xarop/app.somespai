@@ -1221,6 +1221,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
         {(['all', 'storage', 'workspace', 'garden', 'room', 'parking'] as TypeFilter[]).map(type => (
           <button key={type} type="button"
             className={`admin-filter-tab${typeFilter === type ? ' admin-filter-tab--active' : ''}`}
+            data-type={type !== 'all' ? type : undefined}
             onClick={() => setTypeFilter(type)}>
             {type === 'all' ? t('filter_all') : (
               <><Icon name={type} size={13} />{tFilter(type)}</>
@@ -1262,7 +1263,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
                 <input type="checkbox" ref={selectAllRef} checked={allFilteredSelected} onChange={toggleSelectAll} />
               </th>
               <th className="admin-th--sort" onClick={() => handleSort('title')}>{t('colTitle')} {sortArrow('title')}</th>
-              <th className="admin-cell--center">P</th>
+              <th className="admin-cell--center"><Icon name="user" size={13} /></th>
               <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('type')}>{sortArrow('type')}</th>
               <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('status')}>{sortArrow('status')}</th>
               <th className="admin-th--sort" onClick={() => handleSort('city')}>{t('colLocation')} {sortArrow('city')}</th>
