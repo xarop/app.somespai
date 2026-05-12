@@ -35,10 +35,10 @@ function rowToSpace(row: Record<string, any>): Space {
 }
 
 function createSeoClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+  return createSupabaseClient(url, key);
 }
 
 export interface CityStats {
@@ -49,6 +49,7 @@ export interface CityStats {
 
 export async function getCitiesWithStats(): Promise<CityStats[]> {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("city, neighborhood")
@@ -109,6 +110,7 @@ function buildCityMap(rows: any[]) {
 
 export async function getDistinctCities(): Promise<string[]> {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("city")
@@ -123,6 +125,7 @@ export async function getDistinctCityTypePairs(): Promise<
   Array<{ city: string; type: string }>
 > {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("city, type")
@@ -151,6 +154,7 @@ export async function getSpacesByCity(
   type?: string,
 ): Promise<Space[]> {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   let query = supabase
     .from("spaces")
     .select("*")
@@ -163,6 +167,7 @@ export async function getSpacesByCity(
 
 export async function getAllSlugsPublic(): Promise<string[]> {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("slug")
@@ -174,6 +179,7 @@ export async function getAllActiveSpacesSummary(): Promise<
   Array<{ slug: string; title: string; city: string | null; type: string }>
 > {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("slug, title, city, type")
@@ -192,6 +198,7 @@ export async function getAllActiveSpacesSummary(): Promise<
 
 export async function getAllActiveSpaces(): Promise<Space[]> {
   const supabase = createSeoClient();
+  if (!supabase) return [];
   const { data } = await supabase
     .from("spaces")
     .select("*")
