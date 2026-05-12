@@ -161,9 +161,9 @@ export async function updateSpaceFullAction(
   const sizeRaw = formData.get('size_m2') as string;
   const sizeM2 = sizeRaw ? parseFloat(sizeRaw) : null;
   const address = (formData.get('address') as string ?? '').trim() || null;
-  const neighborhood = (formData.get('neighborhood') as string ?? '').trim() || 'Vila de Gràcia';
-  const city = (formData.get('city') as string ?? '').trim() || 'Barcelona';
-  const region = (formData.get('region') as string ?? '').trim() || 'Catalunya';
+  const neighborhood = (formData.get('neighborhood') as string ?? '').trim() || null;
+  const city = (formData.get('city') as string ?? '').trim() || null;
+  const region = (formData.get('region') as string ?? '').trim() || null;
   const lat = parseFloat(formData.get('lat') as string);
   const lng = parseFloat(formData.get('lng') as string);
   const phone = (formData.get('phone') as string ?? '').trim() || null;
