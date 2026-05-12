@@ -2168,6 +2168,23 @@
     border: 1px dashed var(--glass-border);
   }
 
+  /* ── Premium badge ────────────────────────────────────────────────────── */
+  .badge-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: #b8860b;
+    color: #fff;
+    font-size: var(--t-xs);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-left: var(--s-2);
+    vertical-align: middle;
+  }
+
   /* ── Verified badge ───────────────────────────────────────────────────── */
   .badge-verified {
     display: inline-flex;

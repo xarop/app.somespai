@@ -25,9 +25,10 @@ const AMENITY_GROUPS: Record<string, string[]> = {
 interface Props {
   space: Space;
   isAdmin?: boolean;
+  isPremium?: boolean;
 }
 
-export function EditSpaceForm({ space, isAdmin }: Props) {
+export function EditSpaceForm({ space, isAdmin, isPremium = false }: Props) {
   const t = useTranslations('publish');
   const tEdit = useTranslations('edit');
   const tAmenity = useTranslations('amenity');
@@ -97,7 +98,8 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
   }, [newPhotoFiles]);
 
   function addNewPhotos(incoming: File[]) {
-    setNewPhotoFiles(prev => [...prev, ...incoming].slice(0, 6));
+    const photoLimit = isPremium ? 6 : 1;
+    setNewPhotoFiles(prev => [...prev, ...incoming].slice(0, photoLimit));
   }
 
   function removeNewPhoto(index: number) {
@@ -289,7 +291,7 @@ export function EditSpaceForm({ space, isAdmin }: Props) {
 
         <div style={{ marginTop: keptPhotos.length > 0 ? 'var(--s-3)' : undefined }}>
           <input ref={newPhotoInputRef} name="new_photos" type="file" multiple style={{ display: 'none' }} />
-          <p className="field__hint">{tEdit('photosAdd')}</p>
+          <p className="field__hint">{isPremium ? tEdit('photosAdd') : t('photosHelpFree')}</p>
           <div className="photo-upload-row">
             <label className="photo-upload-btn">
               <input ref={newGalleryInputRef} type="file" accept="image/*" multiple onChange={handleNewGallery} style={{ display: 'none' }} />
