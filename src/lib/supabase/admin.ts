@@ -78,8 +78,8 @@ export type AdminSpaceUpdate = Partial<{
   priceCents: number;
   priceUnit: 'month' | 'day' | 'hour';
   sizeM2: number | null;
-  neighborhood: string;
-  city: string;
+  neighborhood: string | null;
+  city: string | null;
   status: 'active' | 'paused' | 'removed';
   isFeatured: boolean;
 }>;
@@ -128,9 +128,9 @@ export type AdminSpaceFullUpdate = {
   priceUnit: string;
   sizeM2: number | null;
   address: string | null;
-  neighborhood: string;
-  city: string;
-  region: string;
+  neighborhood: string | null;
+  city: string | null;
+  region: string | null;
   lat: number;
   lng: number;
   amenities: string[];
