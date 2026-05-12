@@ -17,6 +17,7 @@ import {
   getUsersAdmin,
   deleteUserAdmin,
   setUserAdminRole,
+  setUserPremiumRole,
   getContactMessagesAdmin,
   setContactMessageReadAdmin,
   deleteContactMessageAdmin,
@@ -121,6 +122,11 @@ export async function deleteUserAction(userId: string): Promise<void> {
 export async function setUserAdminRoleAction(userId: string, isAdmin: boolean): Promise<void> {
   await requireAdmin();
   await setUserAdminRole(userId, isAdmin);
+}
+
+export async function setUserPremiumRoleAction(userId: string, isPremium: boolean): Promise<void> {
+  await requireAdmin();
+  await setUserPremiumRole(userId, isPremium);
 }
 
 export async function getContactMessagesAction(): Promise<{ data: ContactMessage[]; error: string | null }> {
