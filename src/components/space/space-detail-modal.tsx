@@ -28,6 +28,8 @@ interface SpaceDetailModalProps {
     reviewsCount: number,
   ) => void;
   standalone?: boolean;
+  liked?: boolean;
+  onToggleLike?: (id: string) => void;
 }
 
 function StarRating({
@@ -62,6 +64,8 @@ export function SpaceDetailModal({
   currentUserId,
   onReviewAdded,
   standalone,
+  liked,
+  onToggleLike,
 }: SpaceDetailModalProps) {
   const t = useTranslations();
   const locale = useLocale();
@@ -487,6 +491,16 @@ export function SpaceDetailModal({
               </span>
             </a>
           )}
+
+          <button
+            type="button"
+            data-variant="ghost"
+            aria-pressed={liked}
+            onClick={() => space && onToggleLike?.(space.id)}
+          >
+            <Icon name="heart" size={16} />
+            <span className="detail__action-label">{t("card.like")}</span>
+          </button>
 
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />

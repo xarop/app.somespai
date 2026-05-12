@@ -69,6 +69,24 @@ export async function getSpaceBySlug(slug: string): Promise<Space | null> {
   }
 }
 
+/** Fetch all spaces the user has favourited. */
+export async function getFavoriteSpaces(userId: string): Promise<Space[]> {
+  const supabase = await createClient();
+  const { data: favData } = await supabase
+    .from('favorites')
+    .select('space_id')
+    .eq('user_id', userId);
+  const ids = (favData ?? []).map(r => r.space_id as string);
+  if (ids.length === 0) return [];
+  const { data, error } = await supabase
+    .from('spaces')
+    .select('*')
+    .in('id', ids)
+    .neq('status', 'removed');
+  if (error) throw new Error(error.message);
+  return (data ?? []).map(rowToSpace);
+}
+
 /** Fetch all non-removed spaces owned by a user. */
 export async function getSpacesByOwner(userId: string): Promise<Space[]> {
   const supabase = await createClient();

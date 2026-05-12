@@ -237,7 +237,9 @@
     "noSpaces": "Encara no has publicat cap espai.",
     "statusActive": "Publicat",
     "statusPaused": "Pausat",
-    "editSpace": "Editar"
+    "editSpace": "Editar",
+    "myFavorites": "Els meus favorits",
+    "noFavorites": "Encara no has marcat cap espai com a favorit."
   },
   "edit": {
     "title": "Edita el teu espai",
