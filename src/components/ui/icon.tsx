@@ -53,6 +53,13 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
     </>
   ),
+  userOff: (
+    <>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
+      <line x1="3" y1="3" x2="21" y2="21" strokeWidth={2} strokeLinecap="round" />
+    </>
+  ),
   heart: <path d="M12 21s-7-4.5-9-9.5C1.5 7 5 4 8 5c1.5.5 3 2 4 4 1-2 2.5-3.5 4-4 3-1 6.5 2 5 6.5-2 5-9 9.5-9 9.5z" />,
   share: (
     <>

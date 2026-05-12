@@ -1285,8 +1285,10 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
                     {space.title}
                   </a>
                 </td>
-                <td className="admin-cell--center" title={space.ownerId ?? 'Sense amo'}>
-                  {space.ownerId ? <span style={{ color: 'green' }}>✓</span> : <span style={{ color: 'red' }}>✕</span>}
+                <td className="admin-cell--center" title={space.ownerId ?? 'Sense propietari'}>
+                  {space.ownerId
+                    ? <Icon name="user" size={15} style={{ color: 'var(--success)' }} />
+                    : <Icon name="userOff" size={15} style={{ color: 'var(--ink-mute)' }} />}
                 </td>
                 <td><TypeBadge type={space.type} /></td>
                 <td><StatusBadge status={space.status} /></td>
