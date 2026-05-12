@@ -1271,7 +1271,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
               <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('rating')}>★ {sortArrow('rating')}</th>
               <th className="admin-cell--center"><Icon name="flag" size={13} /></th>
               <th className="admin-th--sort" onClick={() => handleSort('createdAt')}>Data {sortArrow('createdAt')}</th>
-              <th>{t('colActions')}</th>
+              <th style={{ textAlign: 'right' }}>{t('colActions')}</th>
             </tr>
           </thead>
           <tbody>
