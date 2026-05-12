@@ -656,7 +656,7 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
                       title={user.isPremium ? 'Treure Premium' : 'Fer Premium'}
                       style={user.isPremium ? { borderColor: 'var(--gold)', color: 'var(--gold)' } : undefined}
                     >
-                      ★ {user.isPremium ? 'Premium' : 'Premium'}
+                      {user.isPremium ? '★ Premium' : 'Fer Premium'}
                     </button>
                     {user.email !== mainAdminEmail && (
                       <button
