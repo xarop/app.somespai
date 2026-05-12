@@ -63,9 +63,10 @@ const AMENITIES_BY_TYPE: Record<SpaceType, Set<string>> = {
 
 interface PublishFormProps {
   isLoggedIn?: boolean;
+  isPremium?: boolean;
 }
 
-export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
+export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFormProps) {
   const t = useTranslations('publish');
   const tAmenity = useTranslations('amenity');
   const tSpaceType = useTranslations('spaceType');
@@ -209,8 +210,10 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
     } catch { /* DataTransfer not supported (rare) */ }
   }, [photoFiles]);
 
+  const photoLimit = isPremium ? 6 : 1;
+
   function addPhotos(incoming: File[]) {
-    setPhotoFiles(prev => [...prev, ...incoming].slice(0, 6));
+    setPhotoFiles(prev => [...prev, ...incoming].slice(0, photoLimit));
   }
 
   function removePhoto(index: number) {
@@ -422,7 +425,9 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       <fieldset className="fieldset">
         <legend className="fieldset__legend">{t('sectionPhotos')}</legend>
         <input ref={photoInputRef} name="photos" type="file" multiple style={{ display: 'none' }} />
-        <p className="field__hint">{t('photosHelp')}</p>
+        <p className="field__hint">
+          {isPremium ? t('photosHelp') : t('photosHelpFree')}
+        </p>
         <div className="photo-upload-row">
           <label className="photo-upload-btn">
             <input ref={galleryInputRef} type="file" accept="image/*" multiple onChange={handleGallery} style={{ display: 'none' }} />

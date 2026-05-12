@@ -48,9 +48,17 @@ export async function createSpaceAction(
     await supabase.from('profiles').upsert({ id: user.id, display_name: user.email }, { onConflict: 'id', ignoreDuplicates: true });
   }
 
+  // Check premium for photo limit
+  let isPremium = false;
+  if (user) {
+    const { data: prof } = await supabase.from('profiles').select('is_premium').eq('id', user.id).maybeSingle();
+    isPremium = !!(prof as { is_premium?: boolean } | null)?.is_premium;
+  }
+  const photoLimit = isPremium ? 6 : 1;
+
   // Upload photos
   const photos: string[] = [];
-  const files = formData.getAll('photos') as File[];
+  const files = (formData.getAll('photos') as File[]).slice(0, photoLimit);
   const folderId = user?.id || 'guest';
   for (const file of files) {
     if (!file || file.size === 0) continue;

@@ -204,6 +204,7 @@
     "contact_email": "Email",
     "contact_whatsapp": "WhatsApp",
     "photosHelp": "Up to 6 photos · JPG, PNG, WebP · max 5 MB each",
+    "photosHelpFree": "1 photo (free account) · JPG, PNG, WebP · max 5 MB",
     "photosGallery": "Gallery",
     "photosCamera": "Take photo",
     "geolocating": "Locating address…",
