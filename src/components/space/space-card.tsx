@@ -96,7 +96,7 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, onHover, isAdm
       <div className="card__body">
         <h3 className="card__title">{space.title}</h3>
         <p className="card__meta">
-          <span>{space.address}</span>
+          <span>{[space.address, space.city].filter(Boolean).join(', ')}</span>
           {space.sizeM2 != null && (
             <>
               <span className="card__dot" aria-hidden="true" />
