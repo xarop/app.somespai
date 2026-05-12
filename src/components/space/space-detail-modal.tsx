@@ -5,7 +5,6 @@ import { useLocale, useTranslations } from "next-intl";
 import type { Space } from "@/lib/schemas/space";
 import { Icon, type IconName } from "@/components/ui/icon";
 import { getReviews, addReview, type Review } from "@/lib/supabase/reviews";
-import { createClient } from "@/lib/supabase/client";
 import { getSlugFromType } from "@/lib/seo/type-slugs";
 import { formatLocation } from "@/lib/geo";
 
@@ -89,7 +88,6 @@ export function SpaceDetailModal({
   const [newBody, setNewBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [reviewsLoaded, setReviewsLoaded] = useState(false);
   const [reportMenuOpen, setReportMenuOpen] = useState(false);
   const reportMenuRef = useRef<HTMLDivElement>(null);
@@ -127,15 +125,11 @@ export function SpaceDetailModal({
       setReviewsLoaded(false);
       return;
     }
-    const supabase = createClient();
-    supabase.auth.getUser().then(async ({ data }) => {
-      const loggedIn = !!data.user;
-      setIsLoggedIn(loggedIn);
-      const r = await getReviews(space.id);
+    getReviews(space.id).then((r) => {
       setReviews(r);
       setReviewsLoaded(true);
-      if (loggedIn && data.user) {
-        const mine = r.find((rev) => rev.authorId === data.user!.id);
+      if (currentUserId) {
+        const mine = r.find((rev) => rev.authorId === currentUserId);
         setUserRating(mine?.rating ?? null);
       }
     });
@@ -538,7 +532,7 @@ export function SpaceDetailModal({
           ))}
 
           {/* Review form */}
-          {isLoggedIn && userRating === null && (
+          {!!currentUserId && userRating === null && (
             <form onSubmit={handleReviewSubmit} className="review-form">
               <p className="reviews__title" style={{ fontSize: "var(--t-sm)" }}>
                 {t("review.add")}
@@ -563,7 +557,7 @@ export function SpaceDetailModal({
             </form>
           )}
 
-          {isLoggedIn && userRating !== null && (
+          {!!currentUserId && userRating !== null && (
             <p
               className="reviews__empty"
               style={{ color: "var(--primary-ink)" }}
@@ -572,7 +566,7 @@ export function SpaceDetailModal({
             </p>
           )}
 
-          {!isLoggedIn && (
+          {!!!currentUserId && (
             <p className="reviews__empty">
               {t("review.loginRequired")}{" "}
               <button
