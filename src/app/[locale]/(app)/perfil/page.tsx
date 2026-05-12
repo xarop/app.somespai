@@ -29,10 +29,12 @@ export default async function PerfilPage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
-  const [spaces, profile] = await Promise.all([
+  const [spaces, profile, premiumData] = await Promise.all([
     getSpacesByOwner(user.id),
     getProfileAction(),
+    supabase.from('profiles').select('is_premium').eq('id', user.id).maybeSingle(),
   ]);
+  const isPremium = !!(premiumData.data as { is_premium?: boolean } | null)?.is_premium;
   const t = await getTranslations('user');
 
   return (
@@ -43,7 +45,10 @@ export default async function PerfilPage({ params }: PageProps) {
         <header className="page-form__header">
           <a href="/" className="page-form__back">←</a>
           <h1>{t('mySpaces')}</h1>
-          <p className="page-form__subtitle">{user.email}</p>
+          <p className="page-form__subtitle">
+            {user.email}
+            {isPremium && <span className="badge-premium">Premium</span>}
+          </p>
         </header>
 
         {/* Profile data */}

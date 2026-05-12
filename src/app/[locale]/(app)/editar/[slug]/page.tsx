@@ -18,12 +18,13 @@ export default async function EditSpacePage({ params }: PageProps) {
   if (!user) redirect('/');
 
   let isAdmin = false;
+  const { data: profileData } = await supabase.from('profiles').select('is_admin, is_premium').eq('id', user.id).single();
   if (user.email === process.env.ADMIN_EMAIL || user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
     isAdmin = true;
-  } else {
-    const { data: profile } = await supabase.from('profiles').select('is_admin').eq('id', user.id).single();
-    if (profile?.is_admin) isAdmin = true;
+  } else if (profileData?.is_admin) {
+    isAdmin = true;
   }
+  const isPremium = !!(profileData as { is_premium?: boolean } | null)?.is_premium;
   const space = await getSpaceBySlugForOwner(slug, user.id);
   if (!space) notFound();
 
@@ -39,7 +40,7 @@ export default async function EditSpacePage({ params }: PageProps) {
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{space.title}</p>
         </header>
-        <EditSpaceForm space={space} isAdmin={isAdmin} />
+        <EditSpaceForm space={space} isAdmin={isAdmin} isPremium={isPremium} />
       </div>
     </div>
     </>
