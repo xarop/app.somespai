@@ -32,6 +32,17 @@ interface SpaceDetailModalProps {
   onToggleLike?: (id: string) => void;
 }
 
+function withUtm(url: string): string {
+  try {
+    const u = new URL(url);
+    u.searchParams.set("utm_source", "somespai");
+    u.searchParams.set("utm_medium", "referral");
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
 function StarRating({
   value,
   onChange,
@@ -215,7 +226,7 @@ export function SpaceDetailModal({
 
   const contactOptions = {
     web: space.web
-      ? { href: space.web, label: t("detail.web"), external: true }
+      ? { href: withUtm(space.web), label: t("detail.web"), external: true }
       : null,
     phone: space.phone
       ? {
