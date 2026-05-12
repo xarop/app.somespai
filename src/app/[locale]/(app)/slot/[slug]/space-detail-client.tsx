@@ -5,7 +5,7 @@ import { useRouter } from '@/lib/i18n/routing';
 import { TopNav } from '@/components/ui/top-nav';
 import { SpaceDetailModal } from '@/components/space/space-detail-modal';
 import type { Space } from '@/lib/schemas/space';
-import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites';
+import { getFavoriteIds, toggleFavorite } from '@/lib/supabase/favorites-actions';
 
 interface Props {
   space: Space;
@@ -19,7 +19,7 @@ export function SpaceDetailClient({ space, isAdmin, currentUserId }: Props) {
   const [liked, setLiked] = useState(false);
 
   useEffect(() => {
-    getFavoriteIds().then(ids => setLiked(ids.has(space.id)));
+    getFavoriteIds().then(ids => setLiked(ids.includes(space.id)));
   }, [space.id]);
 
   const handleToggleLike = useCallback(async (id: string) => {
