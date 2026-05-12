@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getFavoriteIds } from '@/lib/supabase/favorites';
+import { getFavoriteIds } from '@/lib/supabase/favorites-actions';
 import { createClient } from '@/lib/supabase/client';
 
 interface FavoriteSpace {
@@ -23,12 +23,12 @@ export function FavoritesSection({ locale, noFavoritesText }: Props) {
   useEffect(() => {
     (async () => {
       const ids = await getFavoriteIds();
-      if (ids.size === 0) { setSpaces([]); return; }
+      if (ids.length === 0) { setSpaces([]); return; }
       const supabase = createClient();
       const { data } = await supabase
         .from('spaces')
         .select('id, slug, title, city, address')
-        .in('id', [...ids])
+        .in('id', ids)
         .neq('status', 'removed');
       setSpaces(data ?? []);
     })();
