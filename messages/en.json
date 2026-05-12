@@ -221,6 +221,7 @@
     "rating": "Rating",
     "body": "Comment",
     "bodyPlaceholder": "How was the experience?",
+    "namePlaceholder": "Your name (public)",
     "submit": "Post review",
     "submitting": "Posting…",
     "loginRequired": "Sign in to write a review.",
@@ -228,13 +229,20 @@
   },
   "user": {
     "signOut": "Sign out",
-    "mySpaces": "My slots",
+    "mySpaces": "Profile",
     "noSpaces": "You haven't published any slots yet.",
     "statusActive": "Published",
     "statusPaused": "Paused",
     "editSpace": "Edit",
     "myFavorites": "My favourites",
-    "noFavorites": "You haven't marked any space as favourite yet."
+    "noFavorites": "You haven't marked any space as favourite yet.",
+    "profileTitle": "My profile",
+    "profileName": "Name",
+    "profilePhone": "Phone",
+    "profileSave": "Save changes",
+    "profileSaving": "Saving…",
+    "profileSaved": "Changes saved.",
+    "mySpacesTitle": "My spaces"
   },
   "edit": {
     "title": "Edit your slot",
