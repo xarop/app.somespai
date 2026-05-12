@@ -10,7 +10,7 @@ import { SpaceSheet, type SortId } from "@/components/space/space-sheet";
 import { SpaceDetailModal } from "@/components/space/space-detail-modal";
 import { Icon } from "@/components/ui/icon";
 import { GRACIA_CENTER } from "@/lib/data/mock-spaces";
-import { getFavoriteIds, toggleFavorite } from "@/lib/supabase/favorites";
+import { getFavoriteIds, toggleFavorite } from "@/lib/supabase/favorites-actions";
 import { createClient } from "@/lib/supabase/client";
 import type { Space } from "@/lib/schemas/space";
 import { filterSpacesByQuery } from "@/lib/search/space-search";
@@ -143,7 +143,7 @@ export function HomeClient({
     const supabase = createClient();
     const load = async () => {
       const ids = await getFavoriteIds();
-      setLikedIds(ids);
+      setLikedIds(new Set(ids));
     };
     load();
     const {
