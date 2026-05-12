@@ -101,24 +101,6 @@ export default async function AjudaPage({ params }: PageProps) {
           ))}
         </ol>
 
-        {/* Features */}
-        <section className="help-features">
-          <h2 className="help-features__title">{t('featuresTitle')}</h2>
-          <div className="help-features__grid">
-            {features.map((f) => (
-              <div key={f.title} className="help-feature-item">
-                <div className="help-feature-item__icon" aria-hidden="true">
-                  <Icon name={f.icon} size={18} />
-                </div>
-                <div>
-                  <p className="help-feature-item__title">{f.title}</p>
-                  <p className="help-feature-item__body">{f.body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* Space types */}
         <section className="help-types">
           <h2 className="help-types__title" id="typeinfo-title">{ti('title')}</h2>
@@ -206,6 +188,24 @@ export default async function AjudaPage({ params }: PageProps) {
               </div>
             </div>
             <p className="help-device-block__desc">{t('desktopDesc')}</p>
+          </div>
+        </section>
+
+        {/* Features */}
+        <section className="help-features">
+          <h2 className="help-features__title">{t('featuresTitle')}</h2>
+          <div className="help-features__grid">
+            {features.map((f) => (
+              <div key={f.title} className="help-feature-item">
+                <div className="help-feature-item__icon" aria-hidden="true">
+                  <Icon name={f.icon} size={18} />
+                </div>
+                <div>
+                  <p className="help-feature-item__title">{f.title}</p>
+                  <p className="help-feature-item__body">{f.body}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
