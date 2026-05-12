@@ -3,7 +3,7 @@ import { createClient } from './client';
 export async function getFavoriteIds(): Promise<Set<string>> {
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.user) return new Set();
+  if (!session?.user || session.access_token === 'mock') return new Set();
   const { data, error } = await supabase.from('favorites').select('space_id').eq('user_id', session.user.id);
   if (error) console.error('[favorites] select error:', error);
   return new Set((data ?? []).map(r => r.space_id as string));
@@ -14,6 +14,8 @@ export async function toggleFavorite(spaceId: string): Promise<boolean> {
   const supabase = createClient();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) throw new Error('not-authenticated');
+  // Dev bypass uses a fake JWT that Supabase rejects — skip DB ops silently.
+  if (session.access_token === 'mock') return true;
 
   const userId = session.user.id;
 
