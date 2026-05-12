@@ -319,6 +319,15 @@ export function SpaceDetailModal({
         <span className="detail__type-badge">
           <Icon name={TYPE_ICON[space.type]} size={16} />
         </span>
+        <button
+          type="button"
+          className="detail__hero-like"
+          aria-pressed={liked}
+          aria-label={t("card.like")}
+          onClick={() => space && onToggleLike?.(space.id)}
+        >
+          <Icon name="heart" size={18} />
+        </button>
         <div className="detail__report-wrap detail__report-wrap--hero" ref={reportMenuRef}>
           <button
             type="button"
@@ -491,16 +500,6 @@ export function SpaceDetailModal({
               </span>
             </a>
           )}
-
-          <button
-            type="button"
-            data-variant="ghost"
-            aria-pressed={liked}
-            onClick={() => space && onToggleLike?.(space.id)}
-          >
-            <Icon name="heart" size={16} />
-            <span className="detail__action-label">{t("card.like")}</span>
-          </button>
 
           <button type="button" data-variant="ghost" onClick={handleShare}>
             <Icon name="share" size={16} />
