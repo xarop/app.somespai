@@ -100,7 +100,10 @@ export function SpaceCard({ space, liked, onSelect, onToggleLike, onHover, isAdm
           {space.sizeM2 != null && (
             <>
               <span className="card__dot" aria-hidden="true" />
-              <span>{t('card.size', { n: space.sizeM2 })}</span>
+              <span className="card__size">
+                <Icon name="ruler" size={11} />
+                {t('card.size', { n: space.sizeM2 })}
+              </span>
             </>
           )}
         </p>
