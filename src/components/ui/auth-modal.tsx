@@ -8,13 +8,14 @@ import { Icon } from './icon';
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
+  initialMode?: 'signIn' | 'signUp' | 'resetPassword';
 }
 
-export function AuthModal({ open, onClose }: AuthModalProps) {
+export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
   const t = useTranslations();
   const dialogRef = useRef<HTMLDialogElement>(null);
-  
-  const [mode, setMode] = useState<'signIn' | 'signUp' | 'resetPassword'>('signIn');
+
+  const [mode, setMode] = useState<'signIn' | 'signUp' | 'resetPassword'>(initialMode ?? 'signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
@@ -31,7 +32,9 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   }, [open]);
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      setMode(initialMode ?? 'signIn');
+    } else {
       setEmail('');
       setPassword('');
       setDisplayName('');
@@ -39,9 +42,8 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       setLoading(false);
       setError(null);
       setSuccessMsg(null);
-      setMode('signIn');
     }
-  }, [open]);
+  }, [open, initialMode]);
 
   useEffect(() => {
     const dialog = dialogRef.current;
