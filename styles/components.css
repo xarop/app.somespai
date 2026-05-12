@@ -3035,6 +3035,61 @@
     color: var(--primary-ink);
   }
 
+  /* ── Help features grid ─────────────────────────────────────────────── */
+  .help-features {
+    margin-bottom: var(--s-8);
+  }
+
+  .help-features__title {
+    font-size: var(--t-xl);
+    font-weight: 700;
+    margin-bottom: var(--s-5);
+  }
+
+  .help-features__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s-4);
+  }
+
+  @media (max-width: 600px) {
+    .help-features__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .help-feature-item {
+    display: flex;
+    gap: var(--s-3);
+    padding: var(--s-4);
+    background: var(--bg-soft);
+    border-radius: var(--r-md);
+    border: 1px solid var(--glass-border);
+  }
+
+  .help-feature-item__icon {
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: var(--r-sm);
+    flex-shrink: 0;
+  }
+
+  .help-feature-item__title {
+    font-weight: 700;
+    font-size: var(--t-base);
+    margin-bottom: var(--s-1);
+  }
+
+  .help-feature-item__body {
+    font-size: var(--t-sm);
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
   /* ── Help space types section ─────────────────────────────────────────── */
   .help-types {
     margin-bottom: var(--s-8);
@@ -4576,6 +4631,34 @@
     position: absolute;
     bottom: var(--s-3);
     right: var(--s-3);
+  }
+
+  .detail__hero-like {
+    position: absolute;
+    top: calc(var(--s-3) + 34px + 6px);
+    left: var(--s-3);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: var(--r-full);
+    background: rgba(0,0,0,0.35);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    cursor: pointer;
+    transition: background var(--t-fast);
+    flex-shrink: 0;
+  }
+
+  .detail__hero-like:hover {
+    background: rgba(0,0,0,0.55);
+  }
+
+  .detail__hero-like[aria-pressed="true"] svg {
+    fill: var(--accent);
+    color: var(--accent);
   }
 
   .detail__report-btn {

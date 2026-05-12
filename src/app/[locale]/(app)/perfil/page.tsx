@@ -3,6 +3,7 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getSpacesByOwner } from '@/lib/supabase/spaces';
 import { PageNav } from '@/components/ui/page-nav';
+import { FavoritesSection } from './favorites-section';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -59,6 +60,12 @@ export default async function PerfilPage({ params }: PageProps) {
             ))}
           </div>
         )}
+
+        <h2 style={{ marginTop: 'var(--s-6)', marginBottom: 'var(--s-2)', fontSize: 'var(--t-lg)', fontWeight: 600 }}>
+          {t('myFavorites')}
+        </h2>
+
+        <FavoritesSection locale={locale} noFavoritesText={t('noFavorites')} />
       </div>
     </div>
     </>
