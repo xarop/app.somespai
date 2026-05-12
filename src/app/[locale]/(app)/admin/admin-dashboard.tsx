@@ -47,19 +47,22 @@ function formatPrice(priceCents: number, unit: string): string {  if (priceCents
   return `${price}€/${unit === 'month' ? 'mes' : unit === 'day' ? 'dia' : 'h'}`;
 }
 
+const STATUS_SYMBOL: Record<string, string> = {
+  active: '●', paused: '⏸', removed: '✕', pending: '○',
+};
+
 function StatusBadge({ status }: { status: string }) {
   const t = useTranslations('admin');
   const label = (t as (k: string) => string)(`filter_${status}`) ?? status;
-  return <span className={`status-badge status-badge--${status}`}>{label}</span>;
+  return <span className={`status-badge status-badge--${status}`} title={label}>{STATUS_SYMBOL[status] ?? '?'}</span>;
 }
 
 function TypeBadge({ type }: { type: string }) {
   const t = useTranslations('filter');
   const label = (t as (k: string) => string)(type) ?? type;
   return (
-    <span className={`type-badge type-badge--${type}`}>
-      <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room' | 'parking'} size={12} />
-      {label}
+    <span className={`type-badge type-badge--${type}`} title={label}>
+      <Icon name={type as 'storage' | 'workspace' | 'garden' | 'room' | 'parking'} size={13} />
     </span>
   );
 }
@@ -888,13 +891,16 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
   const [filterUsers, setFilterUsers] = useState<AdminUser[]>([]);
   const [spacesPage, setSpacesPage] = useState(1);
   const [spacesPageSize, setSpacesPageSize] = useState(25);
+  type SortCol = 'title' | 'createdAt' | 'city' | 'price' | 'rating' | 'type' | 'status';
+  const [sortCol, setSortCol] = useState<SortCol>('createdAt');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const selectAllRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getUsersAction().then(({ data }) => setFilterUsers(data));
   }, []);
 
-  useEffect(() => { setSpacesPage(1); }, [statusFilter, typeFilter, featuredOnly, ownerFilter, searchQuery]);
+  useEffect(() => { setSpacesPage(1); }, [statusFilter, typeFilter, featuredOnly, ownerFilter, searchQuery, sortCol, sortDir]);
 
   useEffect(() => {
     if (!initialEditId) return;
@@ -925,7 +931,36 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
     return true;
   });
 
-  const pagedSpaces = filtered.slice((spacesPage - 1) * spacesPageSize, spacesPage * spacesPageSize);
+  const sorted = [...filtered].sort((a, b) => {
+    let av: string | number | null | undefined;
+    let bv: string | number | null | undefined;
+    switch (sortCol) {
+      case 'title': av = a.title; bv = b.title; break;
+      case 'createdAt': av = a.createdAt; bv = b.createdAt; break;
+      case 'city': av = a.city; bv = b.city; break;
+      case 'price': av = a.priceCents; bv = b.priceCents; break;
+      case 'rating': av = a.rating; bv = b.rating; break;
+      case 'type': av = a.type; bv = b.type; break;
+      case 'status': av = a.status; bv = b.status; break;
+    }
+    if (av == null) return 1;
+    if (bv == null) return -1;
+    const cmp = typeof av === 'number' && typeof bv === 'number'
+      ? av - bv
+      : String(av).localeCompare(String(bv), 'ca');
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  function handleSort(col: SortCol) {
+    if (sortCol === col) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortCol(col); setSortDir(col === 'createdAt' ? 'desc' : 'asc'); }
+  }
+  function sortArrow(col: SortCol) {
+    if (sortCol !== col) return <span className="admin-sort-idle">⇅</span>;
+    return <span className="admin-sort-active">{sortDir === 'asc' ? '▲' : '▼'}</span>;
+  }
+
+  const pagedSpaces = sorted.slice((spacesPage - 1) * spacesPageSize, spacesPage * spacesPageSize);
   const allFilteredSelected = filtered.length > 0 && filtered.every(s => selectedIds.has(s.id));
   const someSelected = selectedIds.size > 0;
 
@@ -1226,14 +1261,15 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
               <th className="admin-cell--cb">
                 <input type="checkbox" ref={selectAllRef} checked={allFilteredSelected} onChange={toggleSelectAll} />
               </th>
-              <th>{t('colTitle')}</th>
-              <th className="admin-cell--center">Prop.</th>
-              <th>{t('colType')}</th>
-              <th>{t('colStatus')}</th>
-              <th>{t('colLocation')}</th>
-              <th>{t('colPrice')}</th>
-              <th className="admin-cell--center">{t('colRating')}</th>
-              <th className="admin-cell--center">{t('colFeatured')}</th>
+              <th className="admin-th--sort" onClick={() => handleSort('title')}>{t('colTitle')} {sortArrow('title')}</th>
+              <th className="admin-cell--center">P</th>
+              <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('type')}>{sortArrow('type')}</th>
+              <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('status')}>{sortArrow('status')}</th>
+              <th className="admin-th--sort" onClick={() => handleSort('city')}>{t('colLocation')} {sortArrow('city')}</th>
+              <th className="admin-th--sort" onClick={() => handleSort('price')}>{t('colPrice')} {sortArrow('price')}</th>
+              <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('rating')}>★ {sortArrow('rating')}</th>
+              <th className="admin-cell--center">★★</th>
+              <th className="admin-th--sort" onClick={() => handleSort('createdAt')}>Data {sortArrow('createdAt')}</th>
               <th>{t('colActions')}</th>
             </tr>
           </thead>
@@ -1271,20 +1307,25 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
                     title={space.isFeatured ? t('unfeature') : t('feature')}>★
                   </button>
                 </td>
+                <td className="admin-cell--date">
+                  {space.createdAt ? new Date(space.createdAt).toLocaleDateString('ca-ES', { day: '2-digit', month: '2-digit', year: '2-digit' }) : '—'}
+                </td>
                 <td>
                   <div className="admin-actions">
-                    <button type="button" className="admin-action-btn"
+                    <button type="button" className="admin-icon-btn"
                       onClick={() => handleToggleStatus(space)} disabled={isPending}
                       title={space.status === 'active' ? t('pauseSpace') : t('activateSpace')}>
-                      {space.status === 'active' ? t('pause') : t('activate')}
+                      <Icon name={space.status === 'active' ? 'pause' : 'play'} size={13} />
                     </button>
-                    <button type="button" className="admin-action-btn admin-action-btn--edit"
-                      onClick={() => setEditingSpace(space)} disabled={isPending}>
-                      {t('edit')}
+                    <button type="button" className="admin-icon-btn"
+                      onClick={() => setEditingSpace(space)} disabled={isPending}
+                      title={t('edit')}>
+                      <Icon name="pencil" size={13} />
                     </button>
-                    <button type="button" className="admin-action-btn admin-action-btn--delete"
-                      onClick={() => setDeletingId(space.id)} disabled={isPending}>
-                      {t('delete')}
+                    <button type="button" className="admin-icon-btn admin-icon-btn--delete"
+                      onClick={() => setDeletingId(space.id)} disabled={isPending}
+                      title={t('delete')}>
+                      <Icon name="trash" size={13} />
                     </button>
                   </div>
                 </td>

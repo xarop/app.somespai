@@ -171,6 +171,18 @@ const ICON_PATHS: Record<string, React.ReactNode> = {
       <path d="M21 15l-5-5L5 21" />
     </>
   ),
+  pause: (
+    <>
+      <rect x="6" y="4" width="4" height="16" rx="1" />
+      <rect x="14" y="4" width="4" height="16" rx="1" />
+    </>
+  ),
+  play: <polygon points="5 3 19 12 5 21 5 3" />,
+  trash: (
+    <>
+      <path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+    </>
+  ),
 };
 
 export type IconName = keyof typeof ICON_PATHS;
