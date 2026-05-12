@@ -89,11 +89,25 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
   const neighborhoodRef = useRef<HTMLInputElement>(null);
   const cityRef = useRef<HTMLInputElement>(null);
   const emailContactRef = useRef<HTMLInputElement>(null);
+  const contactNameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    createClient().auth.getUser().then(({ data }) => {
-      if (data.user?.email && emailContactRef.current && !emailContactRef.current.value) {
-        emailContactRef.current.value = data.user.email;
+    const supabase = createClient();
+    supabase.auth.getUser().then(async ({ data }) => {
+      const user = data.user;
+      if (!user) return;
+      if (emailContactRef.current && !emailContactRef.current.value) {
+        emailContactRef.current.value = user.email ?? '';
+      }
+      // Load profile for name + phone autofill
+      const { data: profile } = await supabase.from('profiles').select('display_name, phone').eq('id', user.id).maybeSingle();
+      const p = profile as { display_name?: string | null; phone?: string | null } | null;
+      if (p?.display_name && contactNameRef.current && !contactNameRef.current.value) {
+        contactNameRef.current.value = p.display_name;
+      }
+      if (p?.phone && phoneRef.current && !phoneRef.current.value) {
+        phoneRef.current.value = p.phone;
       }
     });
   }, []);
@@ -440,7 +454,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
 
         <label className="field">
           <span className="field__label">{t('fieldContactName')}</span>
-          <input name="contact_name" type="text" className="field__input" maxLength={100} autoComplete="name" />
+          <input ref={contactNameRef} name="contact_name" type="text" className="field__input" maxLength={100} autoComplete="name" />
         </label>
 
         <label className="field">
@@ -450,7 +464,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
 
         <label className="field">
           <span className="field__label">{t('fieldPhone')}</span>
-          <input name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" autoComplete="tel" />
+          <input ref={phoneRef} name="phone" type="tel" className="field__input" placeholder="+34 600 000 000" autoComplete="tel" />
           <span className="field__help">{t('fieldPhoneHelp')}</span>
         </label>
 

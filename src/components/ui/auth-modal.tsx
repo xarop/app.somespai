@@ -17,6 +17,8 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
   const [mode, setMode] = useState<'signIn' | 'signUp' | 'resetPassword'>('signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -32,6 +34,8 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
     if (!open) {
       setEmail('');
       setPassword('');
+      setDisplayName('');
+      setPhone('');
       setLoading(false);
       setError(null);
       setSuccessMsg(null);
@@ -81,6 +85,12 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
       const { error: signUpError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            display_name: displayName.trim() || undefined,
+            phone: phone.trim() || undefined,
+          },
+        },
       });
       if (signUpError) {
         setError(signUpError.message);
@@ -170,6 +180,37 @@ export function AuthModal({ open, onClose }: AuthModalProps) {
                 minLength={6}
               />
             </label>
+          )}
+
+          {mode === 'signUp' && (
+            <>
+              <label className="field">
+                <span className="field__label">{t('user.profileName')}</span>
+                <input
+                  type="text"
+                  className="field__input"
+                  value={displayName}
+                  onChange={e => setDisplayName(e.target.value)}
+                  placeholder={t('user.profileName')}
+                  maxLength={80}
+                  autoComplete="name"
+                />
+              </label>
+              <label className="field">
+                <span className="field__label" style={{ display: 'flex', gap: 'var(--s-2)', alignItems: 'center' }}>
+                  {t('user.profilePhone')}
+                  <span style={{ fontSize: '11px', color: 'var(--ink-mute)', fontWeight: 400 }}>({t('auth.optional')})</span>
+                </span>
+                <input
+                  type="tel"
+                  className="field__input"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
+                  placeholder="+34 600 000 000"
+                  maxLength={30}
+                />
+              </label>
+            </>
           )}
 
           {isDevAdmin && (

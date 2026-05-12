@@ -86,7 +86,8 @@
     "toggleToSignUp": "Don't have an account? Sign up",
     "toggleToSignIn": "Already have an account? Sign in",
     "toggleToReset": "Forgot your password?",
-    "resetEmailSent": "We have sent you an email with a reset link. Please check your inbox."
+    "resetEmailSent": "We have sent you an email with a reset link. Please check your inbox.",
+    "optional": "optional"
   },
   "amenity": {
     "wifi": "Wi-Fi",
