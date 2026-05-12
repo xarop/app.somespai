@@ -25,12 +25,17 @@ export function NavMenu() {
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<'signIn' | 'signUp'>('signIn');
   const [user, setUser] = useState<User | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleOpenAuth = () => setAuthOpen(true);
+    const handleOpenAuth = (e: Event) => {
+      const mode = (e as CustomEvent<{ mode?: string }>).detail?.mode;
+      setAuthMode(mode === 'signUp' ? 'signUp' : 'signIn');
+      setAuthOpen(true);
+    };
     window.addEventListener("open-auth-modal", handleOpenAuth);
     return () => window.removeEventListener("open-auth-modal", handleOpenAuth);
   }, []);
@@ -223,7 +228,7 @@ export function NavMenu() {
           </nav>
         </div>
       </div>
-      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} />
+      <AuthModal open={authOpen} onClose={() => setAuthOpen(false)} initialMode={authMode} />
     </>,
     document.body,
   ) : null;
