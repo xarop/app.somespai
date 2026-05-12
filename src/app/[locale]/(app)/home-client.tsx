@@ -276,6 +276,8 @@ export function HomeClient({
           isAdmin={isAdmin}
           currentUserId={currentUserId}
           onReviewAdded={handleReviewAdded}
+          liked={selectedSpace ? likedIds.has(selectedSpace.id) : false}
+          onToggleLike={toggleLike}
         />
       </div>
 

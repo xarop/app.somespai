@@ -237,7 +237,9 @@
     "noSpaces": "You haven't published any spaces yet.",
     "statusActive": "Published",
     "statusPaused": "Paused",
-    "editSpace": "Edit"
+    "editSpace": "Edit",
+    "myFavorites": "My favourites",
+    "noFavorites": "You haven't marked any space as favourite yet."
   },
   "edit": {
     "title": "Edit your space",

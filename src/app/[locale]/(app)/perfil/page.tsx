@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
-import { getSpacesByOwner } from '@/lib/supabase/spaces';
+import { getSpacesByOwner, getFavoriteSpaces } from '@/lib/supabase/spaces';
 import { PageNav } from '@/components/ui/page-nav';
 import type { Metadata } from 'next';
 
@@ -26,7 +26,10 @@ export default async function PerfilPage({ params }: PageProps) {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/');
 
-  const spaces = await getSpacesByOwner(user.id);
+  const [spaces, favorites] = await Promise.all([
+    getSpacesByOwner(user.id),
+    getFavoriteSpaces(user.id),
+  ]);
   const t = await getTranslations('user');
 
   return (
@@ -54,6 +57,30 @@ export default async function PerfilPage({ params }: PageProps) {
                 </div>
                 <a href={`/${locale}/editar/${space.slug}`} className="perfil-space-row__edit">
                   {t('editSpace')}
+                </a>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <header className="page-form__header" style={{ marginTop: 'var(--s-6)' }}>
+          <h1>{t('myFavorites')}</h1>
+        </header>
+
+        {favorites.length === 0 ? (
+          <p style={{ color: 'var(--ink-mute)', padding: 'var(--s-4) 0' }}>{t('noFavorites')}</p>
+        ) : (
+          <div className="perfil-spaces">
+            {favorites.map((space) => (
+              <div key={space.id} className="perfil-space-row">
+                <div className="perfil-space-row__info">
+                  <span className="perfil-space-row__title">{space.title}</span>
+                  <span className="perfil-space-row__status" style={{ color: 'var(--ink-mute)' }}>
+                    {space.city ?? space.address ?? ''}
+                  </span>
+                </div>
+                <a href={`/${locale}/espai/${space.slug}`} className="perfil-space-row__edit">
+                  →
                 </a>
               </div>
             ))}
