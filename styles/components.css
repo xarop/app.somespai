@@ -4649,6 +4649,13 @@
     background: rgba(239, 68, 68, 0.06);
   }
 
+  @media (max-width: 640px) {
+    .detail__report-menu {
+      bottom: auto;
+      top: calc(100% + 6px);
+    }
+  }
+
   /* ── Reviews login link ──────────────────────────────────────────────── */
   .reviews__login-link {
     background: none;

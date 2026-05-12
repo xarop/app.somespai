@@ -68,6 +68,7 @@
     "reportContact": "Altres",
     "reportUnavailable": "L'espai no està disponible",
     "reportWrongData": "L'espai té dades incorrectes",
+    "reportClaim": "L'espai és meu / Reclamar propietat",
     "reportAbuse": "Denunciar l'espai"
   },
   "auth": {
@@ -365,6 +366,7 @@
     "spaceMessageTemplate": "Hola, m'interessa l'espai \"{title}\" ubicat a {address}.\n\n",
     "reportUnavailableTemplate": "L'espai \"{title}\" a {address} no sembla estar disponible.\n\nURL de l'espai: {url}\n\n",
     "reportWrongDataTemplate": "L'espai \"{title}\" a {address} té dades incorrectes.\n\nURL de l'espai: {url}\n\nQuines dades:\n",
+    "reportClaimTemplate": "Hola, sóc el propietari/gestor de l'espai \"{title}\" a {address} i voldria reclamar-ne la propietat.\n\nURL de l'espai: {url}\n\n",
     "reportAbuseTemplate": "Vull denunciar l'espai \"{title}\" a {address}.\n\nURL de l'espai: {url}\n\nMotiu:\n",
     "submit": "Enviar missatge",
     "submitting": "Enviant…",

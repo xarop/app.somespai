@@ -345,6 +345,14 @@ export function SpaceDetailModal({
                 {t("detail.reportWrongData")}
               </a>
               <a
+                href={reportHref("claim")}
+                className="detail__report-item"
+                role="menuitem"
+                onClick={() => setReportMenuOpen(false)}
+              >
+                {t("detail.reportClaim")}
+              </a>
+              <a
                 href={reportHref("contact")}
                 className="detail__report-item"
                 role="menuitem"
