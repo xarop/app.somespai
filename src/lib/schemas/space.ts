@@ -31,6 +31,7 @@ export const spaceSchema = z.object({
   whatsapp: z.string().nullable().default(null),
   web: z.string().nullable().default(null),
   contactDefault: z.enum(['phone', 'whatsapp', 'email', 'web']).default('web'),
+  createdAt: z.string().optional(),
 });
 
 export type Space = z.infer<typeof spaceSchema>;

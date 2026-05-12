@@ -32,6 +32,7 @@ function rowToSpace(row: Record<string, any>): Space {
     whatsapp: row.whatsapp ?? null,
     web: row.web ?? null,
     contactDefault: row.contact_default ?? 'web',
+    createdAt: row.created_at ?? undefined,
   };
 }
 
