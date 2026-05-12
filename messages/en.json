@@ -203,6 +203,8 @@
     "contact_email": "Email",
     "contact_whatsapp": "WhatsApp",
     "photosHelp": "Up to 6 photos · JPG, PNG, WebP · max 5 MB each",
+    "photosGallery": "Gallery",
+    "photosCamera": "Take photo",
     "geolocating": "Locating address…",
     "geoError": "Address not found. Please check it and try again.",
     "submit": "Publish slot",

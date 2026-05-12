@@ -24,7 +24,14 @@ export function SpaceDetailClient({ space, isAdmin, currentUserId }: Props) {
 
   const handleToggleLike = useCallback(async (id: string) => {
     setLiked(v => !v);
-    await toggleFavorite(id);
+    try {
+      await toggleFavorite(id);
+    } catch (err) {
+      setLiked(v => !v); // revert
+      if ((err as Error)?.message !== 'not-authenticated') {
+        console.error('[like] toggleFavorite failed:', err);
+      }
+    }
   }, []);
 
   return (

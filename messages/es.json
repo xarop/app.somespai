@@ -203,6 +203,8 @@
     "contact_email": "Email",
     "contact_whatsapp": "WhatsApp",
     "photosHelp": "Hasta 6 fotos · JPG, PNG, WebP · máx. 5 MB cada una",
+    "photosGallery": "Galería",
+    "photosCamera": "Hacer foto",
     "geolocating": "Buscando coordenadas…",
     "geoError": "No encontramos la dirección. Compruébala e inténtalo de nuevo.",
     "submit": "Publicar elot",

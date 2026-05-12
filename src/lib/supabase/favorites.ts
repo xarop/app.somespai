@@ -2,29 +2,38 @@ import { createClient } from './client';
 
 export async function getFavoriteIds(): Promise<Set<string>> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return new Set();
-  const { data } = await supabase.from('favorites').select('space_id').eq('user_id', user.id);
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user || session.access_token === 'mock') return new Set();
+  const { data, error } = await supabase.from('favorites').select('space_id').eq('user_id', session.user.id);
+  if (error) console.error('[favorites] select error:', error);
   return new Set((data ?? []).map(r => r.space_id as string));
 }
 
+/** Returns true if the space is now liked, false if unliked. Throws on DB error. */
 export async function toggleFavorite(spaceId: string): Promise<boolean> {
   const supabase = createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session?.user) throw new Error('not-authenticated');
+  // Dev bypass uses a fake JWT that Supabase rejects — skip DB ops silently.
+  if (session.access_token === 'mock') return true;
 
-  const { data } = await supabase
+  const userId = session.user.id;
+
+  const { data, error: selectError } = await supabase
     .from('favorites')
     .select('space_id')
-    .eq('user_id', user.id)
+    .eq('user_id', userId)
     .eq('space_id', spaceId)
     .maybeSingle();
+  if (selectError) throw selectError;
 
   if (data) {
-    await supabase.from('favorites').delete().eq('user_id', user.id).eq('space_id', spaceId);
+    const { error: deleteError } = await supabase.from('favorites').delete().eq('user_id', userId).eq('space_id', spaceId);
+    if (deleteError) throw deleteError;
     return false;
   } else {
-    await supabase.from('favorites').insert({ user_id: user.id, space_id: spaceId });
+    const { error: insertError } = await supabase.from('favorites').insert({ user_id: userId, space_id: spaceId });
+    if (insertError) throw insertError;
     return true;
   }
 }
