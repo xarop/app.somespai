@@ -1231,7 +1231,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
         <button type="button"
           className={`admin-filter-tab admin-filter-tab--featured${featuredOnly ? ' admin-filter-tab--active' : ''}`}
           onClick={() => setFeaturedOnly(v => !v)}>
-          ★ {t('statsFeatured')}
+          <Icon name="flag" size={13} /> {t('statsFeatured')}
         </button>
       </div>
 
@@ -1269,7 +1269,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
               <th className="admin-th--sort" onClick={() => handleSort('city')}>{t('colLocation')} {sortArrow('city')}</th>
               <th className="admin-th--sort" onClick={() => handleSort('price')}>{t('colPrice')} {sortArrow('price')}</th>
               <th className="admin-th--sort admin-cell--center" onClick={() => handleSort('rating')}>★ {sortArrow('rating')}</th>
-              <th className="admin-cell--center">★★</th>
+              <th className="admin-cell--center"><Icon name="flag" size={13} /></th>
               <th className="admin-th--sort" onClick={() => handleSort('createdAt')}>Data {sortArrow('createdAt')}</th>
               <th>{t('colActions')}</th>
             </tr>
@@ -1307,7 +1307,8 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
                   <button type="button"
                     className={`admin-featured-btn${space.isFeatured ? ' admin-featured-btn--on' : ''}`}
                     onClick={() => handleToggleFeatured(space)} disabled={isPending}
-                    title={space.isFeatured ? t('unfeature') : t('feature')}>★
+                    title={space.isFeatured ? t('unfeature') : t('feature')}>
+                    <Icon name="flag" size={14} />
                   </button>
                 </td>
                 <td className="admin-cell--date">

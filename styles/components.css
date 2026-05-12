@@ -2425,13 +2425,14 @@
 
   .admin-filter-bar--types .admin-filter-tab--featured {
     margin-left: auto;
-    color: var(--gold);
-    border-color: var(--gold);
+    color: var(--primary);
+    border-color: var(--primary-tint);
   }
 
   .admin-filter-bar--types .admin-filter-tab--featured.admin-filter-tab--active {
-    background: var(--gold);
+    background: var(--primary);
     color: #fff;
+    border-color: var(--primary);
   }
 
   .admin-filter-tab {
@@ -2703,14 +2704,14 @@
   }
 
   .admin-featured-btn:hover {
-    border-color: var(--gold);
-    color: var(--gold);
+    border-color: var(--primary);
+    color: var(--primary);
   }
 
   .admin-featured-btn--on {
-    background: rgba(200, 164, 0, 0.12);
-    border-color: var(--gold);
-    color: var(--gold);
+    background: var(--primary-tint);
+    border-color: var(--primary);
+    color: var(--primary);
   }
 
   .admin-actions {
