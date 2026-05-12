@@ -86,7 +86,7 @@ export async function createSpaceAction(
       address,
       neighborhood,
       city,
-      region: 'Catalunya',
+      region: null,
       location: `SRID=4326;POINT(${lng} ${lat})`,
       amenities,
       photos,
