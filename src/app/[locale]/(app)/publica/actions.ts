@@ -31,8 +31,8 @@ export async function createSpaceAction(
   const sizeM2Raw = formData.get('size_m2') as string;
   const sizeM2 = sizeM2Raw ? parseFloat(sizeM2Raw) : null;
   const address = (formData.get('address') as string)?.trim() || null;
-  const neighborhood = (formData.get('neighborhood') as string)?.trim() || 'Vila de Gràcia';
-  const city = (formData.get('city') as string)?.trim() || 'Barcelona';
+  const neighborhood = (formData.get('neighborhood') as string)?.trim() || null;
+  const city = (formData.get('city') as string)?.trim() || null;
   const lat = parseFloat(formData.get('lat') as string);
   const lng = parseFloat(formData.get('lng') as string);
   const contactName = (formData.get('contact_name') as string)?.trim() || null;
