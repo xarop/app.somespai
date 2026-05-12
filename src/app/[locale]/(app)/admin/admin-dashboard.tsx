@@ -511,8 +511,11 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
   const [error, setError] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const router = useRouter();
 
+  useEffect(() => { setPage(1); }, [searchQuery]);
   useEffect(() => { handleRefresh(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleRefresh() {
@@ -547,6 +550,7 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
     const q = searchQuery.toLowerCase();
     return u.email.toLowerCase().includes(q) || (u.displayName ?? '').toLowerCase().includes(q);
   });
+  const paged = filtered.slice((page - 1) * pageSize, page * pageSize);
 
   if (loading && users.length === 0) return <p className="admin-empty">Carregant usuaris…</p>;
   if (error) return (
@@ -597,7 +601,7 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
             </tr>
           </thead>
           <tbody>
-            {filtered.map(user => (
+            {paged.map(user => (
               <tr key={user.id} className="admin-row admin-row--active" style={{ backgroundColor: (user.isAdmin || user.email === mainAdminEmail) ? 'color-mix(in srgb, var(--primary) 40%, transparent)' : undefined }}>
                 <td className="admin-cell admin-cell--title">
                   {user.email}
@@ -657,6 +661,7 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
         </table>
         {filtered.length === 0 && <p className="admin-empty">{t('emptyUsers')}</p>}
       </div>
+      <Pagination total={filtered.length} page={page} pageSize={pageSize} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} />
 
       {confirmDeleteId && (
         <ConfirmDialog
@@ -678,6 +683,8 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
   const [error, setError] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   useEffect(() => { handleRefresh(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -736,6 +743,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
   );
 
   const unread = messages.filter(m => !m.read).length;
+  const paged = messages.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <div className="admin-messages">
@@ -760,7 +768,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
         <p className="admin-empty">{t('noMessages')}</p>
       ) : (
         <div className="admin-message-list">
-          {messages.map(msg => (
+          {paged.map(msg => (
             <div
               key={msg.id}
               className={`admin-message${msg.read ? '' : ' admin-message--unread'}`}
@@ -807,6 +815,7 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
           ))}
         </div>
       )}
+      <Pagination total={messages.length} page={page} pageSize={pageSize} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} />
 
       {confirmDeleteId && (
         <ConfirmDialog
@@ -815,6 +824,38 @@ function MessagesTab({ onCountChange }: { onCountChange?: (counts: { unread: num
           onCancel={() => setConfirmDeleteId(null)}
         />
       )}
+    </div>
+  );
+}
+
+/* ── Pagination ──────────────────────────────────────────────────────────── */
+
+const PAGE_SIZES = [25, 50, 75, 100] as const;
+
+function Pagination({ total, page, pageSize, onPage, onPageSize }: {
+  total: number;
+  page: number;
+  pageSize: number;
+  onPage: (p: number) => void;
+  onPageSize: (size: number) => void;
+}) {
+  const totalPages = Math.ceil(total / pageSize);
+  if (total === 0) return null;
+  const from = Math.min((page - 1) * pageSize + 1, total);
+  const to = Math.min(page * pageSize, total);
+  return (
+    <div className="admin-pagination">
+      <span className="admin-pagination__info">{from}–{to} de {total}</span>
+      <button type="button" className="admin-pagination__btn" disabled={page <= 1} onClick={() => onPage(page - 1)}>‹</button>
+      <span className="admin-pagination__pages">{page} / {totalPages}</span>
+      <button type="button" className="admin-pagination__btn" disabled={page >= totalPages} onClick={() => onPage(page + 1)}>›</button>
+      <select
+        className="admin-pagination__size"
+        value={pageSize}
+        onChange={e => { onPageSize(Number(e.target.value)); onPage(1); }}
+      >
+        {PAGE_SIZES.map(s => <option key={s} value={s}>{s} / pàg.</option>)}
+      </select>
     </div>
   );
 }
@@ -845,11 +886,15 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkDeleteConfirm, setBulkDeleteConfirm] = useState(false);
   const [filterUsers, setFilterUsers] = useState<AdminUser[]>([]);
+  const [spacesPage, setSpacesPage] = useState(1);
+  const [spacesPageSize, setSpacesPageSize] = useState(25);
   const selectAllRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     getUsersAction().then(({ data }) => setFilterUsers(data));
   }, []);
+
+  useEffect(() => { setSpacesPage(1); }, [statusFilter, typeFilter, featuredOnly, ownerFilter, searchQuery]);
 
   useEffect(() => {
     if (!initialEditId) return;
@@ -880,6 +925,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
     return true;
   });
 
+  const pagedSpaces = filtered.slice((spacesPage - 1) * spacesPageSize, spacesPage * spacesPageSize);
   const allFilteredSelected = filtered.length > 0 && filtered.every(s => selectedIds.has(s.id));
   const someSelected = selectedIds.size > 0;
 
@@ -1192,7 +1238,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
             </tr>
           </thead>
           <tbody>
-            {filtered.map(space => (
+            {pagedSpaces.map(space => (
               <tr key={space.id} className={`admin-row admin-row--${space.status}${selectedIds.has(space.id) ? ' admin-row--selected' : ''}`}>
                 <td className="admin-cell--cb">
                   <input type="checkbox" checked={selectedIds.has(space.id)} onChange={() => toggleSelect(space.id)} />
@@ -1248,6 +1294,7 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
         </table>
         {filtered.length === 0 && <p className="admin-empty">{t('empty')}</p>}
       </div>
+      <Pagination total={filtered.length} page={spacesPage} pageSize={spacesPageSize} onPage={setSpacesPage} onPageSize={(s) => { setSpacesPageSize(s); setSpacesPage(1); }} />
 
       {editingSpace && (
         <EditModal
