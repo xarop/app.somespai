@@ -86,7 +86,8 @@
     "toggleToSignUp": "No tens compte? Registra't",
     "toggleToSignIn": "Ja tens compte? Inicia sessió",
     "toggleToReset": "Has oblidat la contrassenya?",
-    "resetEmailSent": "T'hem enviat un correu amb l'enllaç. Revisa la teva bústia."
+    "resetEmailSent": "T'hem enviat un correu amb l'enllaç. Revisa la teva bústia.",
+    "optional": "opcional"
   },
   "amenity": {
     "wifi": "Wi-Fi",
