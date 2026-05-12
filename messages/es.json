@@ -86,7 +86,8 @@
     "toggleToSignUp": "¿No tienes cuenta? Regístrate",
     "toggleToSignIn": "¿Ya tienes cuenta? Inicia sesión",
     "toggleToReset": "¿Has olvidado la contraseña?",
-    "resetEmailSent": "Te hemos enviado un correo con el enlace. Revisa tu buzón."
+    "resetEmailSent": "Te hemos enviado un correo con el enlace. Revisa tu buzón.",
+    "optional": "opcional"
   },
   "amenity": {
     "wifi": "Wi-Fi",
