@@ -218,7 +218,14 @@
     "autofillGeocoding": "Buscando dirección…",
     "autofillSuccess": "Campos rellenados con tu ubicación actual.",
     "autofillError": "No hemos podido obtener tu ubicación. Comprueba los permisos del navegador.",
-    "amenitiesSelectType": "Selecciona primero el tipo de espacio para ver los equipamientos disponibles."
+    "amenitiesSelectType": "Selecciona primero el tipo de espacio para ver los equipamientos disponibles.",
+    "guestNotice": "No has iniciado sesión.",
+    "guestDesc": "Inicia sesión o crea una cuenta gratuita para publicar y gestionar tus espacios directamente. O si lo prefieres, puedes publicar como invitado dejando tu correo electrónico a continuación.",
+    "guestSignIn": "Iniciar sesión",
+    "guestSignUp": "Registrarse",
+    "guestDataTitle": "Tus datos",
+    "guestEmailPlaceholder": "info@ejemplo.com",
+    "guestEmailHelp": "Necesitamos tu email para crear el usuario y vincular este espacio."
   },
   "review": {
     "title": "Reseñas",
