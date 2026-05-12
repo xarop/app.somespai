@@ -222,12 +222,7 @@
     "submit": "Publicar reseña",
     "submitting": "Publicando…",
     "loginRequired": "Identifícate para escribir una reseña.",
-<<<<<<< HEAD
     "alreadyReviewed": "Ya has reseñado este elot."
-=======
-    "loginLink": "Iniciar sesión →",
-    "alreadyReviewed": "Ya has reseñado este espacio."
->>>>>>> develop
   },
   "user": {
     "signOut": "Cerrar sesión",
