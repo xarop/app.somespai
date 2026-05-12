@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Space } from "@/lib/schemas/space";
 import { Icon, type IconName } from "@/components/ui/icon";
-import { getReviews, addReview, type Review } from "@/lib/supabase/reviews";
+import { getReviews, addReview, getUserDisplayName, type Review } from "@/lib/supabase/reviews";
 import { getSlugFromType } from "@/lib/seo/type-slugs";
 import { formatLocation } from "@/lib/geo";
 
@@ -86,6 +86,8 @@ export function SpaceDetailModal({
   const [userRating, setUserRating] = useState<number | null>(null);
   const [newRating, setNewRating] = useState(5);
   const [newBody, setNewBody] = useState("");
+  const [newAuthorName, setNewAuthorName] = useState("");
+  const [userDisplayName, setUserDisplayName] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
   const [reviewsLoaded, setReviewsLoaded] = useState(false);
@@ -133,6 +135,9 @@ export function SpaceDetailModal({
         setUserRating(mine?.rating ?? null);
       }
     });
+    if (currentUserId) {
+      getUserDisplayName().then(setUserDisplayName);
+    }
   }, [space]);
 
   useEffect(() => {
@@ -180,14 +185,17 @@ export function SpaceDetailModal({
   async function handleReviewSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!space || submitting) return;
+    const nameToUse = userDisplayName ?? newAuthorName.trim();
     setSubmitting(true);
     setReviewError(null);
     try {
-      await addReview(space.id, newRating, newBody);
+      await addReview(space.id, newRating, newBody, nameToUse || undefined);
+      if (newAuthorName.trim()) setUserDisplayName(newAuthorName.trim());
       const updated = await getReviews(space.id);
       setReviews(updated);
       setUserRating(newRating);
       setNewBody("");
+      setNewAuthorName("");
       const newAvg = updated.reduce((s, r) => s + r.rating, 0) / updated.length;
       onReviewAdded?.(space.id, newAvg, updated.length);
     } catch (err) {
@@ -538,6 +546,17 @@ export function SpaceDetailModal({
                 {t("review.add")}
               </p>
               <StarRating value={newRating} onChange={setNewRating} />
+              {!userDisplayName && (
+                <input
+                  type="text"
+                  className="field__input"
+                  value={newAuthorName}
+                  onChange={(e) => setNewAuthorName(e.target.value)}
+                  placeholder={t("review.namePlaceholder")}
+                  maxLength={60}
+                  required
+                />
+              )}
               <textarea
                 className="field__input field__textarea"
                 rows={3}
