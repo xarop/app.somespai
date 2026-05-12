@@ -230,7 +230,9 @@
     "noSpaces": "Encara no has publicat cap slot.",
     "statusActive": "Publicat",
     "statusPaused": "Pausat",
-    "editSpace": "Editar"
+    "editSpace": "Editar",
+    "myFavorites": "Els meus favorits",
+    "noFavorites": "Encara no has marcat cap espai com a favorit."
   },
   "edit": {
     "title": "Edita el teu slot",
@@ -398,7 +400,16 @@
     "ctaExplore": "Explora slots",
     "ctaPublish": "Publica un slot",
     "contactPrompt": "Tens algun dubte o suggeriment?",
-    "contactLink": "Contacta'ns"
+    "contactLink": "Contacta'ns",
+    "featuresTitle": "Accions a la fitxa",
+    "feature1Title": "Desa als favorits",
+    "feature1Body": "El cor a la cantonada de la imatge desa l'espai a la teva llista de favorits. Retroba'ls des del teu perfil.",
+    "feature2Title": "Menú d'opcions (⋮)",
+    "feature2Body": "El botó de tres punts obre opcions per informar de problemes, reclamar la propietat de l'espai o contactar-hi directament.",
+    "feature3Title": "Valora l'espai",
+    "feature3Body": "Un cop identificat pots deixar una valoració amb estrelles i un comentari. Els espais acumulen la seva puntuació.",
+    "feature4Title": "El teu perfil",
+    "feature4Body": "Des del perfil gestiones els espais que has publicat i consultes la llista d'espais guardats com a favorits."
   },
   "notFound": {
     "code": "404",

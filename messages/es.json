@@ -230,7 +230,9 @@
     "noSpaces": "Todavía no has publicado ningún elot.",
     "statusActive": "Publicado",
     "statusPaused": "Pausado",
-    "editSpace": "Editar"
+    "editSpace": "Editar",
+    "myFavorites": "Mis favoritos",
+    "noFavorites": "Todavía no has marcado ningún espacio como favorito."
   },
   "edit": {
     "title": "Edita tu elot",
@@ -398,7 +400,16 @@
     "ctaExplore": "Explorar elots",
     "ctaPublish": "Publicar un elot",
     "contactPrompt": "¿Tienes alguna duda o sugerencia?",
-    "contactLink": "Contáctanos"
+    "contactLink": "Contáctanos",
+    "featuresTitle": "Acciones en la ficha",
+    "feature1Title": "Guarda tus favoritos",
+    "feature1Body": "El corazón en la esquina de la imagen guarda el espacio en tu lista de favoritos. Encuéntralos desde tu perfil.",
+    "feature2Title": "Menú de opciones (⋮)",
+    "feature2Body": "El botón de tres puntos abre opciones para informar de problemas, reclamar la propiedad o contactar con el espacio.",
+    "feature3Title": "Valora el espacio",
+    "feature3Body": "Una vez identificado puedes dejar una valoración con estrellas y comentario. Los espacios acumulan su puntuación.",
+    "feature4Title": "Tu perfil",
+    "feature4Body": "Desde el perfil gestionas los espacios que has publicado y consultas tu lista de espacios guardados como favoritos."
   },
   "notFound": {
     "code": "404",

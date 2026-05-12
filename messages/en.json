@@ -230,7 +230,9 @@
     "noSpaces": "You haven't published any slots yet.",
     "statusActive": "Published",
     "statusPaused": "Paused",
-    "editSpace": "Edit"
+    "editSpace": "Edit",
+    "myFavorites": "My favourites",
+    "noFavorites": "You haven't marked any space as favourite yet."
   },
   "edit": {
     "title": "Edit your slot",
@@ -398,7 +400,16 @@
     "ctaExplore": "Explore slots",
     "ctaPublish": "Publish a slot",
     "contactPrompt": "Have a question or suggestion?",
-    "contactLink": "Contact us"
+    "contactLink": "Contact us",
+    "featuresTitle": "Space card actions",
+    "feature1Title": "Save to favourites",
+    "feature1Body": "The heart on the corner of the image saves the space to your favourites list. Find them again from your profile.",
+    "feature2Title": "Options menu (⋮)",
+    "feature2Body": "The three-dot button opens options to report issues, claim ownership of the space, or contact it directly.",
+    "feature3Title": "Rate the space",
+    "feature3Body": "Once signed in you can leave a star rating and a comment. Spaces accumulate their average score.",
+    "feature4Title": "Your profile",
+    "feature4Body": "From your profile you manage the spaces you have published and browse your saved favourites list."
   },
   "notFound": {
     "code": "404",
