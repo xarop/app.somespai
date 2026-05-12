@@ -4581,7 +4581,7 @@
   .detail__hero-like {
     position: absolute;
     top: var(--s-3);
-    right: var(--s-3);
+    left: var(--s-3);
     width: 32px;
     height: 32px;
     display: flex;
