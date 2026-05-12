@@ -1239,6 +1239,23 @@
     font-size: var(--t-sm);
     color: var(--ink-soft);
     margin-bottom: var(--s-3);
+    overflow: hidden;
+  }
+
+  .card__meta > span:first-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .card__size {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: var(--t-xs);
   }
 
   .card__dot {
