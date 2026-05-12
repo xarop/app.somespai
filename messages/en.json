@@ -212,7 +212,20 @@
     "successTitle": "Slot published!",
     "successDesc": "Your slot is now visible on CoSlot.",
     "viewSpace": "View slot",
-    "loginRequired": "You must be signed in to publish a slot."
+    "loginRequired": "You must be signed in to publish a slot.",
+    "autofillButton": "Fill from my location",
+    "autofillLocating": "Getting location…",
+    "autofillGeocoding": "Looking up address…",
+    "autofillSuccess": "Fields filled with your current location.",
+    "autofillError": "Could not get your location. Check your browser permissions.",
+    "amenitiesSelectType": "Select a slot type first to see the available amenities.",
+    "guestNotice": "You are not signed in.",
+    "guestDesc": "Sign in or create a free account to publish and manage your slots directly. Or if you prefer, you can publish as a guest by leaving your email address below.",
+    "guestSignIn": "I have an account",
+    "guestSignUp": "Create a free account",
+    "guestDataTitle": "Your details",
+    "guestEmailPlaceholder": "info@example.com",
+    "guestEmailHelp": "We need your email to create your account and link this slot to it."
   },
   "review": {
     "title": "Reviews",

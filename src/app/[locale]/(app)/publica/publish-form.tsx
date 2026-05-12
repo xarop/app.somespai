@@ -236,15 +236,15 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
       {!isLoggedIn && (
         <div className="form-notice" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
           <div>
-            <strong>No has iniciat sessió.</strong><br />
-            Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus espais. O si ho prefereixes, pots publicar l'espai com a invitat deixant el teu correu electrònic a continuació.
+            <strong>{t('guestNotice')}</strong><br />
+            {t('guestDesc')}
           </div>
           <div style={{ display: 'flex', gap: 'var(--s-2)' }}>
             <button type="button" data-variant="primary" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
-              Inicia sessió
+              {t('guestSignUp')}
             </button>
-            <button type="button" data-variant="outline" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
-              Registra't
+            <button type="button" data-variant="ghost" onClick={() => window.dispatchEvent(new CustomEvent('open-auth-modal'))}>
+              {t('guestSignIn')}
             </button>
           </div>
         </div>
@@ -252,11 +252,11 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
 
       {!isLoggedIn && (
         <fieldset className="fieldset">
-          <legend className="fieldset__legend">Les teves dades</legend>
+          <legend className="fieldset__legend">{t('guestDataTitle')}</legend>
           <label className="field">
             <span className="field__label">{t('fieldEmail')} <span style={{ color: 'var(--danger)', marginLeft: 4 }}>*</span></span>
-            <input name="guest_email" type="email" className="field__input" placeholder="info@exemple.cat" required />
-            <p className="field__help">Necessitem el teu email per crear l'usuari i vincular-hi aquest espai.</p>
+            <input name="guest_email" type="email" className="field__input" placeholder={t('guestEmailPlaceholder')} required />
+            <p className="field__help">{t('guestEmailHelp')}</p>
           </label>
         </fieldset>
       )}
@@ -456,7 +456,7 @@ export function PublishForm({ isLoggedIn = true }: PublishFormProps) {
 
         <label className="field">
           <span className="field__label">{t('fieldEmail')}</span>
-          <input ref={emailContactRef} name="email_contact" type="email" className="field__input" placeholder="info@exemple.cat" />
+          <input ref={emailContactRef} name="email_contact" type="email" className="field__input" placeholder={t('guestEmailPlaceholder')} />
         </label>
 
         <div className="field">

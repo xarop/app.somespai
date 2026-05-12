@@ -212,7 +212,20 @@
     "successTitle": "¡Elot publicado!",
     "successDesc": "Tu elot ya es visible en CoSlot.",
     "viewSpace": "Ver el elot",
-    "loginRequired": "Debes estar identificado para publicar un elot."
+    "loginRequired": "Debes estar identificado para publicar un elot.",
+    "autofillButton": "Rellenar desde mi ubicación",
+    "autofillLocating": "Obteniendo ubicación…",
+    "autofillGeocoding": "Buscando dirección…",
+    "autofillSuccess": "Campos rellenados con tu ubicación actual.",
+    "autofillError": "No hemos podido obtener tu ubicación. Comprueba los permisos del navegador.",
+    "amenitiesSelectType": "Selecciona primero el tipo de elot para ver los equipamientos disponibles.",
+    "guestNotice": "No has iniciado sesión.",
+    "guestDesc": "Inicia sesión o crea una cuenta gratuita para publicar y gestionar tus elots directamente. O si lo prefieres, puedes publicar como invitado dejando tu correo electrónico a continuación.",
+    "guestSignIn": "Ya tengo cuenta",
+    "guestSignUp": "Crear una cuenta gratis",
+    "guestDataTitle": "Tus datos",
+    "guestEmailPlaceholder": "info@ejemplo.com",
+    "guestEmailHelp": "Necesitamos tu email para crear el usuario y vincular este elot."
   },
   "review": {
     "title": "Reseñas",

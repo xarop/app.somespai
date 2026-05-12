@@ -212,7 +212,20 @@
     "successTitle": "Slot publicat!",
     "successDesc": "El teu slot ja és visible a CoSlot.",
     "viewSpace": "Veure l'slot",
-    "loginRequired": "Has d'estar identificat per publicar un slot."
+    "loginRequired": "Has d'estar identificat per publicar un slot.",
+    "autofillButton": "Omple des de la meva ubicació",
+    "autofillLocating": "Obtenint ubicació…",
+    "autofillGeocoding": "Cercant adreça…",
+    "autofillSuccess": "Camps omplerts amb la ubicació actual.",
+    "autofillError": "No hem pogut obtenir la teva ubicació. Comprova els permisos del navegador.",
+    "amenitiesSelectType": "Selecciona primer el tipus d'espai per veure els equipaments disponibles.",
+    "guestNotice": "No has iniciat sessió.",
+    "guestDesc": "Inicia sessió o crea un compte gratuït per publicar i gestionar directament els teus slots. O si ho prefereixes, pots publicar el slot com a convidat deixant el teu correu electrònic a continuació.",
+    "guestSignIn": "Ja tinc compte",
+    "guestSignUp": "Crea un compte gratuït",
+    "guestDataTitle": "Les teves dades",
+    "guestEmailPlaceholder": "info@exemple.cat",
+    "guestEmailHelp": "Necessitem el teu email per crear l'usuari i vincular-hi aquest slot."
   },
   "review": {
     "title": "Ressenyes",
