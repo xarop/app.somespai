@@ -99,6 +99,11 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0013_add_pending_status.sql` | Afegeix l'estat `pending` a la constraint de `status` |
 | `0014_api_v1.sql` | API v1: columnes de procedència (`source`, `external_id`, `verified`…), taula `api_keys`, RPC `v1_search_spaces` (PostGIS, paginació per cursor) |
 | `0015_import_jobs.sql` | Taula `import_jobs` per traçar importacions massives; FK `import_job_id` a `spaces` |
+| `0016_favorites.sql` | Taula `favorites` (user_id + space_id, PK composta) + RLS per propietari |
+| `0017_profiles_phone.sql` | Afegeix camp `phone` als perfils d'usuari |
+| `0018_profile_trigger_metadata.sql` | Millora el trigger `handle_new_user` per llegir `display_name` i `phone` dels metadates |
+| `0019_city_region_nullable.sql` | Elimina el `NOT NULL DEFAULT` de `city` i `region` a `spaces` (sense valors per defecte hardcodejats) |
+| `0020_profiles_is_premium.sql` | Afegeix `is_premium boolean default false` als perfils — controla el límit de fotos i funcionalitats futures |
 
 ---
 
@@ -273,6 +278,7 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Edició autònoma de la fitxa d'espais per propietat (formulari restringit a `/editar/[slug]`)
 - [x] Secció centralitzada al perfil per veure "Els Meus Espais" (`/perfil`)
 - [x] Afegit badge de Verificat / Garantitzat
+- [x] **Sistema de comptes Premium**: camp `is_premium` als perfils; admins poden activar/desactivar manualment; usuaris premium veuen badge daurada al seu perfil i poden pujar fins a 6 fotos per espai (comptes gratuïts: 1 foto); límit aplicat a la publicació i edició tant al client com al servidor
 - [x] **API REST v1** pública amb autenticació per clau, filtres espacials (PostGIS), paginació per cursor (`/api/v1/spaces`)
 - [x] **Importació des de Google Places**: cerca, selecció i importació massiva d'espais des del panell admin (`/admin/imports/new`)
 - [x] Refresc individual d'espais importats i actualitzacions massives de verificació/estat

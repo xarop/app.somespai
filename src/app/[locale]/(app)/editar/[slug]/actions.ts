@@ -19,6 +19,10 @@ export async function updateOwnSpaceAction(
     .maybeSingle();
   if (!existing) return 'No tens permís per editar aquest slot.';
 
+  const { data: prof } = await supabase.from('profiles').select('is_premium').eq('id', user.id).maybeSingle();
+  const isPremium = !!(prof as { is_premium?: boolean } | null)?.is_premium;
+  const photoLimit = isPremium ? 6 : 1;
+
   const title = (formData.get('title') as string ?? '').trim();
   const type = formData.get('type') as string;
   const description = (formData.get('description') as string ?? '').trim() || null;
@@ -44,7 +48,7 @@ export async function updateOwnSpaceAction(
   if (!['active', 'paused'].includes(status)) return 'Estat no vàlid';
 
   const keptPhotos = formData.getAll('kept_photo') as string[];
-  const newFiles = formData.getAll('new_photos') as File[];
+  const newFiles = (formData.getAll('new_photos') as File[]).slice(0, photoLimit);
   const uploaded: string[] = [];
   for (const file of newFiles) {
     if (!file || file.size === 0) continue;
