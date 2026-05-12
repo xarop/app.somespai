@@ -16,6 +16,7 @@ import {
   getUsersAction,
   deleteUserAction,
   setUserAdminRoleAction,
+  setUserPremiumRoleAction,
   getContactMessagesAction,
   setContactMessageReadAction,
   deleteContactMessageAction,
@@ -536,6 +537,11 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
     router.refresh();
   }
 
+  async function handleTogglePremium(id: string, currentlyPremium: boolean) {
+    await setUserPremiumRoleAction(id, !currentlyPremium);
+    setUsers(prev => prev.map(u => u.id === id ? { ...u, isPremium: !currentlyPremium } : u));
+  }
+
   async function handleDelete(id: string) {
     setConfirmDeleteId(null);
     await deleteUserAction(id);
@@ -609,8 +615,13 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
                 <td className="admin-cell admin-cell--title">
                   {user.email}
                   {(user.isAdmin || user.email === mainAdminEmail) && (
-                    <span style={{ marginLeft: '8px', fontSize: '0.8rem', padding: '2px 6px', background: 'var(--primary)', color: 'var(--brand-ink)', borderRadius: '4px', fontWeight: 'bold' }}>
+                    <span style={{ marginLeft: '6px', fontSize: '0.75rem', padding: '2px 5px', background: 'var(--primary)', color: 'var(--brand-ink)', borderRadius: '4px', fontWeight: 'bold' }}>
                       Admin
+                    </span>
+                  )}
+                  {user.isPremium && (
+                    <span style={{ marginLeft: '6px', fontSize: '0.75rem', padding: '2px 5px', background: 'var(--gold)', color: '#fff', borderRadius: '4px', fontWeight: 'bold' }}>
+                      Premium
                     </span>
                   )}
                 </td>
@@ -638,13 +649,22 @@ function UsersTab({ onCountChange, mainAdminEmail, onViewUserSpaces }: { onCount
                 </td>
                 <td>
                   <div className="admin-actions">
+                    <button
+                      type="button"
+                      className={`admin-action-btn${user.isPremium ? ' admin-action-btn--active' : ''}`}
+                      onClick={() => handleTogglePremium(user.id, user.isPremium)}
+                      title={user.isPremium ? 'Treure Premium' : 'Fer Premium'}
+                      style={user.isPremium ? { borderColor: 'var(--gold)', color: 'var(--gold)' } : undefined}
+                    >
+                      ★ {user.isPremium ? 'Premium' : 'Premium'}
+                    </button>
                     {user.email !== mainAdminEmail && (
                       <button
                         type="button"
                         className="admin-action-btn"
                         onClick={() => handleToggleAdmin(user.id, user.isAdmin)}
                       >
-                        {user.isAdmin ? 'Desfer Admin' : 'Fer Admin'}
+                        {user.isAdmin ? 'Desfer Admin' : 'Admin'}
                       </button>
                     )}
                     {user.email !== mainAdminEmail && (

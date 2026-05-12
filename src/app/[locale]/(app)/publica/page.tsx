@@ -18,6 +18,12 @@ export default async function PublicarPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
+  let isPremium = false;
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('is_premium').eq('id', user.id).maybeSingle();
+    isPremium = !!(profile as { is_premium?: boolean } | null)?.is_premium;
+  }
+
   const t = await getTranslations('publish');
 
   return (
@@ -30,7 +36,7 @@ export default async function PublicarPage() {
           <h1>{t('title')}</h1>
           <p className="page-form__subtitle">{t('subtitle')}</p>
         </header>
-        <PublishForm isLoggedIn={!!user} />
+        <PublishForm isLoggedIn={!!user} isPremium={isPremium} />
       </div>
     </div>
     </>

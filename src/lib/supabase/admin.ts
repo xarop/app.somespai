@@ -251,6 +251,7 @@ export type AdminUser = {
   spacesCount: number;
   displayName: string | null;
   isAdmin: boolean;
+  isPremium: boolean;
 };
 
 export async function getUsersAdmin(): Promise<AdminUser[]> {
@@ -258,13 +259,13 @@ export async function getUsersAdmin(): Promise<AdminUser[]> {
 
   const [rpcRes, profilesRes, spacesRes] = await Promise.all([
     supabase.rpc('admin_list_users'),
-    supabase.from('profiles').select('id, display_name, is_admin'),
+    supabase.from('profiles').select('id, display_name, is_admin, is_premium'),
     supabase.from('spaces').select('owner_id').not('owner_id', 'is', null),
   ]);
 
   if (rpcRes.error) throw new Error(rpcRes.error.message);
 
-  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, { name: p.display_name as string | null, isAdmin: !!p.is_admin }]));
+  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, { name: p.display_name as string | null, isAdmin: !!p.is_admin, isPremium: !!p.is_premium }]));
   const spacesCount = new Map<string, number>();
   for (const s of spacesRes.data ?? []) {
     if (s.owner_id) spacesCount.set(s.owner_id, (spacesCount.get(s.owner_id) ?? 0) + 1);
@@ -280,6 +281,7 @@ export async function getUsersAdmin(): Promise<AdminUser[]> {
       spacesCount: spacesCount.get(u.id) ?? 0,
       displayName: prof?.name ?? null,
       isAdmin: prof?.isAdmin ?? false,
+      isPremium: prof?.isPremium ?? false,
     };
   });
 }
@@ -293,6 +295,12 @@ export async function deleteUserAdmin(userId: string): Promise<void> {
 export async function setUserAdminRole(userId: string, isAdmin: boolean): Promise<void> {
   const supabase = createAdminClient();
   const { error } = await supabase.from('profiles').update({ is_admin: isAdmin }).eq('id', userId);
+  if (error) throw new Error(error.message);
+}
+
+export async function setUserPremiumRole(userId: string, isPremium: boolean): Promise<void> {
+  const supabase = createAdminClient();
+  const { error } = await supabase.from('profiles').update({ is_premium: isPremium }).eq('id', userId);
   if (error) throw new Error(error.message);
 }
 
