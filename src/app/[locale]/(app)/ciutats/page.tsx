@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { PageNav } from '@/components/ui/page-nav';
 import { getCitiesWithStats } from '@/lib/supabase/spaces-seo';
 
+export const dynamic = 'force-dynamic';
+
 interface PageProps {
   params: Promise<{ locale: string }>;
 }
