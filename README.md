@@ -14,7 +14,8 @@ Desenvolupat per [xarop.com](https://xarop.com) amb ajuda de la IA. Les contribu
 ## Stack
 
 - **Next.js 15** (App Router, RSC)
-- **Supabase** (Postgres + PostGIS, Auth mail/password, Storage, RLS)
+- **Supabase** (Postgres + PostGIS, Auth mail/password, RLS)
+- **Cloudflare R2** (emmagatzematge d'imatges — zero egress)
 - **MapLibre GL JS** (open-source maps)
 - **next-intl** (CA / ES / EN)
 - **CSS natiu** amb `@layer` — sense Tailwind, sense CSS-in-JS
@@ -165,9 +166,18 @@ vercel --prod
 echo "https://<ref>.supabase.co" | vercel env add NEXT_PUBLIC_SUPABASE_URL production
 echo "<anon-key>"               | vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY production
 echo "<service-role-key>"       | vercel env add SUPABASE_SERVICE_ROLE_KEY production
+
+# Cloudflare R2 (emmagatzematge d'imatges)
+echo "<account-id>"            | vercel env add R2_ACCOUNT_ID production
+echo "<access-key-id>"         | vercel env add R2_ACCESS_KEY_ID production
+echo "<secret-access-key>"     | vercel env add R2_SECRET_ACCESS_KEY production
+echo "somespai-photos"         | vercel env add R2_BUCKET_NAME production
+echo "https://pub-xxxx.r2.dev" | vercel env add R2_PUBLIC_URL production
 ```
 
-Les claus es troben a: https://supabase.com/dashboard/project/nkdmysztmgerwhrklzhx/settings/api
+Les claus Supabase es troben a: https://supabase.com/dashboard/project/nkdmysztmgerwhrklzhx/settings/api
+
+Les claus R2 es creen a: https://dash.cloudflare.com → R2 → Manage API Tokens
 
 **Desplegaments habituals** — simplement fes push a `main`:
 
@@ -236,6 +246,11 @@ Totes les queries públiques van per `src/lib/supabase/spaces.ts`. Les operacion
 | `NOMINATIM_USER_AGENT` | User-Agent per a Nominatim (ex: `somespai/1.0 (correu@exemple.com)`) |
 | `NOMINATIM_BASE_URL` | Base URL Nominatim (per defecte `https://nominatim.openstreetmap.org`) |
 | `GOOGLE_PLACES_API_KEY` | Clau de l'API de Google Places (necessari per a la importació de Google) |
+| `R2_ACCOUNT_ID` | Cloudflare dashboard → Account ID |
+| `R2_ACCESS_KEY_ID` | Cloudflare R2 → Manage API Tokens → Token Access Key |
+| `R2_SECRET_ACCESS_KEY` | Cloudflare R2 → Manage API Tokens → Token Secret |
+| `R2_BUCKET_NAME` | Nom del bucket R2 creat (ex: `somespai-photos`) |
+| `R2_PUBLIC_URL` | URL pública del bucket (ex: `https://pub-xxxx.r2.dev`) |
 
 ---
 
@@ -263,7 +278,7 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 
 - [x] Auth local i de producció amb correu/contrasenya via Supabase Auth
 - [x] Pàgina i formulari per publicar espais (`/[locale]/publica`)
-- [x] Integració de pujada d'arxius/fotos al bucket `space-photos` (Cloud Storage)
+- [x] Integració de pujada d'arxius/fotos a **Cloudflare R2** (`src/lib/r2.ts`)
 - [x] Funcionalitat de Preferits (cors) guardats a la DB amb actualització optimista
 - [x] Sistema de Ressenyes (lectura, llistat i component visual de rating d'estrelles)
 - [x] Web Share API per compartir la fitxa d'espai
