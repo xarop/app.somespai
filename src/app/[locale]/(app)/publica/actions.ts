@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { slugify } from '@/lib/geo';
 import { redirect } from 'next/navigation';
+import { uploadToR2 } from '@/lib/r2';
 
 export async function createSpaceAction(
   _prev: string | null,
@@ -62,13 +63,10 @@ export async function createSpaceAction(
   const folderId = user?.id || 'guest';
   for (const file of files) {
     if (!file || file.size === 0) continue;
-    const ext = file.name.split('.').pop() ?? 'jpg';
-    const path = `${folderId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabaseAdmin.storage.from('space-photos').upload(path, file);
-    if (!error) {
-      const { data: { publicUrl } } = supabaseAdmin.storage.from('space-photos').getPublicUrl(path);
-      photos.push(publicUrl);
-    }
+    try {
+      const url = await uploadToR2(file, folderId);
+      photos.push(url);
+    } catch { /* skip failed uploads */ }
   }
 
   // Unique slug
