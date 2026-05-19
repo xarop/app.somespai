@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
+    "test": "vitest run",
     "export": "next build",
     "postexport": "node ./scripts/ghpages-redirect.js",
     "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out",
@@ -41,6 +42,7 @@
     "eslint-config-next": "15.3.9",
     "gh-pages": "^6.3.0",
     "sharp": "^0.34.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^4.1.6"
   }
 }
