@@ -126,7 +126,7 @@ create table spaces (
   amenities    text[] default '{}',
   photos       text[] default '{}',           -- Supabase Storage URLs
   is_featured  boolean default false,         -- premium
-  status       text default 'active',         -- active | paused | removed
+  status       text default 'active',         -- active | paused | removed | pending
   created_at   timestamptz default now(),
   updated_at   timestamptz default now()
 );
