@@ -118,14 +118,16 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
     if (!addr) return;
     setGeoState('loading');
     try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addr)}&format=json&limit=1`,
-        { headers: { 'Accept-Language': 'ca,es,en' } }
-      );
+      const res = await fetch('/api/geo/search', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ q: addr, language: locale }),
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-      if (data[0]) {
-        setLat(data[0].lat);
-        setLng(data[0].lon);
+      if (data.lat && data.lng) {
+        setLat(String(data.lat));
+        setLng(String(data.lng));
         setGeoState('idle');
       } else {
         setGeoState('error');

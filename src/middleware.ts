@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
   let { data: { user } } = await supabase.auth.getUser();
 
-  if (process.env.NODE_ENV === 'development' && !user) {
+  if (process.env.NODE_ENV === 'development' && !user && request.cookies.get('dev_admin_bypass')?.value === 'true') {
     user = {
       id: '00000000-0000-0000-0000-000000000001',
       email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@somespai.cat',
