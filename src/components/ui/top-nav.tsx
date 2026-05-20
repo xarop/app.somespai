@@ -72,6 +72,11 @@ export function TopNav({
   return (
     <>
       <header className="topnav glass">
+        {process.env.NEXT_PUBLIC_MOCK_DB === 'true' && (
+          <div style={{ position: 'absolute', top: '-14px', left: 0, right: 0, textAlign: 'center', fontSize: '10px', color: 'var(--bg)', background: 'var(--accent)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', borderRadius: 'var(--r-md)', padding: '0px 8px', zIndex: 10 }}>
+            Mockup Mode — Dades de prova (Manteniment)
+          </div>
+        )}
         <a className="topnav__brand" href="/" aria-label={t("brand.name")}>
           <svg className="topnav__brand-mark" width="34" height="34" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="102.813" height="102.813" rx="51.4065" fill="var(--primary)" />
