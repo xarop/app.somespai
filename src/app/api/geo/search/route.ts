@@ -1,17 +1,13 @@
 import { NextResponse } from 'next/server';
-import { reverseGeocode } from '@/lib/geo/geocoding';
-import { reverseGeocodeRequestSchema } from '@/lib/schemas/geo';
+import { forwardGeocode } from '@/lib/geo/geocoding';
+import { forwardGeocodeRequestSchema } from '@/lib/schemas/geo';
 import { createClient } from '@/lib/supabase/server';
 
 /**
- * POST /api/geo/reverse
+ * POST /api/geo/search
  *
- * Body: { lat: number, lng: number, language?: string }
- * Returns the parsed address (see `ReverseGeocodeResponse`).
- *
- * Backed by Nominatim (OpenStreetMap) — no API key required. To swap
- * providers later (MapTiler, Photon, self-hosted Nominatim, …), only
- * `lib/geo/geocoding.ts` needs to change; this route stays the same.
+ * Body: { q: string, language?: string }
+ * Returns the lat, lng and formatted address.
  */
 
 export const runtime = 'edge';
@@ -32,7 +28,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const parsed = reverseGeocodeRequestSchema.safeParse(body);
+  const parsed = forwardGeocodeRequestSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Invalid input', details: parsed.error.flatten() },
@@ -41,13 +37,12 @@ export async function POST(request: Request) {
   }
 
   try {
-    const result = await reverseGeocode(parsed.data.lat, parsed.data.lng, {
+    const result = await forwardGeocode(parsed.data.q, {
       language: parsed.data.language,
     });
 
     return NextResponse.json(result, {
       headers: {
-        // Identical lat/lng + language → same answer for hours; let the CDN help.
         'Cache-Control': 'public, max-age=3600, s-maxage=86400',
       },
     });

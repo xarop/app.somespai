@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient } from './server';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createAdminClient } from './admin';
 
 export interface Review {
   id: string;
@@ -46,10 +46,7 @@ export async function addReview(spaceId: string, rating: number, body: string, a
   if (!user) throw new Error('Not authenticated');
 
   // Use service role to bypass RLS for profile upsert
-  const adminClient = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  const adminClient = createAdminClient();
   if (authorName?.trim()) {
     await adminClient.from('profiles').upsert(
       { id: user.id, display_name: authorName.trim() },
@@ -71,10 +68,7 @@ export async function addReview(spaceId: string, rating: number, body: string, a
   if (error) throw new Error(error.message);
 
   // Recalculate space rating using service role
-  const admin = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  const admin = createAdminClient();
   const { data: rows } = await admin.from('reviews').select('rating').eq('space_id', spaceId);
   const list = rows ?? [];
   const count = list.length;

@@ -14,7 +14,8 @@
       "Bash(vercel env *)",
       "Bash(mkdir -p /tmp/vspa)",
       "Bash(vercel link *)",
-      "Bash(vercel --prod --yes)"
+      "Bash(vercel --prod --yes)",
+      "Bash(npx vercel *)"
     ]
   }
 }

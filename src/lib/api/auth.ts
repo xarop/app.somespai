@@ -1,11 +1,8 @@
 import { createHash } from 'crypto';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 function adminClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createAdminClient();
 }
 
 export type ApiAuth = { scopes: string[] };
@@ -42,11 +39,11 @@ export async function requireApiKey(req: Request): Promise<ApiAuth> {
     throw new ApiAuthError(401, 'UNAUTHENTICATED', 'Invalid or revoked API key');
   }
 
-  // Fire-and-forget: update last_used_at
-  db.from('api_keys')
+  // Update last_used_at
+  await db
+    .from('api_keys')
     .update({ last_used_at: new Date().toISOString() })
-    .eq('id', (data as { id: string }).id)
-    .then(() => {});
+    .eq('id', (data as { id: string }).id);
 
   return { scopes: (data as { scopes: string[] }).scopes };
 }

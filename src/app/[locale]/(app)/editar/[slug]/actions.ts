@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { uploadToR2, deleteFromR2 } from '@/lib/r2';
 
 export async function updateOwnSpaceAction(
   spaceId: string,
@@ -47,20 +48,24 @@ export async function updateOwnSpaceAction(
   if (isNaN(lat) || isNaN(lng)) return 'Coordenades invàlides — geolocalitza l\'adreça primer';
   if (!['active', 'paused'].includes(status)) return 'Estat no vàlid';
 
+  const { data: spaceData } = await supabase.from('spaces').select('photos').eq('id', spaceId).eq('owner_id', user.id).maybeSingle();
+  const existingPhotos: string[] = (spaceData as { photos?: string[] } | null)?.photos ?? [];
+
   const keptPhotos = formData.getAll('kept_photo') as string[];
   const newFiles = (formData.getAll('new_photos') as File[]).slice(0, photoLimit);
   const uploaded: string[] = [];
   for (const file of newFiles) {
     if (!file || file.size === 0) continue;
-    const ext = file.name.split('.').pop() ?? 'jpg';
-    const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const { error } = await supabase.storage.from('space-photos').upload(path, file);
-    if (!error) {
-      const { data: { publicUrl } } = supabase.storage.from('space-photos').getPublicUrl(path);
-      uploaded.push(publicUrl);
-    }
+    try {
+      const url = await uploadToR2(file, user.id);
+      uploaded.push(url);
+    } catch { /* skip failed uploads */ }
   }
   const photos = [...keptPhotos, ...uploaded];
+
+  // Delete removed R2 photos
+  const removedPhotos = existingPhotos.filter(u => !photos.includes(u));
+  if (removedPhotos.length > 0) await deleteFromR2(removedPhotos);
 
   const { error } = await supabase.from('spaces').update({
     title, type, description,
@@ -83,6 +88,22 @@ export async function deleteOwnSpaceAction(spaceId: string): Promise<string | nu
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return 'Not authenticated';
+
+  // Fetch photos to delete them from storage
+  const { data: space } = await supabase
+    .from('spaces')
+    .select('photos')
+    .eq('id', spaceId)
+    .eq('owner_id', user.id)
+    .maybeSingle();
+
+  if (space?.photos && space.photos.length > 0) {
+    try {
+      await deleteFromR2(space.photos);
+    } catch (e) {
+      console.error('Failed to delete photos from R2 during own space deletion:', e);
+    }
+  }
 
   const { error } = await supabase
     .from('spaces')

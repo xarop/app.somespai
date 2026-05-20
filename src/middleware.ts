@@ -8,26 +8,47 @@ const intlMiddleware = createIntlMiddleware(routing);
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return request.cookies.getAll(); },
-        setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options as Parameters<typeof supabaseResponse.cookies.set>[2])
-          );
+  const isMock =
+    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock');
+
+  let user = null;
+
+  if (isMock) {
+    user = {
+      id: '00000000-0000-0000-0000-000000000001',
+      email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@somespai.cat',
+      app_metadata: {},
+      user_metadata: {},
+      aud: 'authenticated',
+      role: 'authenticated',
+      created_at: new Date().toISOString(),
+    } as any;
+  } else {
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          getAll() { return request.cookies.getAll(); },
+          setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
+            cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+            supabaseResponse = NextResponse.next({ request });
+            cookiesToSet.forEach(({ name, value, options }) =>
+              supabaseResponse.cookies.set(name, value, options as Parameters<typeof supabaseResponse.cookies.set>[2])
+            );
+          },
         },
-      },
-    }
-  );
+      }
+    );
 
-  let { data: { user } } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
+    user = data.user;
+  }
 
-  if (process.env.NODE_ENV === 'development' && !user) {
+  if (process.env.NODE_ENV === 'development' && !user && request.cookies.get('dev_admin_bypass')?.value === 'true') {
     user = {
       id: '00000000-0000-0000-0000-000000000001',
       email: process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMAIL || 'seed@coslot.cat',

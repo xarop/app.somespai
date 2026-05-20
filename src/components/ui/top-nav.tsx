@@ -20,20 +20,14 @@ async function reverseGeocode(
   lng: number,
 ): Promise<string | null> {
   try {
-    const res = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=14&addressdetails=1`,
-      { headers: { "Accept-Language": "ca,es,en" } },
-    );
+    const res = await fetch("/api/geo/reverse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lat, lng }),
+    });
     if (!res.ok) return null;
     const data = await res.json();
-    return (
-      data.address?.quarter ??
-      data.address?.suburb ??
-      data.address?.neighbourhood ??
-      data.address?.city_district ??
-      data.address?.city ??
-      null
-    );
+    return data.neighborhood || data.city || null;
   } catch {
     return null;
   }

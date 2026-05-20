@@ -190,3 +190,59 @@ export async function reverseGeocode(
 
   return parseNominatim(data);
 }
+
+export type ForwardGeocodeOptions = {
+  /** BCP-47 language code (e.g. "ca", "es", "en"). */
+  language?: string;
+  /** Pass an AbortSignal to cancel the request. */
+  signal?: AbortSignal;
+};
+
+/**
+ * Geocode an address query into a point (lat/lng) and formatted string.
+ */
+export async function forwardGeocode(
+  q: string,
+  options: ForwardGeocodeOptions = {},
+): Promise<{ lat: number; lng: number; formatted: string }> {
+  const searchBase = NOMINATIM_BASE_URL.endsWith('/reverse')
+    ? NOMINATIM_BASE_URL.substring(0, NOMINATIM_BASE_URL.length - 8) + '/search'
+    : NOMINATIM_BASE_URL;
+
+  const url = new URL(searchBase);
+  url.searchParams.set('format', 'jsonv2');
+  url.searchParams.set('q', q);
+  url.searchParams.set('limit', '1');
+
+  const language = options.language ?? 'ca';
+
+  const response = await fetch(url, {
+    signal: options.signal,
+    headers: {
+      'User-Agent': USER_AGENT,
+      'Accept-Language': `${language},ca;q=0.9,es;q=0.8,en;q=0.5`,
+    },
+    next: { revalidate: 86_400 },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Nominatim HTTP ${response.status}`);
+  }
+
+  const data = (await response.json()) as Array<{
+    lat?: string;
+    lon?: string;
+    display_name?: string;
+  }>;
+
+  if (!data || data.length === 0 || !data[0]?.lat || !data[0]?.lon) {
+    throw new Error('No geocoding results for this location');
+  }
+
+  return {
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon),
+    formatted: data[0].display_name ?? '',
+  };
+}
+

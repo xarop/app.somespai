@@ -35,3 +35,21 @@ export const reverseGeocodeResponseSchema = z.object({
 export type ReverseGeocodeResponse = z.infer<
   typeof reverseGeocodeResponseSchema
 >;
+
+export const forwardGeocodeRequestSchema = z.object({
+  q: z.string().min(1),
+  language: z.string().min(2).max(5).optional(),
+});
+
+export type ForwardGeocodeRequest = z.infer<typeof forwardGeocodeRequestSchema>;
+
+export const forwardGeocodeResponseSchema = z.object({
+  lat: z.number(),
+  lng: z.number(),
+  formatted: z.string(),
+});
+
+export type ForwardGeocodeResponse = z.infer<
+  typeof forwardGeocodeResponseSchema
+>;
+

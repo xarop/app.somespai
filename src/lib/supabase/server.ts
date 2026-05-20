@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { createMockClient } from './mock-client-server';
 import { cookies } from 'next/headers';
 
 /**
@@ -6,6 +7,16 @@ import { cookies } from 'next/headers';
  * Use only inside Server Components, Route Handlers, or Server Actions.
  */
 export async function createClient() {
+  const isMock =
+    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock');
+
+  if (isMock) {
+    return createMockClient(false);
+  }
+
   const cookieStore = await cookies();
 
   const supabase = createServerClient(
