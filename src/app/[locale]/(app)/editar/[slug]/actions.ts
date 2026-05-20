@@ -89,6 +89,22 @@ export async function deleteOwnSpaceAction(spaceId: string): Promise<string | nu
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return 'Not authenticated';
 
+  // Fetch photos to delete them from storage
+  const { data: space } = await supabase
+    .from('spaces')
+    .select('photos')
+    .eq('id', spaceId)
+    .eq('owner_id', user.id)
+    .maybeSingle();
+
+  if (space?.photos && space.photos.length > 0) {
+    try {
+      await deleteFromR2(space.photos);
+    } catch (e) {
+      console.error('Failed to delete photos from R2 during own space deletion:', e);
+    }
+  }
+
   const { error } = await supabase
     .from('spaces')
     .delete()

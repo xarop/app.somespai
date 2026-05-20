@@ -1,6 +1,7 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import type { Space } from '@/lib/schemas/space';
 import type { Review } from './reviews';
+import { deleteFromR2 } from '@/lib/r2';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function rowToSpace(row: Record<string, any>): Space {
@@ -101,8 +102,48 @@ export async function updateSpaceAdmin(id: string, data: AdminSpaceUpdate): Prom
   if (error) throw new Error(error.message);
 }
 
+async function deletePhotosFromStorage(supabase: ReturnType<typeof createAdminClient>, urls: string[]): Promise<void> {
+  const r2Urls: string[] = [];
+  const supabasePaths: string[] = [];
+  
+  const storageMarker = '/storage/v1/object/public/space-photos/';
+  
+  for (const url of urls) {
+    if (url && url.includes(storageMarker)) {
+      const idx = url.indexOf(storageMarker);
+      const path = url.slice(idx + storageMarker.length);
+      supabasePaths.push(path);
+    } else if (url) {
+      r2Urls.push(url);
+    }
+  }
+  
+  if (r2Urls.length > 0) {
+    try {
+      await deleteFromR2(r2Urls);
+    } catch (e) {
+      console.error('Failed to delete from R2:', e);
+    }
+  }
+  
+  if (supabasePaths.length > 0) {
+    try {
+      await supabase.storage.from('space-photos').remove(supabasePaths);
+    } catch (e) {
+      console.error('Failed to delete from Supabase storage:', e);
+    }
+  }
+}
+
 export async function deleteSpaceAdmin(id: string): Promise<void> {
   const supabase = createAdminClient();
+  
+  // Fetch photos to delete them from storage
+  const { data: space } = await supabase.from('spaces').select('photos').eq('id', id).maybeSingle();
+  if (space?.photos && space.photos.length > 0) {
+    await deletePhotosFromStorage(supabase, space.photos);
+  }
+
   const { error } = await supabase.from('spaces').delete().eq('id', id);
   if (error) throw new Error(error.message);
 }
@@ -115,6 +156,14 @@ export async function bulkSetSpaceStatusAdmin(ids: string[], status: 'active' | 
 
 export async function bulkDeleteSpaceAdmin(ids: string[]): Promise<void> {
   const supabase = createAdminClient();
+  
+  // Fetch photos for all spaces to delete them from storage
+  const { data: spaces } = await supabase.from('spaces').select('photos').in('id', ids);
+  const allPhotos = (spaces ?? []).flatMap(s => s.photos ?? []);
+  if (allPhotos.length > 0) {
+    await deletePhotosFromStorage(supabase, allPhotos);
+  }
+
   const { error } = await supabase.from('spaces').delete().in('id', ids);
   if (error) throw new Error(error.message);
 }
