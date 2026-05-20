@@ -1,11 +1,8 @@
 import { createHash } from 'crypto';
-import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createAdminClient } from '@/lib/supabase/admin';
 
 function adminClient() {
-  return createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  );
+  return createAdminClient();
 }
 
 export type ApiAuth = { scopes: string[] };

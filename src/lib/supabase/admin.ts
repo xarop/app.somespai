@@ -37,7 +37,18 @@ function rowToSpace(row: Record<string, any>): Space {
   };
 }
 
-function createAdminClient() {
+export function createAdminClient() {
+  const isMock =
+    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock');
+
+  if (isMock) {
+    const { createMockClient } = require('./mock-client-server');
+    return createMockClient(false);
+  }
+
   return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
