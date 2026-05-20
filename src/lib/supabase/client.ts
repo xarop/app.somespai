@@ -1,10 +1,21 @@
 import { createBrowserClient } from '@supabase/ssr';
+import { createMockClient } from './mock-client-browser';
 
 /**
  * Browser-side Supabase client.
  * Safe to call from Client Components.
  */
 export function createClient() {
+  const isMock =
+    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock');
+
+  if (isMock) {
+    return createMockClient(true);
+  }
+
   const supabase = createBrowserClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
