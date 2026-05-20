@@ -77,7 +77,7 @@ export async function getFavoriteSpaces(userId: string): Promise<Space[]> {
     .from('favorites')
     .select('space_id')
     .eq('user_id', userId);
-  const ids = (favData ?? []).map(r => r.space_id as string);
+  const ids = (favData ?? []).map((r: any) => r.space_id as string);
   if (ids.length === 0) return [];
   const { data, error } = await supabase
     .from('spaces')
@@ -124,5 +124,5 @@ export async function getAllSlugs(): Promise<string[]> {
     .eq('status', 'active');
 
   if (error) throw new Error(error.message);
-  return (data ?? []).map((row) => row.slug as string);
+  return (data ?? []).map((row: any) => row.slug as string);
 }

@@ -94,23 +94,29 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
   const phoneRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(async ({ data }) => {
-      const user = data.user;
-      if (!user) return;
-      if (emailContactRef.current && !emailContactRef.current.value) {
-        emailContactRef.current.value = user.email ?? '';
+    async function loadUserAndProfile() {
+      const supabase = createClient();
+      try {
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
+        if (!user) return;
+        if (emailContactRef.current && !emailContactRef.current.value) {
+          emailContactRef.current.value = user.email ?? '';
+        }
+        // Load profile for name + phone autofill
+        const { data: profile } = await supabase.from('profiles').select('display_name, phone').eq('id', user.id).maybeSingle();
+        const p = profile as { display_name?: string | null; phone?: string | null } | null;
+        if (p?.display_name && contactNameRef.current && !contactNameRef.current.value) {
+          contactNameRef.current.value = p.display_name;
+        }
+        if (p?.phone && phoneRef.current && !phoneRef.current.value) {
+          phoneRef.current.value = p.phone;
+        }
+      } catch (error) {
+        console.error('Failed to load user or profile:', error);
       }
-      // Load profile for name + phone autofill
-      const { data: profile } = await supabase.from('profiles').select('display_name, phone').eq('id', user.id).maybeSingle();
-      const p = profile as { display_name?: string | null; phone?: string | null } | null;
-      if (p?.display_name && contactNameRef.current && !contactNameRef.current.value) {
-        contactNameRef.current.value = p.display_name;
-      }
-      if (p?.phone && phoneRef.current && !phoneRef.current.value) {
-        phoneRef.current.value = p.phone;
-      }
-    });
+    }
+    loadUserAndProfile();
   }, []);
 
   async function geocodeAddress() {

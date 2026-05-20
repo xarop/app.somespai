@@ -76,7 +76,17 @@ class MockClient {
       rpcName: name,
       rpcArgs: args,
     };
-    return executeMockQueryServer(payload);
+    if (process.env.NEXT_RUNTIME === 'edge') {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const res = await fetch(`${baseUrl}/api/mock-db`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      return res.json();
+    } else {
+      return executeMockQueryServer(payload);
+    }
   }
 }
 
@@ -188,6 +198,16 @@ class MockQueryBuilder {
       insertData: this.insertData,
       isDelete: this.isDelete,
     };
-    return executeMockQueryServer(payload);
+    if (process.env.NEXT_RUNTIME === 'edge') {
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+      const res = await fetch(`${baseUrl}/api/mock-db`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      return res.json();
+    } else {
+      return executeMockQueryServer(payload);
+    }
   }
 }

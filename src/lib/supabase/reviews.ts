@@ -21,7 +21,7 @@ export async function getReviews(spaceId: string): Promise<Review[]> {
     .eq('space_id', spaceId)
     .order('created_at', { ascending: false });
 
-  return (data ?? []).map(r => ({
+  return (data ?? []).map((r: any) => ({
     id: r.id,
     spaceId: r.space_id,
     authorId: r.author_id,

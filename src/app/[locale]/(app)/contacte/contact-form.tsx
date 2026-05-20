@@ -49,20 +49,27 @@ export function ContactForm({ spaceTitle, spaceAddress, spaceUrl, reason }: Cont
   const [userLoaded, setUserLoaded] = useState(false);
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      const user = data.user;
-      if (user) {
-        if (nameRef.current && !nameRef.current.value) {
-          nameRef.current.value =
-            user.user_metadata?.full_name ?? user.user_metadata?.name ?? '';
+    async function loadUser() {
+      const supabase = createClient();
+      try {
+        const { data } = await supabase.auth.getUser();
+        const user = data?.user;
+        if (user) {
+          if (nameRef.current && !nameRef.current.value) {
+            nameRef.current.value =
+              user.user_metadata?.full_name ?? user.user_metadata?.name ?? '';
+          }
+          if (emailRef.current && !emailRef.current.value) {
+            emailRef.current.value = user.email ?? '';
+          }
         }
-        if (emailRef.current && !emailRef.current.value) {
-          emailRef.current.value = user.email ?? '';
-        }
+      } catch (error) {
+        console.error('Failed to load user:', error);
+      } finally {
+        setUserLoaded(true);
       }
-      setUserLoaded(true);
-    });
+    }
+    loadUser();
   }, []);
 
   useEffect(() => {

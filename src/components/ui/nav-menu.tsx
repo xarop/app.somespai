@@ -54,12 +54,18 @@ export function NavMenu() {
       setIsAdmin(!!profile?.is_admin);
     };
 
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-      checkAdmin(data.user);
-    });
+    async function loadInitialUser() {
+      try {
+        const { data } = await supabase.auth.getUser();
+        setUser(data?.user ?? null);
+        checkAdmin(data?.user ?? null);
+      } catch (error) {
+        console.error('Failed to get initial user:', error);
+      }
+    }
+    loadInitialUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
       setUser(session?.user ?? null);
       checkAdmin(session?.user ?? null);
     });

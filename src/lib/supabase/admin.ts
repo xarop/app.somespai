@@ -170,7 +170,7 @@ export async function bulkDeleteSpaceAdmin(ids: string[]): Promise<void> {
   
   // Fetch photos for all spaces to delete them from storage
   const { data: spaces } = await supabase.from('spaces').select('photos').in('id', ids);
-  const allPhotos = (spaces ?? []).flatMap(s => s.photos ?? []);
+  const allPhotos = (spaces ?? []).flatMap((s: any) => s.photos ?? []);
   if (allPhotos.length > 0) {
     await deletePhotosFromStorage(supabase, allPhotos);
   }
@@ -242,7 +242,7 @@ export async function getReviewsAdmin(spaceId: string): Promise<Review[]> {
     .eq('space_id', spaceId)
     .order('created_at', { ascending: false });
   if (error) throw new Error(error.message);
-  return (data ?? []).map((r) => ({
+  return (data ?? []).map((r: any) => ({
     id: r.id,
     spaceId: r.space_id,
     authorId: r.author_id,
@@ -258,7 +258,7 @@ async function recalcSpaceRating(spaceId: string): Promise<void> {
   const { data } = await supabase.from('reviews').select('rating').eq('space_id', spaceId);
   const reviews = data ?? [];
   const count = reviews.length;
-  const avg = count > 0 ? reviews.reduce((s, r) => s + r.rating, 0) / count : 0;
+  const avg = count > 0 ? reviews.reduce((s: number, r: any) => s + r.rating, 0) / count : 0;
   await supabase.from('spaces').update({ rating: avg, reviews_count: count }).eq('id', spaceId);
 }
 
@@ -325,7 +325,7 @@ export async function getUsersAdmin(): Promise<AdminUser[]> {
 
   if (rpcRes.error) throw new Error(rpcRes.error.message);
 
-  const profileMap = new Map((profilesRes.data ?? []).map(p => [p.id, { name: p.display_name as string | null, isAdmin: !!p.is_admin, isPremium: !!p.is_premium }]));
+  const profileMap = new Map<string, { name: string | null; isAdmin: boolean; isPremium: boolean }>((profilesRes.data ?? []).map((p: any) => [p.id, { name: p.display_name as string | null, isAdmin: !!p.is_admin, isPremium: !!p.is_premium }]));
   const spacesCount = new Map<string, number>();
   for (const s of spacesRes.data ?? []) {
     if (s.owner_id) spacesCount.set(s.owner_id, (spacesCount.get(s.owner_id) ?? 0) + 1);
@@ -383,7 +383,7 @@ export async function getContactMessagesAdmin(): Promise<ContactMessage[]> {
     .select('*')
     .order('created_at', { ascending: false });
   if (error) throw new Error(error.message);
-  return (data ?? []).map(r => ({
+  return (data ?? []).map((r: any) => ({
     id: r.id,
     name: r.name,
     email: r.email,

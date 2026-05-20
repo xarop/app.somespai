@@ -1,8 +1,9 @@
-import fs from 'fs';
-import path from 'path';
 import { MOCK_SPACES } from '../data/mock-spaces';
 
-const DB_PATH = path.join(process.cwd(), 'src/lib/supabase/mock-db-file.json');
+function getDbPath(): string {
+  const path = eval('require')('path');
+  return path.join(process.cwd(), 'src/lib/supabase/mock-db-file.json');
+}
 
 interface DbState {
   spaces: any[];
@@ -69,13 +70,15 @@ function getInitialDbState(): DbState {
 }
 
 function readDb(): DbState {
+  const fs = eval('require')('fs');
+  const dbPath = getDbPath();
   try {
-    if (!fs.existsSync(DB_PATH)) {
+    if (!fs.existsSync(dbPath)) {
       const state = getInitialDbState();
-      fs.writeFileSync(DB_PATH, JSON.stringify(state, null, 2), 'utf-8');
+      fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf-8');
       return state;
     }
-    const raw = fs.readFileSync(DB_PATH, 'utf-8');
+    const raw = fs.readFileSync(dbPath, 'utf-8');
     return JSON.parse(raw);
   } catch (e) {
     console.error('Failed to read mock DB file:', e);
@@ -84,8 +87,10 @@ function readDb(): DbState {
 }
 
 function writeDb(state: DbState) {
+  const fs = eval('require')('fs');
+  const dbPath = getDbPath();
   try {
-    fs.writeFileSync(DB_PATH, JSON.stringify(state, null, 2), 'utf-8');
+    fs.writeFileSync(dbPath, JSON.stringify(state, null, 2), 'utf-8');
   } catch (e) {
     console.error('Failed to write mock DB file:', e);
   }
