@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { reverseGeocode } from '@/lib/geo/geocoding';
 import { reverseGeocodeRequestSchema } from '@/lib/schemas/geo';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * POST /api/geo/reverse
@@ -16,19 +17,13 @@ import { reverseGeocodeRequestSchema } from '@/lib/schemas/geo';
 export const runtime = 'edge';
 
 export async function POST(request: Request) {
-  // ---------------------------------------------------------------------------
-  // TODO: Gate to authenticated users to prevent anonymous abuse of the API key.
-  // Use the same Supabase server client you use elsewhere, e.g.:
-  //
-  //   const supabase = await createServerClient();
-  //   const { data: { user } } = await supabase.auth.getUser();
-  //   if (!user) {
-  //     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  //   }
-  //
-  // The `publica` form already requires auth, so this is a defence-in-depth
-  // measure for the API surface itself.
-  // ---------------------------------------------------------------------------
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   let body: unknown;
   try {

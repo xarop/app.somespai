@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { forwardGeocode } from '@/lib/geo/geocoding';
 import { forwardGeocodeRequestSchema } from '@/lib/schemas/geo';
+import { createClient } from '@/lib/supabase/server';
 
 /**
  * POST /api/geo/search
@@ -12,6 +13,14 @@ import { forwardGeocodeRequestSchema } from '@/lib/schemas/geo';
 export const runtime = 'edge';
 
 export async function POST(request: Request) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();
