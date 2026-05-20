@@ -2,16 +2,21 @@ import { createServerClient } from '@supabase/ssr';
 import { createMockClient } from './mock-client-server';
 import { cookies } from 'next/headers';
 
+export function isMockEnabled() {
+  return (
+    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
+    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock')
+  );
+}
+
 /**
  * Server-side Supabase client. Reads cookies for the current session.
  * Use only inside Server Components, Route Handlers, or Server Actions.
  */
 export async function createClient() {
-  const isMock =
-    process.env.NEXT_PUBLIC_MOCK_DB === 'true' ||
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL === 'mock' ||
-    process.env.NEXT_PUBLIC_SUPABASE_URL.startsWith('http://mock');
+  const isMock = isMockEnabled();
 
   if (isMock) {
     return createMockClient(false);
