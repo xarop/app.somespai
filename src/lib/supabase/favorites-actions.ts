@@ -11,7 +11,7 @@ export async function getFavoriteIds(): Promise<string[]> {
     .from('favorites')
     .select('space_id')
     .eq('user_id', user.id);
-  return (data ?? []).map(r => r.space_id as string);
+  return (data ?? []).map((r: any) => r.space_id as string);
 }
 
 /** Toggles a favorite. Returns true if now liked, false if unliked. Throws on error. */
