@@ -37,6 +37,15 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
     else if (!open && dialog.open) dialog.close();
   }, [open]);
 
+  // The dialog is position:absolute, so lock page scroll while it's open to
+  // keep it from scrolling away with the background.
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [open]);
+
   useEffect(() => {
     if (open) {
       setMode(initialMode ?? 'signIn');
@@ -150,7 +159,7 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
   if (!mounted) return null;
 
   return createPortal(
-    <dialog ref={dialogRef} data-modal aria-labelledby="auth-title">
+    <dialog ref={dialogRef} className="auth-modal" data-modal aria-labelledby="auth-title">
       <button type="button" className="modal__close" aria-label={t('typeInfo.close')} onClick={onClose}>
         <Icon name="close" size={18} />
       </button>
