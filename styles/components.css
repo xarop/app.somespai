@@ -1325,9 +1325,6 @@
   dialog[data-modal] {
     position: fixed;
     inset: 0;
-    /* Use 100% (the fixed-positioning containing block, which excludes the
-       reserved scrollbar gutter) rather than 100vw (which includes it) — so the
-       modal can't end up wider than its centring box and overflow to one side. */
     width: min(640px, calc(100% - 24px));
     max-width: calc(100% - 24px);
     /* dvh tracks the *visible* viewport on mobile (excludes the URL bar),
@@ -1339,6 +1336,12 @@
     background: var(--bg);
     border: 1px solid var(--glass-border);
     animation: modal-in var(--t-norm) var(--ease-out);
+  }
+
+  /* The auth dialog centres reliably with `absolute` (not `fixed`); its page
+     scroll is locked in JS while open so it doesn't scroll away. */
+  dialog.auth-modal[data-modal] {
+    position: absolute;
   }
 
   @keyframes modal-in {
