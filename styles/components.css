@@ -1323,8 +1323,13 @@
 
   /* ── Detail modal ─────────────────────────────────────────────────────── */
   dialog[data-modal] {
+    position: fixed;
+    inset: 0;
     width: min(640px, calc(100vw - 24px));
-    max-height: calc(100vh - 24px);
+    max-width: calc(100vw - 24px);
+    /* dvh tracks the *visible* viewport on mobile (excludes the URL bar),
+       so the modal never grows taller than the screen and gets clipped. */
+    max-height: calc(100dvh - 24px);
     margin: auto;
     border-radius: var(--r-lg);
     overflow: hidden auto;
@@ -2866,7 +2871,7 @@
 
   .admin-modal {
     width: min(640px, 100%);
-    max-height: calc(100vh - var(--s-8));
+    max-height: calc(100dvh - var(--s-8));
     background: var(--bg);
     border-radius: var(--r-lg);
     border: 1px solid var(--glass-border);
