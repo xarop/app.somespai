@@ -6,6 +6,7 @@ import { useLocale } from 'next-intl';
 import { useRouter } from '@/lib/i18n/routing';
 import { Icon } from '@/components/ui/icon';
 import { updateOwnSpaceAction, deleteOwnSpaceAction } from './actions';
+import { resizeImageFile } from '@/lib/images/resize-image';
 import { ReviewsSection } from '@/components/admin/reviews-section';
 import type { Space } from '@/lib/schemas/space';
 
@@ -99,9 +100,12 @@ export function EditSpaceForm({ space, isAdmin, isPremium = false }: Props) {
     } catch { /* DataTransfer not supported */ }
   }, [newPhotoFiles]);
 
-  function addNewPhotos(incoming: File[]) {
+  async function addNewPhotos(incoming: File[]) {
     const photoLimit = isPremium ? 6 : 1;
-    setNewPhotoFiles(prev => [...prev, ...incoming].slice(0, photoLimit));
+    // Downscale to a mobile-friendly size before the photo enters the form,
+    // so we never upload a multi-megabyte original from a phone camera.
+    const resized = await Promise.all(incoming.map(f => resizeImageFile(f)));
+    setNewPhotoFiles(prev => [...prev, ...resized].slice(0, photoLimit));
   }
 
   function removeNewPhoto(index: number) {
@@ -109,12 +113,12 @@ export function EditSpaceForm({ space, isAdmin, isPremium = false }: Props) {
   }
 
   function handleNewGallery(e: React.ChangeEvent<HTMLInputElement>) {
-    addNewPhotos(Array.from(e.target.files ?? []));
+    void addNewPhotos(Array.from(e.target.files ?? []));
     e.target.value = '';
   }
 
   function handleNewCamera(e: React.ChangeEvent<HTMLInputElement>) {
-    addNewPhotos(Array.from(e.target.files ?? []));
+    void addNewPhotos(Array.from(e.target.files ?? []));
     e.target.value = '';
   }
 

@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { Icon } from '@/components/ui/icon';
 import { createClient } from '@/lib/supabase/client';
 import { createSpaceAction } from './actions';
+import { resizeImageFile } from '@/lib/images/resize-image';
 import type { ReverseGeocodeResponse } from '@/lib/schemas/geo';
 
 const SPACE_TYPES = ['storage', 'workspace', 'garden', 'room', 'parking'] as const;
@@ -220,8 +221,11 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
 
   const photoLimit = isPremium ? 6 : 1;
 
-  function addPhotos(incoming: File[]) {
-    setPhotoFiles(prev => [...prev, ...incoming].slice(0, photoLimit));
+  async function addPhotos(incoming: File[]) {
+    // Downscale to a mobile-friendly size before the photo enters the form,
+    // so we never upload a multi-megabyte original from a phone camera.
+    const resized = await Promise.all(incoming.map(f => resizeImageFile(f)));
+    setPhotoFiles(prev => [...prev, ...resized].slice(0, photoLimit));
   }
 
   function removePhoto(index: number) {
@@ -229,12 +233,12 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
   }
 
   function handleGallery(e: React.ChangeEvent<HTMLInputElement>) {
-    addPhotos(Array.from(e.target.files ?? []));
+    void addPhotos(Array.from(e.target.files ?? []));
     e.target.value = '';
   }
 
   function handleCamera(e: React.ChangeEvent<HTMLInputElement>) {
-    addPhotos(Array.from(e.target.files ?? []));
+    void addPhotos(Array.from(e.target.files ?? []));
     e.target.value = '';
   }
 

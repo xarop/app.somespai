@@ -279,6 +279,7 @@ A continuació es detalla l'estat del projecte dividit per fases, marcant el que
 - [x] Auth local i de producció amb correu/contrasenya via Supabase Auth
 - [x] Pàgina i formulari per publicar espais (`/[locale]/publica`)
 - [x] Integració de pujada d'arxius/fotos a **Cloudflare R2** (`src/lib/r2.ts`)
+- [x] **Escalat de fotos al client** abans de pujar: les imatges es redueixen a mida òptima per a mòbil (`src/lib/images/resize-image.ts`)
 - [x] Funcionalitat de Preferits (cors) guardats a la DB amb actualització optimista
 - [x] Sistema de Ressenyes (lectura, llistat i component visual de rating d'estrelles)
 - [x] Web Share API per compartir la fitxa d'espai
@@ -362,6 +363,41 @@ El formulari `/publica` inclou un botó **"Omple ubicació"** que automatitza l'
 | `src/app/api/geo/route.ts` | Route handler proxy per evitar CORS i amagar l'User-Agent |
 
 La crida a Nominatim es fa des d'un route handler de Next.js (`/api/geo`) per tal d'evitar problemes de CORS i per poder incloure un User-Agent correcte (`somespai/1.0`). Requereix connexió a internet però no cap API key.
+
+---
+
+### Escalat de fotos al client (publicació)
+
+Quan l'usuari afegeix una foto al formulari `/publica` (des de galeria o fent-la amb la càmera del mòbil), s'escala **al navegador, abans de pujar-la** a Cloudflare R2. Així no s'envia mai l'original de diversos MB que generen les càmeres dels mòbils, reduint temps de pujada i egress.
+
+1. La imatge es descodifica amb `createImageBitmap` (respectant l'orientació EXIF, freqüent en fotos de mòbil).
+2. Es redimensiona perquè el costat més llarg no superi **1280px**, mantenint la proporció.
+3. Es recodifica a **JPEG qualitat 0.8** via `<canvas>`.
+4. És defensiu: si la imatge ja és prou petita, si el resultat fos més gran, o si la descodificació falla, es manté el fitxer original perquè la pujada sempre funcioni. Els GIF se salten.
+
+L'escalat passa just quan la foto entra al formulari, així que la previsualització, l'enviament i la pujada a R2 ja fan servir la versió reduïda. El mateix s'aplica al formulari d'edició (`/editar/[slug]`) i al panell d'admin.
+
+**Fitxers clau:**
+
+| Fitxer | Rol |
+|--------|-----|
+| `src/lib/images/resize-image.ts` | Utilitat `resizeImageFile()` (descodificació, redimensionat, recodificació) |
+| `src/app/[locale]/(app)/publica/publish-form.tsx` | `addPhotos()` escala cada fitxer entrant abans de desar-lo a l'estat |
+| `src/app/[locale]/(app)/editar/[slug]/edit-form.tsx` | `addNewPhotos()` — mateix escalat a l'edició |
+| `src/app/[locale]/(app)/admin/admin-dashboard.tsx` | `handleNewPhotos()` — mateix escalat a l'admin |
+
+### Importació des de Google Places
+
+L'script `scripts/bulk-scraper.ts` també optimitza les fotos abans de pujar-les: demana la imatge a Google amb amplada màxima de 1280px, aplica l'orientació EXIF, limita el costat més llarg a **1280px** i la converteix a **WebP qualitat 80** (`sharp`) — un format molt lleuger, òptim per a mòbil.
+
+### Fotos ja pujades
+
+Per reduir fotos **ja existents** a R2, hi ha un script de servidor (les baixa, les redimensiona amb `sharp` i les torna a pujar amb la mateixa clau, així la URL no canvia ni cal tocar la DB). R2 té egress zero, per tant reprocessar fotos de R2 no té cost de transferència. Les fotos encara a Supabase Storage se salten (migra-les abans amb `scripts/migrate-photos-to-r2.mjs`).
+
+```bash
+node scripts/resize-existing-photos.mjs --dry-run   # previsualitza els canvis
+node scripts/resize-existing-photos.mjs             # aplica
+```
 
 ---
 

@@ -23,6 +23,7 @@ import {
   bulkSetStatusAction,
   bulkDeleteAction,
 } from './actions';
+import { resizeImageFile } from '@/lib/images/resize-image';
 import type { Review } from '@/lib/supabase/reviews';
 import type { AdminUser, ContactMessage } from '@/lib/supabase/admin';
 
@@ -239,9 +240,18 @@ function EditModal({ space, onClose, onSuccess }: EditModalProps) {
     }
   }
 
-  function handleNewPhotos(e: React.ChangeEvent<HTMLInputElement>) {
-    const files = Array.from(e.target.files ?? []).slice(0, 10);
-    setNewPreviews(files.map(f => URL.createObjectURL(f)));
+  async function handleNewPhotos(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.target;
+    const files = Array.from(input.files ?? []).slice(0, 10);
+    // Downscale to a mobile-friendly size, then write the resized files back
+    // into the input so the form submits the smaller versions.
+    const resized = await Promise.all(files.map(f => resizeImageFile(f)));
+    try {
+      const dt = new DataTransfer();
+      resized.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    } catch { /* DataTransfer not supported (rare) */ }
+    setNewPreviews(resized.map(f => URL.createObjectURL(f)));
   }
 
   return (
