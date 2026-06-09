@@ -7,7 +7,17 @@
   * { margin: 0; padding: 0; }
 
   html, body { height: 100%; }
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    /* Always reserve the scrollbar gutter so opening a modal <dialog> (which
+       locks page scroll and removes the scrollbar) doesn't shift the layout. */
+    scrollbar-gutter: stable;
+  }
+  /* Guard against any element forcing horizontal page scroll — the topnav and
+     content live directly in <body>, outside the per-page overflow clipping.
+     `clip` (not `hidden`) avoids creating a scroll container, so it doesn't
+     trap vertical scroll on the height:100% body or break position:sticky. */
+  html, body { overflow-x: clip; }
 
   body {
     -webkit-font-smoothing: antialiased;
