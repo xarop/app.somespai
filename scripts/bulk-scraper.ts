@@ -23,6 +23,9 @@ if (!query) {
   process.exit(1);
 }
 
+// Mobile-friendly photo target — longest side in px. Matches src/lib/images/resize-image.ts.
+const MAX_PHOTO_DIMENSION = 1280;
+
 const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY;
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -115,15 +118,19 @@ async function run() {
     if (details.photos && details.photos.length > 0) {
       console.log(`   📸 Descarregant i optimitzant foto per ${title}...`);
       const photoRef = details.photos[0].photo_reference;
-      const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=1200&photoreference=${photoRef}&key=${GOOGLE_API_KEY}`;
-      
+      const photoUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=${MAX_PHOTO_DIMENSION}&photoreference=${photoRef}&key=${GOOGLE_API_KEY}`;
+
       try {
         const photoRes = await fetch(photoUrl);
         const arrayBuffer = await photoRes.arrayBuffer();
         const buffer = Buffer.from(arrayBuffer);
 
-        // Convertir a webp optimitzat
-        const webpBuffer = await sharp(buffer).webp({ quality: 80 }).toBuffer();
+        // Format lleuger òptim per a mòbil: orientació EXIF, costat llarg ≤ 1280px, WebP q80
+        const webpBuffer = await sharp(buffer)
+          .rotate()
+          .resize({ width: MAX_PHOTO_DIMENSION, height: MAX_PHOTO_DIMENSION, fit: 'inside', withoutEnlargement: true })
+          .webp({ quality: 80 })
+          .toBuffer();
         
         const storagePath = `imports/${slug}-${Date.now()}.webp`;
         const { error: uploadError } = await supabase.storage.from('space-photos').upload(storagePath, webpBuffer, { contentType: 'image/webp' });

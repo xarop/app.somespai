@@ -45,7 +45,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <head />
       <body>
         <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-364235874"
+          src="https://www.googletagmanager.com/gtag/js?id=G-S9DSSWGP53"
           strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
@@ -53,7 +53,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-364235874');
+            gtag('config', 'G-S9DSSWGP53');
           `}
         </Script>
         <NextIntlClientProvider messages={messages}>
