@@ -30,6 +30,7 @@ Llegeix abans de tocar el codi:
 
 - [`DESIGN.md`](./DESIGN.md) — sistema de disseny (colors, tipografia, components)
 - [`AGENTS.md`](./AGENTS.md) — arquitectura, model de dades, convencions
+- [`CHANGELOG.md`](./CHANGELOG.md) — historial de versions i canvis
 
 I la ruta interactiva: `/design-system`.
 
