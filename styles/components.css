@@ -1325,8 +1325,11 @@
   dialog[data-modal] {
     position: fixed;
     inset: 0;
-    width: min(640px, calc(100vw - 24px));
-    max-width: calc(100vw - 24px);
+    /* Use 100% (the fixed-positioning containing block, which excludes the
+       reserved scrollbar gutter) rather than 100vw (which includes it) — so the
+       modal can't end up wider than its centring box and overflow to one side. */
+    width: min(640px, calc(100% - 24px));
+    max-width: calc(100% - 24px);
     /* dvh tracks the *visible* viewport on mobile (excludes the URL bar),
        so the modal never grows taller than the screen and gets clipped. */
     max-height: calc(100dvh - 24px);
@@ -1363,6 +1366,76 @@
     border-radius: var(--r-sm);
     backdrop-filter: blur(8px);
     z-index: 2;
+  }
+
+  /* ── Auth modal ───────────────────────────────────────────────────────── */
+  .auth-modal__body {
+    padding: var(--s-7) var(--s-5) var(--s-5);
+  }
+
+  .auth-modal__title {
+    font-size: var(--t-xl);
+    font-weight: 700;
+    margin-bottom: var(--s-2);
+  }
+
+  .auth-modal__lead {
+    color: var(--ink-mute);
+    font-size: var(--t-sm);
+    margin-bottom: var(--s-5);
+  }
+
+  .auth-modal__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-3);
+  }
+
+  .auth-modal__label-row {
+    display: flex;
+    gap: var(--s-2);
+    align-items: center;
+  }
+
+  .auth-modal__optional {
+    font-size: 11px;
+    color: var(--ink-mute);
+    font-weight: 400;
+  }
+
+  .auth-modal__dev-note {
+    font-size: var(--t-sm);
+    color: var(--ink-mute);
+    margin: 0;
+  }
+
+  .auth-modal__msg {
+    margin: 0;
+  }
+
+  .auth-modal__success {
+    margin: 0;
+    color: green;
+    font-size: var(--t-sm);
+  }
+
+  .auth-modal__submit {
+    margin-top: var(--s-1);
+  }
+
+  .auth-modal__toggles {
+    text-align: center;
+    margin-top: var(--s-3);
+  }
+
+  .auth-modal__toggle {
+    font-size: var(--t-sm);
+  }
+
+  .auth-modal__toggle--block {
+    font-size: var(--t-sm);
+    display: block;
+    margin: 0 auto var(--s-2);
   }
 
   .detail__hero {

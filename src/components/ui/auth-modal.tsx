@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslations } from 'next-intl';
 import { createClient } from '@/lib/supabase/client';
 import { Icon } from './icon';
@@ -23,6 +24,11 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  // Portal target — the topnav ancestor uses backdrop-filter, which would
+  // otherwise become the containing block for the fixed dialog and throw off
+  // its centring. Rendering into <body> keeps it anchored to the viewport.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -141,21 +147,23 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
     setSuccessMsg(null);
   }
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <dialog ref={dialogRef} data-modal aria-labelledby="auth-title">
       <button type="button" className="modal__close" aria-label={t('typeInfo.close')} onClick={onClose}>
         <Icon name="close" size={18} />
       </button>
 
-      <div style={{ padding: 'var(--s-7) var(--s-5) var(--s-5)' }}>
-        <h2 id="auth-title" style={{ fontSize: 'var(--t-xl)', fontWeight: 700, marginBottom: 'var(--s-2)' }}>
+      <div className="auth-modal__body">
+        <h2 id="auth-title" className="auth-modal__title">
           {mode === 'signIn' ? t('auth.titleSignIn') : mode === 'signUp' ? t('auth.titleSignUp') : t('auth.titleReset')}
         </h2>
-        <p style={{ color: 'var(--ink-mute)', fontSize: 'var(--t-sm)', marginBottom: 'var(--s-5)' }}>
+        <p className="auth-modal__lead">
           {mode === 'signIn' ? t('auth.leadSignIn') : mode === 'signUp' ? t('auth.leadSignUp') : t('auth.leadReset')}
         </p>
-        
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--s-3)' }}>
+
+        <form onSubmit={handleSubmit} className="auth-modal__form">
           <label className="field">
             <span className="field__label">{t('auth.email')}</span>
             <input
@@ -199,9 +207,9 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
                 />
               </label>
               <label className="field">
-                <span className="field__label" style={{ display: 'flex', gap: 'var(--s-2)', alignItems: 'center' }}>
+                <span className="field__label auth-modal__label-row">
                   {t('user.profilePhone')}
-                  <span style={{ fontSize: '11px', color: 'var(--ink-mute)', fontWeight: 400 }}>({t('auth.optional')})</span>
+                  <span className="auth-modal__optional">({t('auth.optional')})</span>
                 </span>
                 <input
                   type="tel"
@@ -216,36 +224,37 @@ export function AuthModal({ open, onClose, initialMode }: AuthModalProps) {
           )}
 
           {isDevAdmin && (
-            <p style={{ fontSize: 'var(--t-sm)', color: 'var(--ink-mute)', margin: 0 }}>
+            <p className="auth-modal__dev-note">
               🛠 Dev mode — entra directament sense contrasenya
             </p>
           )}
-          
-          {error && <p className="form-error" style={{ margin: 0 }}>{error}</p>}
-          {successMsg && <p className="form-success" style={{ margin: 0, color: 'green', fontSize: 'var(--t-sm)' }}>{successMsg}</p>}
-          
-          <button type="submit" data-variant="primary" disabled={loading} style={{ marginTop: 'var(--s-1)' }}>
+
+          {error && <p className="form-error auth-modal__msg">{error}</p>}
+          {successMsg && <p className="form-success auth-modal__success">{successMsg}</p>}
+
+          <button type="submit" data-variant="primary" disabled={loading} className="auth-modal__submit">
             {loading ? '…' : (mode === 'signIn' ? t('auth.sendSignIn') : mode === 'signUp' ? t('auth.sendSignUp') : t('auth.sendReset'))}
           </button>
-          
-          <div style={{ textAlign: 'center', marginTop: 'var(--s-3)' }}>
+
+          <div className="auth-modal__toggles">
              {mode === 'signIn' && (
-               <button type="button" className="inline-link" onClick={toggleResetMode} style={{ fontSize: 'var(--t-sm)', display: 'block', margin: '0 auto var(--s-2)' }}>
+               <button type="button" className="inline-link auth-modal__toggle--block" onClick={toggleResetMode}>
                  {t('auth.toggleToReset')}
                </button>
              )}
              {mode === 'resetPassword' ? (
-               <button type="button" className="inline-link" onClick={toggleResetMode} style={{ fontSize: 'var(--t-sm)' }}>
+               <button type="button" className="inline-link auth-modal__toggle" onClick={toggleResetMode}>
                  {t('auth.toggleToSignIn')}
                </button>
              ) : (
-               <button type="button" className="inline-link" onClick={toggleMode} style={{ fontSize: 'var(--t-sm)' }}>
+               <button type="button" className="inline-link auth-modal__toggle" onClick={toggleMode}>
                  {mode === 'signIn' ? t('auth.toggleToSignUp') : t('auth.toggleToSignIn')}
                </button>
              )}
           </div>
         </form>
       </div>
-    </dialog>
+    </dialog>,
+    document.body,
   );
 }
