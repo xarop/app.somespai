@@ -42,46 +42,54 @@
     top: calc(100% + 4px);
     left: var(--s-4);
     z-index: 3;
+    padding: 2px var(--s-2);
+    border-radius: var(--r-md);
+    background: var(--surface, #fff);
     color: var(--danger);
     font-size: var(--t-xs);
+    white-space: nowrap;
   }
 
-  .workshop-filterbar {
-    justify-content: flex-start;
+  .workshop-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--s-2);
+    min-width: 0;
   }
 
-  .workshop-filterbar .chip__icon svg {
-    width: 16px;
-    height: 16px;
+  .workshop-select {
+    display: flex;
+    flex: 1 1 160px;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
   }
 
-  .workshop-date-chip {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .workshop-date-chip > svg {
-    width: 16px;
-    height: 16px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .workshop-date-chip input {
-    width: 112px;
-    padding: 0;
-    border: 0;
-    color: inherit;
-    background: transparent;
-    font: inherit;
+  .workshop-select__label {
+    padding-left: var(--s-2);
+    color: var(--text-muted, currentColor);
     font-size: var(--t-xs);
+    opacity: 0.75;
   }
 
-  .workshop-date-chip input:focus {
-    outline: none;
+  .workshop-select select,
+  .workshop-select input {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 var(--s-3);
+    border: 1px solid var(--border, rgba(0, 0, 0, 0.15));
+    border-radius: var(--r-md);
+    background: var(--surface, #fff);
+    color: inherit;
+    font: inherit;
+    font-size: var(--t-sm, 0.875rem);
+  }
+
+  .workshop-select select:focus-visible,
+  .workshop-select input:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
   }
 
   .workshop-mapwrap .workshop-map {

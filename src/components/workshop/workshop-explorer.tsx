@@ -16,7 +16,8 @@ const copy = {
     publish: 'Publica un taller',
     location: 'Cerca tallers a prop teu…',
     locate: 'Centrar al meu lloc',
-    all: 'Totes',
+    category: 'Tipus de taller',
+    allCategories: 'Tots els tipus',
     date: 'Data',
     results: 'Tallers a prop teu',
     empty: 'No hi ha tallers amb aquests filtres. Prova una altra data o categoria.',
@@ -32,7 +33,8 @@ const copy = {
     publish: 'Publica un taller',
     location: 'Busca talleres cerca de ti…',
     locate: 'Centrar en mi ubicación',
-    all: 'Todos',
+    category: 'Tipo de taller',
+    allCategories: 'Todos los tipos',
     date: 'Fecha',
     results: 'Talleres cerca de ti',
     empty: 'No hay talleres con estos filtros. Prueba otra fecha o categoría.',
@@ -48,7 +50,8 @@ const copy = {
     publish: 'List a workshop',
     location: 'Find workshops near you…',
     locate: 'Center on my location',
-    all: 'All',
+    category: 'Workshop type',
+    allCategories: 'All types',
     date: 'Date',
     results: 'Workshops near you',
     empty: 'No workshops match these filters. Try another date or category.',
@@ -224,56 +227,36 @@ export function WorkshopExplorer({
           <NavMenu workshops />
         </div>
         <div className="topnav__filters">
-          <nav className="filterbar workshop-filterbar" aria-label={locale === 'en' ? 'Workshop categories' : locale === 'es' ? 'Categorías de talleres' : 'Categories de tallers'}>
-            <button
-              type="button"
-              className="chip"
-              aria-pressed={!category}
-              onClick={() => {
-                setCategory('');
-                updateUrl({ category: '' });
-              }}
-            >
-              {text.all}
-            </button>
-            {WORKSHOP_CATEGORIES.map((item) => (
-              <button
-                key={item.value}
-                type="button"
-                className="chip"
-                data-type={item.value}
-                aria-label={item[locale as keyof typeof item] ?? item.ca}
-                title={item[locale as keyof typeof item] ?? item.ca}
-                aria-pressed={category === item.value}
-                onClick={() => {
-                  const nextCategory = category === item.value ? '' : item.value;
-                  setCategory(nextCategory);
-                  updateUrl({ category: nextCategory });
+          <div className="workshop-filters">
+            <label className="workshop-select">
+              <span className="workshop-select__label">{text.category}</span>
+              <select
+                value={category}
+                onChange={(event) => {
+                  setCategory(event.target.value);
+                  updateUrl({ category: event.target.value });
                 }}
               >
-                <span className="chip__icon">
-                  <WorkshopCategoryIcon category={item.value} />
-                </span>
-                <span>{item[locale as keyof typeof item] ?? item.ca}</span>
-              </button>
-            ))}
-            <label className="chip workshop-date-chip">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="3" y="5" width="18" height="16" rx="2" />
-                <path d="M16 3v4M8 3v4M3 10h18" />
-              </svg>
-              <span>{text.date}</span>
+                <option value="">{text.allCategories}</option>
+                {WORKSHOP_CATEGORIES.map((item) => (
+                  <option key={item.value} value={item.value}>
+                    {item[locale as keyof typeof item] ?? item.ca}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="workshop-select">
+              <span className="workshop-select__label">{text.date}</span>
               <input
                 type="date"
                 value={date}
-                aria-label={text.date}
                 onChange={(event) => {
                   setDate(event.target.value);
                   updateUrl({ date: event.target.value });
                 }}
               />
             </label>
-          </nav>
+          </div>
         </div>
       </header>
 

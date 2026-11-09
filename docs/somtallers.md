@@ -74,7 +74,7 @@ changed any time.
    the space list before selecting it.
 3. Confirm the success link opens `/taller/[slug]`. Verify the session dates,
    contact links, and linked Somespai space.
-4. Return to `/`, filter with the category icon chips and date field, and verify
+4. Return to `/`, filter with the category select (text labels) and date field, and verify
    the category icon appears on both the map marker and result card. Switch
    between map and list layouts, and clear the filters to verify the listing
    remains discoverable.
