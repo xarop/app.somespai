@@ -229,8 +229,8 @@ export function WorkshopExplorer({
         <div className="topnav__filters">
           <div className="workshop-filters">
             <label className="workshop-select">
-              <span className="workshop-select__label">{text.category}</span>
               <select
+                aria-label={text.category}
                 value={category}
                 onChange={(event) => {
                   setCategory(event.target.value);
@@ -246,9 +246,9 @@ export function WorkshopExplorer({
               </select>
             </label>
             <label className="workshop-select">
-              <span className="workshop-select__label">{text.date}</span>
               <input
                 type="date"
+                aria-label={text.date}
                 value={date}
                 onChange={(event) => {
                   setDate(event.target.value);
