@@ -28,7 +28,7 @@ const brands: Record<BrandId, BrandConfig> = {
     tagline: 'Tallers, cursos i activitats creatives',
     domain: 'https://tallers.somespai.net',
     logo: '/somtallers.svg',
-    colors: { primary: '#6FCF97', primaryInk: '#1a4a2e', accent: '#c45a2c' },
+    colors: { primary: '#F2A65A', primaryInk: '#5a2f0c', accent: '#2f7f86' },
   },
 };
 

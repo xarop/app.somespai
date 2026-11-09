@@ -13,12 +13,12 @@
   }
 
   body[data-brand="somtallers"] {
-    --primary: #6FCF97;
-    --primary-soft: #a5dfc0;
-    --primary-tint: #dff2ea;
-    --primary-ink: #1a4a2e;
-    --accent: #c45a2c;
-    --accent-soft: #e8a583;
+    --primary: #F2A65A;
+    --primary-soft: #f7c996;
+    --primary-tint: #fcebd8;
+    --primary-ink: #5a2f0c;
+    --accent: #2f7f86;
+    --accent-soft: #8cc4c8;
   }
 
   .workshop-app {
