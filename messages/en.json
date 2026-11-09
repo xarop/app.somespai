@@ -180,6 +180,7 @@
     "fieldTitle": "Title",
     "fieldTitlePlaceholder": "E.g. Dry and ventilated storage unit in central Gràcia",
     "fieldType": "Space type",
+    "workshopVenue": "Workshops are hosted at this space",
     "fieldDescription": "Description",
     "fieldDescriptionPlaceholder": "Describe the space in detail…",
     "fieldPrice": "Price (€)",

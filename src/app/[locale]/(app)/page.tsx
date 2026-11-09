@@ -3,6 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 import { HomeClient } from "./home-client";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
+import { getBrand } from "@/lib/brand";
+import { WorkshopsHome } from "@/components/workshop/workshops-home";
 
 export async function generateMetadata({
   params,
@@ -10,6 +12,22 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const brand = getBrand();
+  if (brand.id === "somtallers") {
+    const titles = {
+      ca: "Tallers i activitats creatives a prop teu",
+      es: "Talleres y actividades creativas cerca de ti",
+      en: "Creative workshops and activities near you",
+    };
+    const title = titles[locale as keyof typeof titles] ?? titles.ca;
+    return {
+      title,
+      description: brand.tagline,
+      metadataBase: new URL(brand.domain),
+      alternates: { canonical: `${brand.domain}${locale === "ca" ? "" : `/${locale}`}` },
+      openGraph: { title: `${brand.name} — ${title}`, description: brand.tagline, url: brand.domain },
+    };
+  }
   const t = await getTranslations({ locale });
   const title = t("seo.homeTitle");
   const desc = t("seo.homeDesc");
@@ -36,9 +54,33 @@ export async function generateMetadata({
 
 export default async function HomePage({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>;
+  searchParams: Promise<{
+    category?: string;
+    date?: string;
+    location?: string;
+    latitude?: string;
+    longitude?: string;
+  }>;
 }) {
+  const brand = getBrand();
+  if (brand.id === "somtallers") {
+    const [{ locale }, filters] = await Promise.all([params, searchParams]);
+    const latitude = filters.latitude ? Number(filters.latitude) : undefined;
+    const longitude = filters.longitude ? Number(filters.longitude) : undefined;
+    return (
+      <WorkshopsHome
+        locale={locale}
+        category={filters.category}
+        date={filters.date}
+        location={filters.location}
+        latitude={latitude}
+        longitude={longitude}
+      />
+    );
+  }
   const [{ locale }, spaces, supabase] = await Promise.all([
     params,
     getSpaces(),

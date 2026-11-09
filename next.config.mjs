@@ -7,6 +7,7 @@ const withNextIntl = createNextIntlPlugin('./src/lib/i18n/request.ts');
 const isExport = process.env.NEXT_EXPORT === 'true';
 
 const nextConfig = {
+  distDir: process.env.NEXT_BUILD_DIR || '.next',
   reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],

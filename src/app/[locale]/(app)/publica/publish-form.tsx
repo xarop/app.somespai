@@ -76,6 +76,7 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
   const [state, formAction, isPending] = useActionState(createSpaceAction, null);
 
   const [selectedType, setSelectedType] = useState<SpaceType | null>(null);
+  const [isWorkshopVenue, setIsWorkshopVenue] = useState(false);
   const [titleAutofilled, setTitleAutofilled] = useState(false);
   const [geoState, setGeoState] = useState<'idle' | 'loading' | 'error'>('idle');
   const [autofillState, setAutofillState] = useState<'idle' | 'locating' | 'geocoding' | 'done' | 'error'>('idle');
@@ -198,6 +199,7 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
 
   function handleTypeChange(type: SpaceType) {
     setSelectedType(type);
+    setIsWorkshopVenue(type === 'room');
     if (titleAutofilled && titleRef.current) {
       const location = titleLocationRef.current;
       titleRef.current.value = location ? `${tSpaceType(type)} ${location}` : tSpaceType(type);
@@ -311,6 +313,17 @@ export function PublishForm({ isLoggedIn = true, isPremium = false }: PublishFor
             </label>
           ))}
         </div>
+        {selectedType && (
+          <label className="checkbox-item">
+            <input
+              type="checkbox"
+              name="is_workshop_venue"
+              checked={isWorkshopVenue}
+              onChange={(event) => setIsWorkshopVenue(event.target.checked)}
+            />
+            <span>{t('workshopVenue')}</span>
+          </label>
+        )}
       </fieldset>
 
       {/* ── Location ── */}

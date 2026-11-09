@@ -66,7 +66,7 @@ npx supabase start
 npx supabase db reset --local
 ```
 
-The `db reset` applies migrations from `supabase/migrations/` and runs `supabase/seed.sql` (27 real spaces from Barcelona).
+The `db reset` applies migrations from `supabase/migrations/` and runs `supabase/seed.sql` (27 real spaces from Barcelona and 5 local Somtallers demo listings). Demo dates and seat counts are illustrative, not real availability.
 
 ### 5. Start the App
 
@@ -74,6 +74,26 @@ The `db reset` applies migrations from `supabase/migrations/` and runs `supabase
 bun dev
 # → http://localhost:3000/en
 ```
+
+### Test Somtallers locally
+
+Somtallers shares Somespai accounts and database. Reset the local Supabase database
+so the workshops migration is applied, then select the brand at startup:
+
+```bash
+npx supabase start
+npx supabase db reset --local
+NEXT_PUBLIC_BRAND=somtallers bun dev
+# → http://localhost:3000
+```
+
+See [`docs/somtallers.md`](./docs/somtallers.md) for environment setup, a complete
+workshop publishing smoke test, and RLS verification steps.
+
+To run Somtallers and Somespai together without Docker, start two terminals with
+`NEXT_PUBLIC_MOCK_DB=true`, ports `3000` and `3001`, and a different
+`NEXT_BUILD_DIR` for each process. Full commands and mock-mode limitations are
+in [`docs/somtallers.md`](./docs/somtallers.md).
 
 ---
 
@@ -91,6 +111,12 @@ bun dev
 | `0008_contact_messages.sql` | Table `contact_messages` to store messages sent from spaces |
 | `0009_admin_list_users_rpc.sql` | RPC (function) to list users for the admin panel |
 | `0010_profiles_is_admin.sql` | Adds `is_admin` field to profiles instead of relying solely on email |
+| `0021_explicit_grants.sql` | Adds explicit Supabase Data API grants for existing tables |
+| `0022_workshops.sql` | Adds workshops and sessions, RLS, PostGIS indexes, and `nearby_workshops` RPC |
+| `0023_workshop_venues.sql` | Marks spaces that can host workshops; initially only rooms (`type = 'room'`) |
+
+> Migration version `0021` is already used by `0021_explicit_grants.sql`, so workshops
+> use versions `0022` and `0023` to keep Supabase migration versions unique.
 
 ---
 
@@ -102,6 +128,8 @@ This repository maintains two different brands through separate branches pointin
    - Vercel: [app-somespai](https://vercel.com/xarops-projects/app-somespai)
 2. **CoSlot** (`coslot.space`): Automatically deployed from the `coslot` branch (forced English, "slot" terms).
    - Vercel: [app-coslot](https://vercel.com/xarops-projects/app-coslot)
+3. **Somtallers** (`tallers.somespai.net`): Independent deployment from branch `somtallers`; shares authentication and Postgres, and mirrors Somespai's map, search, filters, and menu UI with workshop-focused content. The only Somespai feature change for this integration is the ability to mark a space as a workshop venue.
+   - Vercel: set `NEXT_PUBLIC_BRAND=somtallers` and reuse the Somespai Supabase environment variables.
 
 ### Workflow and Deployment
 

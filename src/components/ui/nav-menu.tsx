@@ -8,6 +8,7 @@ import { Icon } from "@/components/ui/icon";
 import { AuthModal } from "@/components/ui/auth-modal";
 import { createClient } from "@/lib/supabase/client";
 import { useNavCities } from "@/hooks/use-nav-cities";
+import { getSomespaiUrl } from "@/lib/brand";
 import type { User } from "@supabase/supabase-js";
 
 const LOCALES = [
@@ -16,13 +17,12 @@ const LOCALES = [
   { code: "en", label: "English" },
 ] as const;
 
-export function NavMenu() {
+export function NavMenu({ workshops = false }: { workshops?: boolean } = {}) {
   const t = useTranslations();
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const cities = useNavCities();
-
   const [menuOpen, setMenuOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signIn' | 'signUp'>('signIn');
@@ -120,7 +120,7 @@ export function NavMenu() {
               <path d="M23.4217 70.6662C22.0036 70.6662 20.9078 70.2795 20.1344 69.506C19.3867 68.7583 19.0128 67.6754 19.0128 66.2574V36.5557C19.0128 35.1376 19.3867 34.0548 20.1344 33.3071C20.9078 32.5336 22.0036 32.1469 23.4217 32.1469H29.5322V35.7435H24.1178C23.2927 35.7435 22.8802 36.1561 22.8802 36.9811V65.7546C22.8802 66.5796 23.2927 66.9922 24.1178 66.9922H29.5322V70.6662H23.4217Z" fill="var(--primary-ink)" />
               <path d="M73.281 70.6662V66.9922H78.6953C79.5204 66.9922 79.9329 66.5796 79.9329 65.7546V36.9811C79.9329 36.1561 79.5204 35.7435 78.6953 35.7435H73.281V32.1469H79.3915C80.8095 32.1469 81.8924 32.5336 82.6401 33.3071C83.4136 34.0548 83.8003 35.1376 83.8003 36.5557V66.2574C83.8003 67.6754 83.4136 68.7583 82.6401 69.506C81.8924 70.2795 80.8095 70.6662 79.3915 70.6662H73.281Z" fill="var(--primary-ink)" />
             </svg>
-            <span className="dropmenu__title">{t("brand.name")}</span>
+            <span className="dropmenu__title">{workshops ? "Somtallers" : t("brand.name")}</span>
           </div>
           <button
             type="button"
@@ -160,16 +160,31 @@ export function NavMenu() {
 
           <div className="dropmenu__divider" />
 
-          <a href={`/${locale}`} role="menuitem" onClick={() => setMenuOpen(false)}>
-            <Icon name="map" size={16} />
-            {t("nav.map")}
-          </a>
-          <a href={`/${locale}/espais`} role="menuitem" onClick={() => setMenuOpen(false)}>
-            <Icon name="list" size={16} />
-            {t("nav.allSpaces")}
-          </a>
+          {workshops ? (
+            <>
+              <a href={`/${locale}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                <Icon name="list" size={16} />
+                {locale === "en" ? "Workshops and activities" : locale === "es" ? "Talleres y actividades" : "Tallers i activitats"}
+              </a>
+              <a href={`/${locale}/publicar-taller`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                <Icon name="pencil" size={16} />
+                {locale === "en" ? "List a workshop" : locale === "es" ? "Publicar un taller" : "Publica un taller"}
+              </a>
+            </>
+          ) : (
+            <>
+              <a href={`/${locale}`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                <Icon name="map" size={16} />
+                {t("nav.map")}
+              </a>
+              <a href={`/${locale}/espais`} role="menuitem" onClick={() => setMenuOpen(false)}>
+                <Icon name="list" size={16} />
+                {t("nav.allSpaces")}
+              </a>
+            </>
+          )}
 
-          {cities.length > 0 && (
+          {!workshops && cities.length > 0 && (
             <>
               <div className="dropmenu__cities-header">
                 <span className="dropmenu__item dropmenu__item--label">{t("nav.cities")}</span>
@@ -190,10 +205,17 @@ export function NavMenu() {
 
           <div className="dropmenu__divider" />
 
-          <a href="https://somespai.net" role="menuitem" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
-            <Icon name="globe" size={16} />
-            somespai.net
-          </a>
+          {workshops ? (
+            <a href={getSomespaiUrl()} role="menuitem" onClick={() => setMenuOpen(false)}>
+              <Icon name="globe" size={16} />
+              {locale === "en" ? "Somespai spaces" : locale === "es" ? "Espacios Somespai" : "Espais Somespai"}
+            </a>
+          ) : (
+            <a href="https://somespai.net" role="menuitem" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+              <Icon name="globe" size={16} />
+              somespai.net
+            </a>
+          )}
           <a href={`/${locale}/ajuda`} role="menuitem" onClick={() => setMenuOpen(false)}>
             <Icon name="info" size={16} />
             {t("nav.help")}

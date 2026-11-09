@@ -5,6 +5,19 @@ Tots els canvis notables d'aquest projecte es documenten en aquest fitxer.
 El format es basa en [Keep a Changelog](https://keepachangelog.com/ca/1.1.0/)
 i el projecte segueix [Semantic Versioning](https://semver.org/lang/ca/).
 
+## [Unreleased]
+
+### Added
+- Marca Somtallers amb cercador de tallers, mapa, fitxa de detall, contacte directe i publicació per passos, compartint els perfils i els espais de Somespai.
+- Migració additiva de tallers i sessions amb RLS, índexs PostGIS i cerca RPC per proximitat i dates (`0022_workshops.sql`).
+- Dades locals de demostració per tallers de terraris/plantes i ceràmica a Barcelona, basades en proveïdors amb oferta pública; sessions i places clarament orientatives.
+- Cerques de tallers per ubicació actual (amb permís del navegador) o per ciutat/adreça, amb radi PostGIS de 15 km i filtratge equivalent en mode mock.
+- Vinculació dels exemples amb espais Somespai, amb selector al començament del pas 2, enllaç per crear un espai a Somespai i actualització de la llista sense perdre el formulari.
+- Camp `is_workshop_venue` per identificar espais que acullen tallers; inicialment només es marquen les sales i el selector de tallers filtra per aquesta opció.
+- Somtallers passa a `tallers.somespai.net` i replica l’experiència de Somespai (mapa, cercador, filtres, targetes i menú) amb icones per categories creatives; la UI de Somespai només afegeix el selector d’espais aptes per a tallers.
+- Mode mock compartit per executar Somtallers i Somespai en ports locals independents; els enllaços entre marques apunten al servei Somespai local.
+- Documentació per configurar i provar Somtallers localment (`docs/somtallers.md`).
+
 ## [0.6.0] — 2026-06-09
 
 ### Added

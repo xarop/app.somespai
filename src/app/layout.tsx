@@ -1,23 +1,25 @@
 import type { ReactNode } from 'react';
 import './globals.css';
+import { getBrand } from '@/lib/brand';
 
+const brand = getBrand();
 export const metadata = {
-  metadataBase: new URL('https://app.somespai.net'),
-  title: { default: 'Somespai - Marketplace P2P d\'espais', template: '%s · Somespai' },
-  description: 'Trasters, garatges, sales, estudis i jardins. Lloga i posa de lloguer els teus espais propers de forma fàcil i directa.',
-  icons: { icon: '/favicon.svg' },
+  metadataBase: new URL(brand.domain),
+  title: { default: `${brand.name} — ${brand.tagline}`, template: `%s · ${brand.name}` },
+  description: brand.tagline,
+  icons: { icon: brand.logo },
   openGraph: {
-    title: 'Somespai — Marketplace P2P d\'espais',
-    description: 'Troba els millors trasters, sales, jardins i estudis a prop teu per llogar.',
-    url: 'https://app.somespai.net',
-    siteName: 'Somespai',
+    title: `${brand.name} — ${brand.tagline}`,
+    description: brand.tagline,
+    url: brand.domain,
+    siteName: brand.name,
     locale: 'ca_ES',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Somespai',
-    description: 'Marketplace P2P d\'espais',
+    title: brand.name,
+    description: brand.tagline,
   }
 };
 

@@ -1,4 +1,5 @@
 import { MOCK_SPACES } from '../data/mock-spaces';
+import { MOCK_WORKSHOPS } from '../data/mock-workshops';
 
 function getDbPath(): string {
   const path = eval('require')('path');
@@ -11,6 +12,8 @@ interface DbState {
   reviews: any[];
   favorites: any[];
   api_keys: any[];
+  workshops: any[];
+  workshop_sessions: any[];
 }
 
 function getInitialDbState(): DbState {
@@ -34,6 +37,7 @@ function getInitialDbState(): DbState {
     amenities: s.amenities,
     photos: s.photos || [],
     is_featured: s.isFeatured,
+    is_workshop_venue: s.type === 'room',
     rating: s.rating,
     reviews_count: s.reviewsCount,
     status: s.status,
@@ -66,6 +70,8 @@ function getInitialDbState(): DbState {
     reviews: [],
     favorites: [],
     api_keys: [],
+    workshops: MOCK_WORKSHOPS.map(({ sessions: _sessions, ...workshop }) => workshop),
+    workshop_sessions: MOCK_WORKSHOPS.flatMap((workshop) => workshop.sessions),
   };
 }
 
@@ -79,7 +85,18 @@ function readDb(): DbState {
       return state;
     }
     const raw = fs.readFileSync(dbPath, 'utf-8');
-    return JSON.parse(raw);
+    const savedState = JSON.parse(raw);
+    const initialState = getInitialDbState();
+    return {
+      ...initialState,
+      ...savedState,
+      spaces: (savedState.spaces ?? initialState.spaces).map((space: any) => ({
+        ...space,
+        is_workshop_venue: space.is_workshop_venue ?? space.type === 'room',
+      })),
+      workshops: savedState.workshops ?? initialState.workshops,
+      workshop_sessions: savedState.workshop_sessions ?? initialState.workshop_sessions,
+    };
   } catch (e) {
     console.error('Failed to read mock DB file:', e);
     return getInitialDbState();
@@ -115,6 +132,38 @@ function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
 }
 
 function executeRpc(name: string, args: any, db: DbState): any {
+  if (name === 'nearby_workshops') {
+    let result = db.workshops
+      .filter((workshop) => workshop.status === 'active' && workshop.lat !== null && workshop.lng !== null)
+      .map((workshop) => ({
+        ...workshop,
+        distance_m: getDistance(args.center_lat, args.center_lng, workshop.lat, workshop.lng),
+      }))
+      .filter((workshop) => workshop.distance_m <= (args.radius_m ?? 15000));
+
+    if (args.filter_category) {
+      result = result.filter((workshop) => workshop.category === args.filter_category);
+    }
+
+    if (args.date_from || args.date_to) {
+      result = result.filter((workshop) =>
+        db.workshop_sessions.some(
+          (session) =>
+            session.workshop_id === workshop.id &&
+            session.status === 'scheduled' &&
+            (!args.date_from || session.start_time >= args.date_from) &&
+            (!args.date_to || session.start_time <= args.date_to),
+        ),
+      );
+    }
+
+    result.sort((a, b) => a.distance_m - b.distance_m);
+    return {
+      data: result.slice(0, Math.min(args.limit_count ?? 50, 200)),
+      error: null,
+    };
+  }
+
   if (name === 'v1_search_spaces') {
     let result = [...db.spaces];
 
@@ -313,13 +362,17 @@ export function executeMockQueryServer(payload: any): any {
   }
 
   // Find matches
-  const filterFn = (item: any) => {
-    for (const f of filters || []) {
+  const filterFn = (item: any, itemFilters = filters || []) => {
+    for (const f of itemFilters) {
       const itemVal = item[f.col];
       if (f.type === 'eq') {
         if (itemVal !== f.val) return false;
       } else if (f.type === 'neq') {
         if (itemVal === f.val) return false;
+      } else if (f.type === 'gte') {
+        if (itemVal === undefined || itemVal < f.val) return false;
+      } else if (f.type === 'lt') {
+        if (itemVal === undefined || itemVal >= f.val) return false;
       } else if (f.type === 'in') {
         if (!f.vals.includes(itemVal)) return false;
       } else if (f.type === 'is') {
@@ -334,7 +387,37 @@ export function executeMockQueryServer(payload: any): any {
     return true;
   };
 
-  const matches = tableData.filter(filterFn);
+  const relationFilters =
+    table === 'workshops'
+      ? (filters || []).filter((filter: any) => filter.col.startsWith('workshop_sessions.'))
+      : [];
+  const directFilters =
+    table === 'workshops'
+      ? (filters || []).filter((filter: any) => !filter.col.startsWith('workshop_sessions.'))
+      : filters || [];
+  let matches = tableData.filter((item: any) => filterFn(item, directFilters));
+
+  if (table === 'workshops') {
+    matches = matches.flatMap((workshop: any) => {
+      const sessions = db.workshop_sessions.filter(
+        (session) =>
+          session.workshop_id === workshop.id &&
+          filterFn(
+            session,
+            relationFilters.map((filter: any) => ({
+              ...filter,
+              col: filter.col.slice('workshop_sessions.'.length),
+            })),
+          ),
+      );
+      if (relationFilters.length > 0 && sessions.length === 0) return [];
+      return [{
+        ...workshop,
+        workshop_sessions: sessions,
+        spaces: db.spaces.find((space) => space.id === workshop.space_id) ?? null,
+      }];
+    });
+  }
 
   // Write operation: UPDATE
   if (updateData) {

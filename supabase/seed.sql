@@ -446,3 +446,117 @@ INSERT INTO spaces (
 )
 
 ON CONFLICT (slug) DO NOTHING;
+
+-- Initial local seed data: only room-type spaces are workshop venues.
+UPDATE public.spaces
+SET is_workshop_venue = (type::text = 'room');
+
+-- ── Local Somtallers demo listings ──────────────────────────────────────────
+-- Providers and activity types are based on their public workshop pages.
+-- These listing records, session dates, and seat counts are illustrative local
+-- demo data only; they are not real bookings or availability claims.
+INSERT INTO public.workshops (
+  organizer_id, space_id, title, slug, description, category, price,
+  duration_minutes, max_capacity, address, city, lat, lng,
+  contact_url, contact_default, status
+) VALUES
+(
+  '00000000-0000-0000-0000-000000000001',
+  (SELECT id FROM public.spaces WHERE slug = 'placa-diamant-polivalent'),
+  'Taller de terraris a Jungle Mow''s',
+  'demo-terrari-jungle-mows',
+  'Crea un petit jardí dins d’un recipient de vidre i descobreix com combinar plantes, substrat i elements naturals. Consulta el proveïdor per veure les properes sessions.',
+  'plantas', NULL, 120, 12,
+  'Carrer de Verdi, 75, Barcelona',
+  'Barcelona', 41.4049892, 2.1555603,
+  'https://junglemows.com/cat/workshops/', 'web', 'active'
+),
+(
+  '00000000-0000-0000-0000-000000000001',
+  (SELECT id FROM public.spaces WHERE slug = 'salo-tallers-joanic'),
+  'Crea el teu terrari a Casapampa',
+  'demo-terrari-casapampa',
+  'Un taller pràctic per crear un mini jardí amb plantes, pedres i molsa, sense necessitat d’experiència prèvia. Consulta Casapampa per confirmar lloc, disponibilitat i properes dates.',
+  'plantas', NULL, 120, 10,
+  NULL,
+  'Barcelona', NULL, NULL,
+  'https://www.casapampa.net/talleres', 'web', 'active'
+),
+(
+  '00000000-0000-0000-0000-000000000001',
+  (SELECT id FROM public.spaces WHERE slug = 'placa-diamant-polivalent'),
+  'Primera experiència amb ceràmica a Consell81',
+  'demo-ceramica-consell81',
+  'Una primera presa de contacte amb el fang i les tècniques de ceràmica en un taller de Barcelona. Revisa el web del taller per consultar el programa i el preu actuals.',
+  'ceramica', NULL, 120, 10,
+  'Carrer del Consell de Cent, 81, Barcelona',
+  'Barcelona', 41.3793899, 2.1499450,
+  'https://www.consell81.com/primera-experiencia-ceramica/', 'web', 'active'
+),
+(
+  '00000000-0000-0000-0000-000000000001',
+  (SELECT id FROM public.spaces WHERE slug = 'salo-tallers-joanic'),
+  'Iniciació al modelatge o al torn a Atuell',
+  'demo-iniciacio-ceramica-atuell',
+  'Aprèn tècniques bàsiques de modelatge o de torn i crea les teves pròpies peces. Els formats i les dates poden variar; consulta Atuell abans de reservar.',
+  'ceramica', NULL, 120, 8,
+  'Carrer del Montseny, 45, Barcelona',
+  'Barcelona', 41.4026182, 2.1558204,
+  'https://atuell.com/', 'web', 'active'
+),
+(
+  '00000000-0000-0000-0000-000000000001',
+  (SELECT id FROM public.spaces WHERE slug = 'sira10-sala-verdi'),
+  'Taller creatiu de ceràmica a Aforest',
+  'demo-ceramica-aforest',
+  'Un espai de classes i monogràfics de ceràmica i altres disciplines creatives. Consulta l’agenda d’Aforest per trobar l’activitat i l’horari disponibles.',
+  'ceramica', NULL, 120, 10,
+  'Carrer de Cartagena, 313, Barcelona',
+  'Barcelona', 41.4105556, 2.1749759,
+  'https://aforest.es/', 'web', 'active'
+)
+ON CONFLICT (slug) DO UPDATE SET
+  space_id = excluded.space_id,
+  title = excluded.title,
+  description = excluded.description,
+  category = excluded.category,
+  price = excluded.price,
+  duration_minutes = excluded.duration_minutes,
+  max_capacity = excluded.max_capacity,
+  address = excluded.address,
+  city = excluded.city,
+  lat = excluded.lat,
+  lng = excluded.lng,
+  contact_url = excluded.contact_url,
+  contact_default = excluded.contact_default,
+  status = excluded.status;
+
+-- Future dates and places are deliberately sample values for local UI testing.
+INSERT INTO public.workshop_sessions (
+  workshop_id, start_time, end_time, available_seats, status
+)
+SELECT
+  w.id,
+  ((current_date + demo.day_offset) + time '18:00')
+    AT TIME ZONE 'Europe/Madrid',
+  ((current_date + demo.day_offset) + time '20:00')
+    AT TIME ZONE 'Europe/Madrid',
+  demo.seats,
+  'scheduled'
+FROM (
+  VALUES
+    ('demo-terrari-jungle-mows', 14, 8),
+    ('demo-terrari-casapampa', 16, 6),
+    ('demo-ceramica-consell81', 18, 8),
+    ('demo-iniciacio-ceramica-atuell', 20, 6),
+    ('demo-ceramica-aforest', 22, 8)
+) AS demo(slug, day_offset, seats)
+JOIN public.workshops w ON w.slug = demo.slug
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM public.workshop_sessions session
+  WHERE session.workshop_id = w.id
+    AND session.start_time =
+      ((current_date + demo.day_offset) + time '18:00')
+        AT TIME ZONE 'Europe/Madrid'
+);

@@ -7,6 +7,7 @@ import Script from 'next/script';
 import { Analytics } from '@vercel/analytics/next';
 import { routing } from '@/lib/i18n/routing';
 import { isMockEnabled } from '@/lib/supabase/server';
+import { getBrand } from '@/lib/brand';
 
 function MockupBanner() {
   if (!isMockEnabled()) return null;
@@ -36,6 +37,7 @@ interface LocaleLayoutProps {
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale } = await params;
   if (!(routing.locales as readonly string[]).includes(locale)) notFound();
+  const brand = getBrand();
 
   setRequestLocale(locale);
   const messages = await getMessages();
@@ -43,7 +45,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
   return (
     <html lang={locale} className={recursive.variable}>
       <head />
-      <body>
+      <body data-brand={brand.id}>
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-S9DSSWGP53"
           strategy="afterInteractive"

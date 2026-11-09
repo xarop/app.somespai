@@ -6,6 +6,8 @@ node_modules/
 
 # Next.js
 .next/
+.next-somtallers/
+.next-somespai/
 out/
 build/
 next-env.d.ts

@@ -69,7 +69,7 @@ npx supabase start
 npx supabase db reset --local
 ```
 
-El `db reset` aplica les migracions de `supabase/migrations/` i executa `supabase/seed.sql` (27 espais reals de Barcelona).
+El `db reset` aplica les migracions de `supabase/migrations/` i executa `supabase/seed.sql` (27 espais reals de Barcelona i 5 fitxes locals de demostració de Somtallers). Les dates i places de les fitxes són orientatives i no representen disponibilitat real.
 
 ### 5. Arrenca l'app
 
@@ -79,6 +79,26 @@ bun dev
 ```
 
 Català és el locale per defecte. Prova també `/es` i `/en`.
+
+### Provar Somtallers en local
+
+Somtallers comparteix els comptes i la base de dades de Somespai. Per provar la marca,
+aplica primer les migracions a la instància local i arrenca Next.js amb la marca activa:
+
+```bash
+npx supabase start
+npx supabase db reset --local
+NEXT_PUBLIC_BRAND=somtallers bun dev
+# → http://localhost:3000
+```
+
+Consulta [`docs/somtallers.md`](./docs/somtallers.md) per configurar l’entorn, publicar
+un taller de prova i verificar les rutes, el mapa i els permisos.
+
+Per veure Somtallers i Somespai alhora sense Docker, inicia dos terminals amb
+`NEXT_PUBLIC_MOCK_DB=true`, ports `3000` i `3001`, i `NEXT_BUILD_DIR` diferent
+per a cada procés. Les instruccions completes i les limitacions del mode mock
+són a [`docs/somtallers.md`](./docs/somtallers.md).
 
 ---
 
@@ -106,6 +126,12 @@ Català és el locale per defecte. Prova també `/es` i `/en`.
 | `0018_profile_trigger_metadata.sql` | Millora el trigger `handle_new_user` per llegir `display_name` i `phone` dels metadates |
 | `0019_city_region_nullable.sql` | Elimina el `NOT NULL DEFAULT` de `city` i `region` a `spaces` (sense valors per defecte hardcodejats) |
 | `0020_profiles_is_premium.sql` | Afegeix `is_premium boolean default false` als perfils — controla el límit de fotos i funcionalitats futures |
+| `0021_explicit_grants.sql` | Concedeix permisos explícits de Data API a les taules existents |
+| `0022_workshops.sql` | Afegeix tallers i sessions, RLS, índexs PostGIS i RPC `nearby_workshops` |
+| `0023_workshop_venues.sql` | Marca els espais que poden acollir tallers; inicialment només les sales (`type = 'room'`) |
+
+> La versió `0021` ja està ocupada per `0021_explicit_grants.sql`; les migracions de tallers
+> utilitzen `0022` i `0023` per evitar versions duplicades al registre de Supabase.
 
 ---
 
@@ -117,6 +143,8 @@ Aquest repositori manté dues marques diferents mitjançant branques separades q
    - Vercel: [app-somespai](https://vercel.com/xarops-projects/app-somespai)
 2. **CoSlot** (`coslot.space`): Es desplega automàticament des de la branca `coslot` (anglès forçat, termes "slot").
    - Vercel: [app-coslot](https://vercel.com/xarops-projects/app-coslot)
+3. **Somtallers** (`tallers.somespai.net`): Desplegament independent des de la branca `somtallers`; comparteix Auth i Postgres, i replica la UI de mapa, cercador, filtres i menú de Somespai amb contingut orientat a tallers. A Somespai, l’únic canvi funcional d’aquesta integració és poder marcar un espai com a lloc on s’hi fan tallers.
+   - Vercel: configura `NEXT_PUBLIC_BRAND=somtallers` i les mateixes variables de Supabase.
 
 ### Com treballar-hi i desplegar
 

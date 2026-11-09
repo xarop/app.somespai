@@ -10,10 +10,14 @@
 
 Somespai is a P2P marketplace for **physical spaces** (storage, workspaces, gardens, rooms, parking) in **Barcelona and Catalonia**.
 
+The `somtallers` deployment is a separate brand on the same codebase and Supabase project. Its workshops and session tables must remain additive and must reuse `profiles` and `spaces`; select the UI brand with `NEXT_PUBLIC_BRAND=somtallers`.
+
 **Admin dashboard** (`/[locale]/admin`): two-tab interface — spaces management and user management — accessible only to `ADMIN_EMAIL`.
 
 **Out of scope (do not add)**: in-app payments, escrow, identity verification flows, chat moderation AI, "social feed", gamification.
 **In scope**: discovery (map + list), listing creation, reviews, favorites, sharing.
+
+For Somtallers, discovery and listing creation apply to creative workshops and sessions; space links remain optional and point back to the shared Somespai directory.
 
 The economic agreement happens **off-platform**. Somespai introduces hosts and guests; it does not process money.
 

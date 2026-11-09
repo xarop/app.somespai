@@ -180,6 +180,7 @@
     "fieldTitle": "Título",
     "fieldTitlePlaceholder": "Ej: Trastero seco y ventilado en el centro de Gracia",
     "fieldType": "Tipo de espacio",
+    "workshopVenue": "En este espacio se realizan talleres",
     "fieldDescription": "Descripción",
     "fieldDescriptionPlaceholder": "Describe el espacio con detalle…",
     "fieldPrice": "Precio (€)",

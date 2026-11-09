@@ -120,6 +120,16 @@ class MockQueryBuilder {
     return this;
   }
 
+  gte(col: string, val: any) {
+    this.filters.push({ type: 'gte', col, val });
+    return this;
+  }
+
+  lt(col: string, val: any) {
+    this.filters.push({ type: 'lt', col, val });
+    return this;
+  }
+
   in(col: string, vals: any[]) {
     this.filters.push({ type: 'in', col, vals });
     return this;
@@ -161,17 +171,17 @@ class MockQueryBuilder {
     return this;
   }
 
-  async insert(data: any) {
+  insert(data: any) {
     this.insertData = data;
     return this;
   }
 
-  async update(data: any) {
+  update(data: any) {
     this.updateData = data;
     return this;
   }
 
-  async delete() {
+  delete() {
     this.isDelete = true;
     return this;
   }
