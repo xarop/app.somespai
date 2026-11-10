@@ -45,3 +45,11 @@ export function getSomespaiUrl(): string {
     ? 'http://localhost:3001'
     : 'https://app.somespai.net';
 }
+
+export function getSomtallersUrl(): string {
+  const configuredUrl = process.env.NEXT_PUBLIC_SOMTALLERS_URL;
+  if (configuredUrl) return configuredUrl.replace(/\/+$/, '');
+  return process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3000'
+    : 'https://tallers.somespai.net';
+}

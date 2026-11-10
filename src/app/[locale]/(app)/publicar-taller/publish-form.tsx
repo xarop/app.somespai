@@ -55,10 +55,12 @@ export function WorkshopPublishForm({
   locale,
   spaces,
   somespaiUrl,
+  defaultSpaceId = '',
 }: {
   locale: string;
   spaces: SpaceOption[];
   somespaiUrl: string;
+  defaultSpaceId?: string;
 }) {
   const text = copy[locale as keyof typeof copy] ?? copy.ca;
   const [state, formAction, pending] = useActionState<PublishWorkshopState | null, FormData>(
@@ -124,7 +126,7 @@ export function WorkshopPublishForm({
         </aside>
         <label>
           {text.space}
-          <select name="space_id" defaultValue="">
+          <select name="space_id" defaultValue={defaultSpaceId}>
             <option value="">{text.noSpace}</option>
             {spaces.map((space) => (
               <option key={space.id} value={space.id}>{space.title}{space.city ? ` · ${space.city}` : ''}</option>

@@ -6,6 +6,7 @@ import { WorkshopPublishForm } from './publish-form';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
+  searchParams?: Promise<{ space?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -16,8 +17,9 @@ export async function generateMetadata({ params }: PageProps) {
   };
 }
 
-export default async function PublishWorkshopPage({ params }: PageProps) {
+export default async function PublishWorkshopPage({ params, searchParams }: PageProps) {
   const { locale } = await params;
+  const { space: spaceSlug } = (await searchParams) ?? {};
   setRequestLocale(locale);
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -53,6 +55,7 @@ export default async function PublishWorkshopPage({ params }: PageProps) {
             locale={locale}
             spaces={spaces}
             somespaiUrl={getSomespaiUrl()}
+            defaultSpaceId={spaces.find((space) => space.slug === spaceSlug)?.id ?? ''}
           />
         ) : (
           <div className="workshop-login-note">

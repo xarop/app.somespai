@@ -253,3 +253,16 @@ export async function getWorkshopsByOwner(ownerId: string): Promise<WorkshopWith
   if (error) throw new Error(`Could not load your workshops: ${error.message}`);
   return ((data ?? []) as unknown as WorkshopRow[]).map(mapWorkshop);
 }
+
+export async function getWorkshopsBySpace(spaceId: string): Promise<WorkshopWithSpace[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('workshops')
+    .select('*, workshop_sessions(*), spaces(id, slug, title, city, address, neighborhood)')
+    .eq('space_id', spaceId)
+    .eq('status', 'active')
+    .order('created_at', { ascending: false });
+
+  if (error) throw new Error(`Could not load space workshops: ${error.message}`);
+  return ((data ?? []) as unknown as WorkshopRow[]).map(mapWorkshop);
+}

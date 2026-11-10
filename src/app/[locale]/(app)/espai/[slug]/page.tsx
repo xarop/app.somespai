@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { getSpaceBySlug } from "@/lib/supabase/spaces";
 import { createClient } from "@/lib/supabase/server";
+import { getSomtallersUrl } from "@/lib/brand";
+import { getWorkshopsBySpace } from "@/lib/supabase/workshops";
+import { SpaceWorkshops } from "@/components/space/space-workshops";
 import { SpaceDetailClient } from "./space-detail-client";
 
 // Always render dynamically — cookies() is required for auth state
@@ -84,6 +87,20 @@ export default async function SpaceDetailPage({ params }: PageProps) {
     }
   }
 
+  let isWorkshopVenue = false;
+  let workshops: Awaited<ReturnType<typeof getWorkshopsBySpace>> = [];
+  try {
+    const { data: venue } = await supabase
+      .from("spaces")
+      .select("is_workshop_venue")
+      .eq("id", space.id)
+      .maybeSingle();
+    isWorkshopVenue = Boolean(venue?.is_workshop_venue);
+    workshops = await getWorkshopsBySpace(space.id);
+  } catch (err) {
+    console.error("[space workshops] failed:", err);
+  }
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -117,6 +134,22 @@ export default async function SpaceDetailPage({ params }: PageProps) {
         space={space}
         isAdmin={isAdmin}
         currentUserId={user?.id}
+      />
+      <SpaceWorkshops
+        space={space}
+        locale={locale}
+        isVenue={isWorkshopVenue || workshops.length > 0}
+        workshops={workshops.map((w) => ({
+          slug: w.slug,
+          title: w.title,
+          category: w.category,
+          price: w.price,
+          next: w.sessions
+            .map((s) => s.startTime)
+            .filter((d) => new Date(d) >= new Date())
+            .sort()[0] ?? null,
+        }))}
+        tallersUrl={getSomtallersUrl()}
       />
     </>
   );

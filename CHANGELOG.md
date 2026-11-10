@@ -8,6 +8,7 @@ i el projecte segueix [Semantic Versioning](https://semver.org/lang/ca/).
 ## [Unreleased]
 
 ### Added
+- Fitxa d'espai de Somespai: si l'espai està habilitat per fer tallers, mostra els tallers associats i botons per crear-ne un a Somtallers (`/publicar-taller?space=<slug>` preselecciona l'espai) o preguntar al propietari.
 - Marca Somtallers amb cercador de tallers, mapa, fitxa de detall, contacte directe i publicació per passos, compartint els perfils i els espais de Somespai.
 - Migració additiva de tallers i sessions amb RLS, índexs PostGIS i cerca RPC per proximitat i dates (`0022_workshops.sql`).
 - Dades locals de demostració per tallers de terraris/plantes i ceràmica a Barcelona, basades en proveïdors amb oferta pública; sessions i places clarament orientatives.

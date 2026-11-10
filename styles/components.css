@@ -5935,3 +5935,65 @@
 .reviews__login-link:hover {
   color: var(--ink);
 }
+@layer components {
+  .space-workshops {
+    max-width: 800px;
+    margin: 0 auto var(--s-7);
+    padding: var(--s-4);
+    display: grid;
+    gap: var(--s-3);
+  }
+
+  .space-workshops h2 {
+    margin: 0;
+  }
+
+  .space-workshops p {
+    margin: 0;
+    color: var(--ink-soft);
+  }
+
+  .space-workshops__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--s-2);
+  }
+
+  .space-workshops__list a {
+    display: grid;
+    gap: 2px;
+    padding: var(--s-3);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    background: var(--glass-strong);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .space-workshops__list span {
+    color: var(--ink-soft);
+    font-size: 0.875rem;
+  }
+
+  .space-workshops__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+  }
+
+  .space-workshops__actions a {
+    padding: var(--s-2) var(--s-4);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--r-md);
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .space-workshops__actions a[data-variant="primary"] {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: var(--primary-ink);
+  }
+}
