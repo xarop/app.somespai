@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 import { getAllSpacesAdmin } from '@/lib/supabase/admin';
 import { AdminDashboard } from './admin-dashboard';
+import { getBrand } from '@/lib/brand';
 import { PageNav } from '@/components/ui/page-nav';
 
 interface AdminPageProps {
@@ -46,7 +47,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           <a href="/" className="page-form__back">←</a>
           <h1>{t('title')}</h1>
         </header>
-        <AdminDashboard spaces={spaces} initialEditId={edit} mainAdminEmail={adminEmail} />
+        <AdminDashboard spaces={spaces} initialEditId={edit} mainAdminEmail={adminEmail} showWorkshops={getBrand().id === 'somtallers'} />
       </div>
     </div>
     </>

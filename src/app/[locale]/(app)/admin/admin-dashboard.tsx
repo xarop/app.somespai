@@ -26,6 +26,7 @@ import {
 import { resizeImageFile } from '@/lib/images/resize-image';
 import type { Review } from '@/lib/supabase/reviews';
 import type { AdminUser, ContactMessage } from '@/lib/supabase/admin';
+import { WorkshopsAdminTab } from './workshops-tab';
 
 type StatusFilter = 'all' | 'active' | 'paused' | 'removed' | 'pending';
 type TypeFilter = 'all' | 'storage' | 'workspace' | 'garden' | 'room' | 'parking';
@@ -905,7 +906,7 @@ function Pagination({ total, page, pageSize, onPage, onPageSize }: {
 
 /* ── Main dashboard ──────────────────────────────────────────────────────── */
 
-export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdminEmail }: { spaces: Space[]; initialEditId?: string; mainAdminEmail?: string }) {
+export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdminEmail, showWorkshops = false }: { spaces: Space[]; initialEditId?: string; mainAdminEmail?: string; showWorkshops?: boolean }) {
   const t = useTranslations('admin');
   const tFilter = useTranslations('filter');
   const locale = useLocale();
@@ -916,7 +917,8 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
     (_state: Space[], updater: (s: Space[]) => Space[]) => updater(_state),
   );
 
-  const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages' | 'analytics'>('spaces');
+  const [activeTab, setActiveTab] = useState<'spaces' | 'users' | 'messages' | 'analytics' | 'workshops'>(showWorkshops ? 'workshops' : 'spaces');
+  const [workshopsCount, setWorkshopsCount] = useState<number | null>(null);
   const [usersCount, setUsersCount] = useState<number | null>(null);
   const [msgCounts, setMsgCounts] = useState<{ unread: number; total: number } | null>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
@@ -1077,6 +1079,17 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
       {/* Tabs */}
       <div className="admin-tabs-row">
         <div className="admin-tabs">
+          {showWorkshops && (
+            <button
+              type="button"
+              className={`admin-tab${activeTab === 'workshops' ? ' admin-tab--active' : ''}`}
+              onClick={() => setActiveTab('workshops')}
+            >
+              <Icon name="list" size={15} />
+              {locale === 'en' ? 'Workshops' : locale === 'es' ? 'Talleres' : 'Tallers'}
+              <span className="admin-tab__count">{workshopsCount ?? '…'}</span>
+            </button>
+          )}
           <button
             type="button"
             className={`admin-tab${activeTab === 'spaces' ? ' admin-tab--active' : ''}`}
@@ -1149,6 +1162,8 @@ export function AdminDashboard({ spaces: initialSpaces, initialEditId, mainAdmin
           </div>
         </div>
       )}
+
+      {activeTab === 'workshops' && <WorkshopsAdminTab onCountChange={setWorkshopsCount} />}
 
       {activeTab === 'users' && (
         <>
