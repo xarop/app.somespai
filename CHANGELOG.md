@@ -17,6 +17,10 @@ i el projecte segueix [Semantic Versioning](https://semver.org/lang/ca/).
 - Somtallers passa a `tallers.somespai.net` i replica l’experiència de Somespai (mapa, cercador, filtres, targetes i menú) amb icones per categories creatives; la UI de Somespai només afegeix el selector d’espais aptes per a tallers.
 - Mode mock compartit per executar Somtallers i Somespai en ports locals independents; els enllaços entre marques apunten al servei Somespai local.
 - Documentació per configurar i provar Somtallers localment (`docs/somtallers.md`).
+- Identitat pròpia de Somtallers: color principal taronja (`#F2A65A`) amb accent blau-verd, nou logo i favicon (`public/somtallers.svg`); Somespai manté el verd.
+
+### Changed
+- El filtre de tipus de taller és un desplegable amb text (en lloc d'icones) i els camps de la capçalera s'alineen amb el cercador.
 
 ## [0.6.0] — 2026-06-09
 
