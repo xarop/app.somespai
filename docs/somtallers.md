@@ -7,8 +7,10 @@ remain shared with Somespai. Workshop data is additive in `workshops` and
 Its directory mirrors Somespai's map-first layout, search header, filter chips,
 result sheet, map/list toggle, and hamburger menu, with category icons and
 workshop markers/cards instead of space types. Somespai's existing directory
-and menu remain unchanged; its publishing form only gains the workshop-venue
-checkbox.
+and menu remain unchanged; its publishing form gains the workshop-venue
+checkbox, and the detail page of venue spaces lists their workshops with
+buttons to create one on Somtallers (`/publicar-taller?space=<slug>`) or ask the
+owner. Set `NEXT_PUBLIC_SOMTALLERS_URL` to override the Somtallers link.
 
 ## Local setup
 

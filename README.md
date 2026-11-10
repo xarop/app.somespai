@@ -143,7 +143,7 @@ Aquest repositori manté dues marques diferents mitjançant branques separades q
    - Vercel: [app-somespai](https://vercel.com/xarops-projects/app-somespai)
 2. **CoSlot** (`coslot.space`): Es desplega automàticament des de la branca `coslot` (anglès forçat, termes "slot").
    - Vercel: [app-coslot](https://vercel.com/xarops-projects/app-coslot)
-3. **Somtallers** (`tallers.somespai.net`): Desplegament independent des de la branca `somtallers`; comparteix Auth i Postgres, i replica la UI de mapa, cercador, filtres i menú de Somespai amb contingut orientat a tallers. A Somespai, l’únic canvi funcional d’aquesta integració és poder marcar un espai com a lloc on s’hi fan tallers.
+3. **Somtallers** (`tallers.somespai.net`): Desplegament independent des de la branca `somtallers`; comparteix Auth i Postgres, i replica la UI de mapa, cercador, filtres i menú de Somespai amb contingut orientat a tallers. A Somespai, l’únic canvi funcional d’aquesta integració és poder marcar un espai com a lloc on s’hi fan tallers; la fitxa d’aquests espais llista els tallers associats i ofereix crear-ne un a Somtallers o preguntar al propietari.
    - Vercel: configura `NEXT_PUBLIC_BRAND=somtallers` i les mateixes variables de Supabase.
 
 ### Com treballar-hi i desplegar

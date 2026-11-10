@@ -128,7 +128,7 @@ This repository maintains two different brands through separate branches pointin
    - Vercel: [app-somespai](https://vercel.com/xarops-projects/app-somespai)
 2. **CoSlot** (`coslot.space`): Automatically deployed from the `coslot` branch (forced English, "slot" terms).
    - Vercel: [app-coslot](https://vercel.com/xarops-projects/app-coslot)
-3. **Somtallers** (`tallers.somespai.net`): Independent deployment from branch `somtallers`; shares authentication and Postgres, and mirrors Somespai's map, search, filters, and menu UI with workshop-focused content. The only Somespai feature change for this integration is the ability to mark a space as a workshop venue.
+3. **Somtallers** (`tallers.somespai.net`): Independent deployment from branch `somtallers`; shares authentication and Postgres, and mirrors Somespai's map, search, filters, and menu UI with workshop-focused content. The only Somespai feature change for this integration is the ability to mark a space as a workshop venue; the detail page of such spaces lists their workshops and offers creating one on Somtallers or asking the owner.
    - Vercel: set `NEXT_PUBLIC_BRAND=somtallers` and reuse the Somespai Supabase environment variables.
 
 ### Workflow and Deployment
