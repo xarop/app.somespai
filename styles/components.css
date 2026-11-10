@@ -123,6 +123,70 @@
     background: linear-gradient(135deg, #d7e8ef, #6e9daf);
   }
 
+  .workshop-map-card__media[data-category="fusteria"] {
+    background: linear-gradient(135deg, #ead8c0, #b98a55);
+  }
+
+  .workshop-map-card__media[data-category="floristeria"] {
+    background: linear-gradient(135deg, #f7dce6, #d98aa8);
+  }
+
+  .workshop-map-card__media[data-category="reposteria"] {
+    background: linear-gradient(135deg, #fbe9c8, #e0a64f);
+  }
+
+  .workshop-map-card__media[data-category="begudes"] {
+    background: linear-gradient(135deg, #f0d6d9, #b45a66);
+  }
+
+  .workshop-map-card__media[data-category="musica"] {
+    background: linear-gradient(135deg, #dde4f6, #6f86c9);
+  }
+
+  .workshop-map-card__media[data-category="dansa"] {
+    background: linear-gradient(135deg, #f6dcee, #c874ae);
+  }
+
+  .workshop-map-card__media[data-category="benestar"] {
+    background: linear-gradient(135deg, #d9efe6, #6fb59b);
+  }
+
+  .workshop-map-card__media[data-category="fotografia"] {
+    background: linear-gradient(135deg, #dfe3e8, #7d8796);
+  }
+
+  .workshop-map-card__media[data-category="escriptura"] {
+    background: linear-gradient(135deg, #efe5d4, #b79a68);
+  }
+
+  .workshop-map-card__media[data-category="illustracio"] {
+    background: linear-gradient(135deg, #e4f0cf, #8fb54e);
+  }
+
+  .workshop-map-card__media[data-category="textil"] {
+    background: linear-gradient(135deg, #f3dcc9, #cd8a5c);
+  }
+
+  .workshop-map-card__media[data-category="vidre"] {
+    background: linear-gradient(135deg, #d8eef2, #68b2c0);
+  }
+
+  .workshop-map-card__media[data-category="cuir"] {
+    background: linear-gradient(135deg, #e6d5c7, #a97b5a);
+  }
+
+  .workshop-map-card__media[data-category="escultura"] {
+    background: linear-gradient(135deg, #e5e0dc, #9a8f86);
+  }
+
+  .workshop-map-card__media[data-category="maker"] {
+    background: linear-gradient(135deg, #d9e6f5, #6393cf);
+  }
+
+  .workshop-map-card__media[data-category="altres"] {
+    background: linear-gradient(135deg, #ece6dd, #a39a8d);
+  }
+
   .workshop-map-card .card__glyph {
     color: rgba(31, 28, 23, 0.65);
   }
@@ -197,6 +261,86 @@
   .workshop-marker[data-category="costura"] .marker__icon {
     background: #d7e8ef;
     color: #386579;
+  }
+
+  .workshop-marker[data-category="fusteria"] .marker__icon {
+    background: #ead8c0;
+    color: #6b4a22;
+  }
+
+  .workshop-marker[data-category="floristeria"] .marker__icon {
+    background: #f7dce6;
+    color: #8e3a5c;
+  }
+
+  .workshop-marker[data-category="reposteria"] .marker__icon {
+    background: #fbe9c8;
+    color: #8a5a12;
+  }
+
+  .workshop-marker[data-category="begudes"] .marker__icon {
+    background: #f0d6d9;
+    color: #6e2430;
+  }
+
+  .workshop-marker[data-category="musica"] .marker__icon {
+    background: #dde4f6;
+    color: #2f437f;
+  }
+
+  .workshop-marker[data-category="dansa"] .marker__icon {
+    background: #f6dcee;
+    color: #7a2c62;
+  }
+
+  .workshop-marker[data-category="benestar"] .marker__icon {
+    background: #d9efe6;
+    color: #235f4a;
+  }
+
+  .workshop-marker[data-category="fotografia"] .marker__icon {
+    background: #dfe3e8;
+    color: #2f3a4a;
+  }
+
+  .workshop-marker[data-category="escriptura"] .marker__icon {
+    background: #efe5d4;
+    color: #5f4a22;
+  }
+
+  .workshop-marker[data-category="illustracio"] .marker__icon {
+    background: #e4f0cf;
+    color: #40611a;
+  }
+
+  .workshop-marker[data-category="textil"] .marker__icon {
+    background: #f3dcc9;
+    color: #7a3f1b;
+  }
+
+  .workshop-marker[data-category="vidre"] .marker__icon {
+    background: #d8eef2;
+    color: #1f5e6b;
+  }
+
+  .workshop-marker[data-category="cuir"] .marker__icon {
+    background: #e6d5c7;
+    color: #53341d;
+  }
+
+  .workshop-marker[data-category="escultura"] .marker__icon {
+    background: #e5e0dc;
+    color: #4a4039;
+  }
+
+  .workshop-marker[data-category="maker"] .marker__icon {
+    background: #d9e6f5;
+    color: #244f8a;
+  }
+
+  .workshop-marker[data-category="altres"] .marker__icon {
+    background: #ece6dd;
+    color: #4a4338;
   }
 
   .workshops-page,

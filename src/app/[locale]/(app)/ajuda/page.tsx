@@ -3,6 +3,8 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { PageNav } from '@/components/ui/page-nav';
 import type { SpaceType } from '@/lib/schemas/space';
 import type { Metadata } from 'next';
+import { getBrand } from '@/lib/brand';
+import { WorkshopHelp } from '@/components/workshop/workshop-help';
 
 interface PageProps {
   params: Promise<{ locale: string }>;
@@ -11,9 +13,10 @@ interface PageProps {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale });
+  const brand = getBrand();
   return {
-    title: `${t('help.title')} — somespai`,
-    description: t('help.subtitle'),
+    title: brand.id === 'somtallers' ? 'Ajuda — Somtallers' : `${t('help.title')} — somespai`,
+    description: brand.id === 'somtallers' ? brand.tagline : t('help.subtitle'),
   };
 }
 
@@ -36,6 +39,7 @@ const TYPE_COLORS: Record<SpaceType, { tint: string; main: string }> = {
 export default async function AjudaPage({ params }: PageProps) {
   const { locale } = await params;
   setRequestLocale(locale);
+  if (getBrand().id === 'somtallers') return <WorkshopHelp locale={locale} />;
   const t = await getTranslations('help');
   const ti = await getTranslations('typeInfo');
 

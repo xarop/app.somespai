@@ -20,6 +20,8 @@ i el projecte segueix [Semantic Versioning](https://semver.org/lang/ca/).
 - Identitat pròpia de Somtallers: color principal taronja (`#F2A65A`) amb accent blau-verd, nou logo i favicon (`public/somtallers.svg`); Somespai manté el verd.
 
 ### Changed
+- Més categories de tallers (fusteria, floristeria, rebosteria, begudes, música, dansa, benestar, fotografia, escriptura, il·lustració, teixit, vidre, cuir, escultura, maker i altres), amb icona i color propis.
+- La pàgina d'Ajuda del menú de Somtallers explica Somtallers (cerca, filtres, contacte, publicació) en lloc de Somespai.
 - El filtre de tipus de taller és un desplegable amb text (en lloc d'icones) i els camps de la capçalera s'alineen amb el cercador.
 
 ## [0.6.0] — 2026-06-09
