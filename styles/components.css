@@ -526,10 +526,28 @@
     font-size: var(--t-sm);
   }
 
-  .workshop-form__space-actions {
+  .workshop-form__space-help a,
+  .workshop-form__link-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--primary-ink);
+    font: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .workshop-form__find-space {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--s-2);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3);
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--primary-tint);
+    color: var(--primary-ink);
+    font-size: var(--t-sm);
   }
 
   .workshop-form textarea {

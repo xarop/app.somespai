@@ -23,7 +23,7 @@ const copy = {
     steps: ['Dades del taller', 'Lloc i contacte', 'Dates de les sessions'],
     title: 'Nom del taller', description: 'Descripció', category: 'Categoria', price: 'Preu per persona (€)', duration: 'Durada (minuts)', capacity: 'Aforament màxim',
     address: 'Adreça', city: 'Ciutat', lat: 'Latitud', lng: 'Longitud', space: 'Espai de Somespai (opcional)', noSpace: 'Sense espai vinculat',
-    createSpace: 'No trobes el local? Crea un espai a Somespai', refreshSpaces: 'Actualitza la llista d’espais',
+    createSpace: 'No trobes el local? Crea un espai a Somespai', findSpaceText: 'Encara no tens on fer el taller? Busca i contacta amb un espai de Somespai.', findSpaceCta: 'Buscar un espai a Somespai', refreshSpaces: 'Actualitza la llista d’espais',
     spaceHelp: 'Selecciona primer on es farà el taller. Si l’espai encara no existeix, crea’l a Somespai en una pestanya nova i després actualitza la llista.',
     contactName: 'Persona de contacte', phone: 'Telèfon', email: 'Email', whatsapp: 'WhatsApp', url: 'Web', default: 'Contacte preferit',
     start: 'Inici', end: 'Final', seats: 'Places disponibles', add: 'Afegeix una sessió', next: 'Continua', back: 'Enrere', submit: 'Publica el taller',
@@ -33,7 +33,7 @@ const copy = {
     steps: ['Datos del taller', 'Lugar y contacto', 'Fechas de las sesiones'],
     title: 'Nombre del taller', description: 'Descripción', category: 'Categoría', price: 'Precio por persona (€)', duration: 'Duración (minutos)', capacity: 'Aforo máximo',
     address: 'Dirección', city: 'Ciudad', lat: 'Latitud', lng: 'Longitud', space: 'Espacio de Somespai (opcional)', noSpace: 'Sin espacio vinculado',
-    createSpace: '¿No encuentras el local? Crea un espacio en Somespai', refreshSpaces: 'Actualizar lista de espacios',
+    createSpace: '¿No encuentras el local? Crea un espacio en Somespai', findSpaceText: '¿Aún no tienes dónde hacer el taller? Busca y contacta con un espacio de Somespai.', findSpaceCta: 'Buscar un espacio en Somespai', refreshSpaces: 'Actualizar lista de espacios',
     spaceHelp: 'Selecciona primero dónde se hará el taller. Si el espacio aún no existe, créalo en Somespai en una pestaña nueva y después actualiza la lista.',
     contactName: 'Persona de contacto', phone: 'Teléfono', email: 'Email', whatsapp: 'WhatsApp', url: 'Web', default: 'Contacto preferido',
     start: 'Inicio', end: 'Fin', seats: 'Plazas disponibles', add: 'Añadir una sesión', next: 'Continuar', back: 'Atrás', submit: 'Publicar el taller',
@@ -43,7 +43,7 @@ const copy = {
     steps: ['Workshop details', 'Location and contact', 'Session dates'],
     title: 'Workshop title', description: 'Description', category: 'Category', price: 'Price per person (€)', duration: 'Duration (minutes)', capacity: 'Maximum capacity',
     address: 'Address', city: 'City', lat: 'Latitude', lng: 'Longitude', space: 'Somespai space (optional)', noSpace: 'No linked space',
-    createSpace: "Can't find the venue? Create a space on Somespai", refreshSpaces: 'Refresh space list',
+    createSpace: "Can't find the venue? Create a space on Somespai", findSpaceText: 'No place for your workshop yet? Find and contact a Somespai space.', findSpaceCta: 'Find a space on Somespai', refreshSpaces: 'Refresh space list',
     spaceHelp: 'First choose where the workshop will take place. If the space does not exist yet, create it on Somespai in a new tab, then refresh this list.',
     contactName: 'Contact person', phone: 'Phone', email: 'Email', whatsapp: 'WhatsApp', url: 'Website', default: 'Preferred contact',
     start: 'Start', end: 'End', seats: 'Available seats', add: 'Add a session', next: 'Continue', back: 'Back', submit: 'Publish workshop',
@@ -116,6 +116,12 @@ export function WorkshopPublishForm({
       </section>
 
       <section data-workshop-step="2" hidden={step !== 2}>
+        <aside className="workshop-form__find-space">
+          <span>{text.findSpaceText}</span>
+          <a className="workshop-button workshop-button--primary" href={somespaiUrl} target="_blank" rel="noreferrer">
+            {text.findSpaceCta} <span aria-hidden="true">↗</span>
+          </a>
+        </aside>
         <label>
           {text.space}
           <select name="space_id" defaultValue="">
@@ -125,20 +131,14 @@ export function WorkshopPublishForm({
             ))}
           </select>
         </label>
-        <p className="workshop-form__space-help">{text.spaceHelp}</p>
-        <div className="workshop-form__space-actions">
-          <a
-            className="workshop-button"
-            href={`${somespaiUrl}${localizedPrefix}/publica`}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {text.createSpace}
-          </a>
-          <button className="workshop-button" type="button" onClick={() => router.refresh()}>
+        <p className="workshop-form__space-help">
+          {text.spaceHelp}{' '}
+          <a href={`${somespaiUrl}${localizedPrefix}/publica`} target="_blank" rel="noreferrer">{text.createSpace}</a>
+          {' · '}
+          <button className="workshop-form__link-button" type="button" onClick={() => router.refresh()}>
             {text.refreshSpaces}
           </button>
-        </div>
+        </p>
         <label>{text.address}<input name="address" maxLength={200} /></label>
         <label>{text.city}<input name="city" defaultValue="Barcelona" maxLength={100} /></label>
         <div className="workshop-form__two-columns">
