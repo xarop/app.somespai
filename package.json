@@ -12,6 +12,7 @@
     "export": "next build",
     "postexport": "node ./scripts/ghpages-redirect.js",
     "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out",
+    "deploy:cloudflare": "npm run build && npx wrangler publish",
     "db:status": "bun run scripts/sync-db.ts status",
     "db:pull": "bun run scripts/sync-db.ts pull",
     "db:push": "bun run scripts/sync-db.ts push",
@@ -21,6 +22,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1048.0",
+    "@opennextjs/cloudflare": "^1.20.17",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.45.4",
     "@vercel/analytics": "^2.0.1",
@@ -30,6 +32,7 @@
     "react": "19.0.0-rc-66855b96-20241106",
     "react-dom": "19.0.0-rc-66855b96-20241106",
     "supercluster": "^8.0.1",
+    "wrangler": "^4.163.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
