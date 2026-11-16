@@ -15,12 +15,114 @@ Desenvolupat per [xarop.com](https://xarop.com) amb ajuda de la IA. Les contribu
 
 - **Next.js 15** (App Router, RSC)
 - **Supabase** (Postgres + PostGIS, Auth mail/password, RLS)
+- **Cloudflare Workers / Pages** (desplegament, via OpenNext)
 - **Cloudflare R2** (emmagatzematge d'imatges — zero egress)
 - **MapLibre GL JS** (open-source maps)
 - **next-intl** (CA / ES / EN)
 - **CSS natiu** amb `@layer` — sense Tailwind, sense CSS-in-JS
 
 Tot el codi en anglès. Tota la UI traduïble.
+
+---
+
+## Desplegament a Cloudflare Pages / Workers
+
+Somespai està configurat per desplegar-se a **Cloudflare Pages** mitjançant l'adaptador **OpenNext** (`@opennextjs/cloudflare`).
+
+### Branca de desplegament
+
+La branca `cloudflare-deploy` està preparada per a desplegaments a Cloudflare:
+
+```bash
+git checkout cloudflare-deploy
+git push origin cloudflare-deploy
+```
+
+### Configuració
+
+#### `wrangler.toml`
+
+Arrel del projecte:
+
+```toml
+name = "app-somespai"
+compatibility_date = "2026-11-16"
+compatibility_flags = ["nodejs_compat_dependencies"]
+workers_dev = true
+
+[env.production]
+workers_dev = false
+
+[env.staging]
+workers_dev = true
+```
+
+#### `package.json` (scripts)
+
+```json
+{
+  "scripts": {
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview"
+  },
+  "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.17",
+    "wrangler": "^4.148.0"
+  }
+}
+```
+
+#### Desplegament manual
+
+```bash
+# 1. Assegura't que tens Node.js >= 22.12
+nvm use 22.12.0  # o instal·la amb: nvm install 22.12.0
+
+# 2. Instal·la dependències
+npm install
+
+# 3. Desplega a Cloudflare (producció)
+npm run deploy
+
+# 4. O per a preproducció
+npm run preview
+```
+
+### Connexió GitHub → Cloudflare Pages
+
+1. Anira al [dashboard de Cloudflare](https://dash.cloudflare.com/workers-and-pages)
+2. Crea una aplicació nova → **"Connect to Git"**
+3. Selecciona el repositori **`app.somespai`**
+4. Configura:
+   - **Branch**: `cloudflare-deploy`
+   - **Build command**: `npm run build`
+   - **Output directory**: `.next`
+   - **Framework preset**: Next.js (o "Other")
+5. Configura les **Environment variables** a *Settings* → *Environment variables*:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_ADMIN_EMAIL`
+
+### Variables d'entorn necessàries (producció)
+
+Afegeix aquestes a Cloudflare Pages → *Settings* → *Environment variables*:
+
+| Variable | Valor d'exemple | Necessari |
+|----------|-----------------|-----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://xxx.supabase.co` | Sí |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | `eyJ...` | Sí |
+| `NEXT_PUBLIC_ADMIN_EMAIL` | `admin@somespai.net` | Sí (per al panell admin) |
+
+### Com provar localment
+
+```bash
+npm run preview
+# → http://localhost:8788
+```
+
+---
+
+## Desplegament a Vercel (opcional)
 
 ---
 
