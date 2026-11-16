@@ -1,6 +1,6 @@
 name = "app-somespai"
-compatibility_flags = ["nodejs_compat_dependencies"]
 compatibility_date = "2026-11-16"
+compatibility_flags = ["nodejs_compat_dependencies"]
 workers_dev = true
 
 [env.production]
@@ -8,6 +8,3 @@ workers_dev = false
 
 [env.staging]
 workers_dev = true
-
-[assets]
-directory = ".next"
