@@ -17,7 +17,7 @@
     "db:push": "bun run scripts/sync-db.ts push",
     "db:push:force": "bun run scripts/sync-db.ts push --force",
     "import:all": "bun run scripts/mass-import.ts",
-    "import:plan": "bun run scripts/mass-import.ts --dry-run"
+    "deploy:cloudflare": "npm run build && npx wrangler publish",
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1048.0",
