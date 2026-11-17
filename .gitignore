@@ -36,3 +36,6 @@ supabase/.branches/
 !.vscode/extensions.json
 
 .vercel
+
+# Local node installations (too large for GitHub)
+.local/
