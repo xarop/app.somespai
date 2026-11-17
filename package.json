@@ -17,7 +17,7 @@
     "db:push": "bun run scripts/sync-db.ts push",
     "db:push:force": "bun run scripts/sync-db.ts push --force",
     "import:all": "bun run scripts/mass-import.ts",
-    "deploy:cloudflare": "npm run build && npx wrangler pages deploy .next --exclude '**/cache/**'"
+    "deploy:cloudflare": "npm run build && rm -rf .next/cache && npx wrangler pages deploy .next"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1048.0",
