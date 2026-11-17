@@ -14,7 +14,7 @@ import { createClient } from '@/lib/supabase/server';
  * `lib/geo/geocoding.ts` needs to change; this route stays the same.
  */
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   const supabase = await createClient();

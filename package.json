@@ -9,7 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "export": "next export",
+    "export": "next build",
     "postexport": "node ./scripts/ghpages-redirect.js",
     "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out",
     "db:status": "bun run scripts/sync-db.ts status",
@@ -17,7 +17,7 @@
     "db:push": "bun run scripts/sync-db.ts push",
     "db:push:force": "bun run scripts/sync-db.ts push --force",
     "import:all": "bun run scripts/mass-import.ts",
-    "deploy:cloudflare": "npm run build && npx wrangler pages deploy out"
+    "deploy:cloudflare": "opennextjs-cloudflare build && wrangler deploy"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1048.0",
@@ -32,6 +32,7 @@
     "zod": "^3.25.0"
   },
   "devDependencies": {
+    "@opennextjs/cloudflare": "^1.20.17",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -43,6 +44,6 @@
     "sharp": "^0.34.5",
     "typescript": "^5.6.3",
     "vitest": "^4.1.6",
-    "wrangler": "^4.163.0"
+    "wrangler": "^4.164.0"
   }
 }

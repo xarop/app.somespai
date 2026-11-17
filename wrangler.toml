@@ -1,13 +1,5 @@
 name = "app-somespai"
 compatibility_date = "2026-11-16"
-compatibility_flags = ["nodejs_compat_dependencies"]
-pages_build_output_dir = "out"
-
-[env.production]
-workers_dev = false
-
-[env.staging]
-pages_build_output_dir = "out"
-
-[assets]
- directory = ".next"
+compatibility_flags = ["nodejs_compat"]
+main = ".open-next/worker.js"
+assets = { directory = ".open-next/assets", binding = "ASSETS" }

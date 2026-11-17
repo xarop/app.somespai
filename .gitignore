@@ -39,3 +39,4 @@ supabase/.branches/
 
 # Local node installations (too large for GitHub)
 .local/
+.open-next

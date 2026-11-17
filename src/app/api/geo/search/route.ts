@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/server';
  * Returns the lat, lng and formatted address.
  */
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function POST(request: Request) {
   const supabase = await createClient();
