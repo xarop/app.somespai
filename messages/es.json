@@ -410,6 +410,7 @@
   "help": {
     "back": "Inicio",
     "title": "Cómo funciona somespai",
+    "subtitle": "Aprende cómo funciona Somespai",
     "intro": "somespai conecta propietarios de espacios infrautilizados con personas que los necesitan, de forma directa y sin intermediarios.",
     "step1Title": "Explora el mapa",
     "step1Body": "Descubre los espacios disponibles en el mapa interactivo o cambia a la vista en lista. Cada pin es un espacio real en el barrio.",

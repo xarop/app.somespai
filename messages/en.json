@@ -410,6 +410,7 @@
   "help": {
     "back": "Home",
     "title": "How cospace works",
+    "subtitle": "Learn how Somespai works",
     "intro": "cospace connects owners of underused spaces with people who need them — directly, without intermediaries.",
     "step1Title": "Explore the map",
     "step1Body": "Discover available spaces on the interactive map or switch to list view. Each pin is a real space in the neighbourhood.",
