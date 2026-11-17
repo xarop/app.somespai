@@ -9,7 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "vitest run",
-    "export": "next build",
+    "export": "next export",
     "postexport": "node ./scripts/ghpages-redirect.js",
     "deploy:gh-pages": "next build && npm run postexport && npx gh-pages -d out",
     "db:status": "bun run scripts/sync-db.ts status",
@@ -17,7 +17,7 @@
     "db:push": "bun run scripts/sync-db.ts push",
     "db:push:force": "bun run scripts/sync-db.ts push --force",
     "import:all": "bun run scripts/mass-import.ts",
-    "deploy:cloudflare": "npm run build && rm -rf .next/cache && npx wrangler pages deploy .next"
+    "deploy:cloudflare": "npm run build && npx wrangler pages deploy out"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1048.0",

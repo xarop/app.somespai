@@ -13,7 +13,8 @@ const nextConfig = {
       { protocol: 'https', hostname: '*.r2.dev' },
     ],
   },
-  experimental: {
+  output: "export",
+
     serverActions: {
       bodySizeLimit: '10mb',
     },
